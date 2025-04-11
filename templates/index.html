@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriBot - Smart Farming Assistant</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/style.css') }}">
+</head>
+<body>
+    <!-- Main Container (always visible now) -->
+    <div class="container" id="mainContainer">
+        <h2 id="appTitle">AgriBot - Smart Farming Assistant</h2>
+        
+        <div class="language-select">
+            <label for="language">Select Language</label>
+            <select id="language" onchange="changeLanguage()">
+                <option value="ta">தமிழ் (Tamil)</option>
+                <option value="ml">മലയാളം (Malayalam)</option>
+                <option value="te">తెలుగు (Telugu)</option>
+                <option value="kn">ಕನ್ನಡ (Kannada)</option>
+                <option value="hi">हिंदी (Hindi)</option>
+                <option value="en" selected>English</option>
+            </select>
+        </div>
+
+        <div id="options">
+            <div class="option" id="soilOption" onclick="showForm('soil_prediction')">Soil & Pest Detection</div>
+            <div class="option" id="cropOption" onclick="showForm('crop_mgmt')">Crop & Irrigation Management</div>
+            <div class="option" id="aidOption" onclick="showForm('govt_aid')">Government Aids</div>
+        </div>
+
+        <div id="farmerBot" class="farmer-bot">
+            <img src="{{ url_for('static', filename='images/farmer.jpg') }}" />
+
+            <div class="speech-bubble" id="botMessage">Welcome to Uzhavan! Click a section to get started.</div>
+        </div>
+
+        <!-- Soil Prediction Form -->
+        <div id="soil_prediction" class="hidden">
+            <h3 id="soilTitle">Soil & Pest Detection</h3>
+            <form id="soilForm">
+                <div class="form-group">
+                    <label id="soilImageLabel" for="soilImage">Upload Soil Image</label>
+                    <input type="file" id="soilImage" accept="image/*" required>
+                </div>
+                <button type="submit" class="button predict-button" id="soilButton">Analyze Soil</button>
+            </form>
+            <div class="image-container">
+                <img src="https://t3.ftcdn.net/jpg/03/40/70/04/360_F_340700428_AquH6hbzeMOYLQ6g6kfWAMuUvfw60Zd1.jpg" alt="Farming Scene">
+            </div>
+            <div class="loading" id="soilLoading">Analyzing soil image...</div>
+          
+            <button onclick="goBack()" class="button back-button" id="backButton1">Back</button>
+        </div>
+
+        <!-- Crop Management Form -->
+        <div id="crop_mgmt" class="hidden">
+            <h3 id="cropTitle">Crop & Irrigation Management</h3>
+            <form id="cropForm">
+
+                
+                <div class="form-group">
+                    <label id="nitrogenLabel" for="nitrogen">Nitrogen (N) Level</label>
+                    <input type="number" id="nitrogen" placeholder="Enter nitrogen level" required step="0.01">
+                </div>
+                <div class="form-group">
+                    <label id="phosphorousLabel" for="phosphorous">Phosphorous (P) Level</label>
+                    <input type="number" id="phosphorous" placeholder="Enter phosphorous level" required step="0.01">
+                </div>
+                <div class="form-group">
+                    <label id="potassiumLabel" for="potassium">Potassium (K) Level</label>
+                    <input type="number" id="potassium" placeholder="Enter potassium level" required step="0.01">
+                </div>
+                <div class="form-group">
+                    <label id="tempLabel" for="temperature">Temperature (°C)</label>
+                    <input type="number" id="temperature" placeholder="Enter temperature" required step="0.1">
+                </div>
+                <div class="form-group">
+                    <label id="humidityLabel" for="humidity">Humidity (%)</label>
+                    <input type="number" id="humidity" placeholder="Enter humidity percentage" required step="0.1">
+                </div>
+                <div class="form-group">
+                    <label id="phLabel" for="ph">Soil pH</label>
+                    <input type="number" id="ph" placeholder="Enter soil pH (0-14)" required min="0" max="14" step="0.1">
+                </div>
+                <div class="form-group">
+                    <label id="rainfallLabel" for="rainfall">Rainfall (mm)</label>
+                    <input type="number" id="rainfall" placeholder="Enter rainfall in mm" required step="0.1">
+                </div>
+
+                <div class="form-group">
+                    <label id="soilTypeLabel" for="soil_type">Soil Type</label>
+                    <input type="text" id="soil_type" placeholder="Enter soil type (e.g., Clay, Red)" required>
+                </div>
+                
+                <button type="submit" class="button predict-button" id="cropButton">Recommend Crop & Irrigation</button>
+            </form>
+            <div class="image-container">
+                <img src="https://t3.ftcdn.net/jpg/03/40/70/04/360_F_340700428_AquH6hbzeMOYLQ6g6kfWAMuUvfw60Zd1.jpg" alt="Farming Scene">
+            </div>
+            <div class="loading" id="cropLoading">Analyzing soil conditions...</div>
+           
+            <button onclick="goBack()" class="button back-button" id="backButton2">Back</button>
+        </div>
+
+        <!-- Government Aid Form -->
+        <div id="govt_aid" class="hidden">
+            <h3 id="aidTitle">Government Aids</h3>
+            <form id="aidForm">
+                <div class="form-group">
+                    <label id="stateLabel" for="state">State</label>
+                    <input type="text" id="state" placeholder="Enter your state" required>
+                </div>
+                <div class="form-group">
+                    <label id="landLabel" for="land_size">Land Size (acres)</label>
+                    <input type="number" id="land_size" placeholder="Enter land size in acres" required min="0" step="0.1">
+                </div>
+                <button type="submit" class="button predict-button" id="aidButton">Get Government Schemes</button>
+            </form>
+            <div class="image-container">
+                <img src="https://t3.ftcdn.net/jpg/03/40/70/04/360_F_340700428_AquH6hbzeMOYLQ6g6kfWAMuUvfw60Zd1.jpg" alt="Farming Scene">
+            </div>
+            <div class="loading" id="aidLoading">Searching for government schemes...</div>
+           
+            <button onclick="goBack()" class="button back-button" id="backButton3">Back</button>
+        </div>
+    </div>
+    <div class="toast" id="toast"></div>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'92c25ec8eeffbd58',t:'MTc0Mzk1Mzg4NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+</body>
+</html>

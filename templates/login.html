@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Authentication Page with Dynamic Slogan</title>
+
+    <!-- External Fonts & Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+
+    <!-- Linked CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/stylesLogin.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="auth-section">
+            <div class="auth-container" id="authContainer">
+                <div class="auth-card">
+                    <div class="auth-header">
+                        <div class="logo">
+                            <i class="fas fa-seedling logo-icon"></i>
+                            <h1>உழவன்</h1>
+                        </div>
+                        <p>Your smart farming assistant</p>
+                    </div>
+
+                    <div class="tabs">
+                        <button class="tab-btn active" data-tab="login">Login</button>
+                        <button class="tab-btn" data-tab="register">Register</button>
+                    </div>
+
+                    <!-- Login Form -->
+                    <form id="loginForm" class="auth-form active">
+                        <div class="form-group">
+                            <label for="loginEmail">Email</label>
+                            <input type="email" id="loginEmail" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="loginPassword">Password</label>
+                            <input type="password" id="loginPassword" required />
+                            <a href="#" class="forgot-password">Forgot password?</a>
+                        </div>
+                        <button type="submit" class="submit-btn">Sign In</button>
+                    </form>
+
+                    <!-- Register Form -->
+                    <form id="registerForm" class="auth-form">
+                        <div class="form-group">
+                            <label for="registerName">Full Name</label>
+                            <input type="text" id="registerName" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="registerEmail">Email</label>
+                            <input type="email" id="registerEmail" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="registerPassword">Password</label>
+                            <input type="password" id="registerPassword" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="confirmPassword">Confirm Password</label>
+                            <input type="password" id="confirmPassword" required />
+                        </div>
+                        <button type="submit" class="submit-btn">Create Account</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="slogan-section">
+            <div class="slogan-container">
+                <h2 id="dynamic-slogan" class="slogan-text"></h2>
+                <p id="slogan-language" class="slogan-language"></p>
+            </div>
+            <div class="background-image"></div>
+        </div>
+    </div>
+
+    <!-- Linked JavaScript -->
+    <script src="{{ url_for('static', filename='js/scriptLogin.js') }}"></script>
+    <script>
+        // Tab switching
+        const tabButtons = document.querySelectorAll(".tab-btn");
+        const authForms = document.querySelectorAll(".auth-form");
+
+        tabButtons.forEach(btn => {
+            btn.addEventListener("click", () => {
+                tabButtons.forEach(b => b.classList.remove("active"));
+                authForms.forEach(form => form.classList.remove("active"));
+                btn.classList.add("active");
+                document.getElementById(`${btn.dataset.tab}Form`).classList.add("active");
+            });
+        });
+
+        // Login redirect logic with validation
+        document.getElementById("loginForm").addEventListener("submit", function(e) {
+            e.preventDefault();
+            const emailInput = document.getElementById("loginEmail");
+            const passwordInput = document.getElementById("loginPassword");
+            const email = emailInput.value.trim();
+            const password = passwordInput.value.trim();
+
+            const emailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+
+            if (!emailRegex.test(email)) {
+                alert("Please enter a valid Gmail address (must end with @gmail.com)");
+                emailInput.focus();
+                return;
+            }
+
+            if (password === "") {
+                alert("Please enter your password");
+                passwordInput.focus();
+                return;
+            }
+
+            // Save to localStorage
+            localStorage.setItem("savedEmail", email);
+            localStorage.setItem("savedPassword", password);
+
+            // Redirect to home
+            window.location.href = "index.html";
+        });
+
+        // Load saved credentials if any
+        window.addEventListener("DOMContentLoaded", function () {
+            const savedEmail = localStorage.getItem("savedEmail");
+            const savedPassword = localStorage.getItem("savedPassword");
+
+            if (savedEmail) document.getElementById("loginEmail").value = savedEmail;
+            if (savedPassword) document.getElementById("loginPassword").value = savedPassword;
+        });
+
+        // Slogan rotation
+        const slogans = [
+            { text: "Empowering Farmers with AI", lang: "English" },
+            { text: "किसानों के लिए स्मार्ट समाधान", lang: "Hindi" },
+            { text: "உழவர்களுக்கு அறிவாற்றல் வழிகாட்டி", lang: "Tamil" },
+            { text: "കർഷകർക്ക് സ്മാർട്ട് സഹായം", lang: "Malayalam" },
+            { text: "రైతులకు మేధో సహాయం", lang: "Telugu" },
+            { text: "ರೈತರಿಗೆ ಸ್ಮಾರ್ಟ್ ಸಲಹೆಗಾರ", lang: "Kannada" },
+        ];
+        let i = 0;
+        const sloganText = document.getElementById("dynamic-slogan");
+        const sloganLang = document.getElementById("slogan-language");
+
+        function rotateSlogan() {
+            sloganText.textContent = slogans[i].text;
+            sloganLang.textContent = `(${slogans[i].lang})`;
+            i = (i + 1) % slogans.length;
+        }
+
+        rotateSlogan();
+        setInterval(rotateSlogan, 4000);
+    </script>
+</body>
+</html>
+

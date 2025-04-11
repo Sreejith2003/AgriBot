@@ -1,0 +1,23 @@
+{
+    "title": "🌱 Agricultural Assistant",
+    "soilTitle": "🧪 Soil Testing",
+    "phLabel": "pH Level:",
+    "moistureLabel": "Moisture:",
+    "cropTitle": "🌾 Crop & Irrigation Management",
+    "cropFeatures": "Crop Features",
+    "nitrogenLabel": "Nitrogen:",
+    "phosphorousLabel": "Phosphorous:",
+    "potassiumLabel": "Potassium:",
+    "temperatureLabel": "Temperature:",
+    "humidityLabel": "Humidity:",
+    "phCropLabel": "pH:",
+    "rainfallLabel": "Rainfall:",
+    "irrigationFeatures": "Irrigation Features",
+    "soilMoistureLabel": "Soil Moisture:",
+    "airTempLabel": "Air Temperature:",
+    "windSpeedLabel": "Wind Speed:",
+    "pressureLabel": "Pressure:",
+    "govtTitle": "🏛 Government Aid",
+    "locationLabel": "Location:",
+    "landTypeLabel": "Land Type:"
+}
