@@ -15,7 +15,7 @@ from googletrans import Translator
 app = Flask(__name__)
 CORS(app)
 
-translator = Translator(timeout=10)
+# translator = Translator(timeout=10)
 
 # Paths
 CROP_MODEL_PATH = "C://Users//sreej//OneDrive//Documents//AgriBot//model//crop_model (2) (1).pkl"
