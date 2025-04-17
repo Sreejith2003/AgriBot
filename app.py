@@ -1,37 +1,36 @@
 from flask import Flask, request, jsonify, render_template
-from flask_cors import CORS
-from werkzeug.utils import secure_filename
 import os
-import random
-import joblib
-import requests
-from bs4 import BeautifulSoup
-from PIL import Image
 import torch
 import torchvision.transforms as transforms
 from torchvision.models import efficientnet_b0
+from PIL import Image
+import joblib
+import pandas as pd
 from googletrans import Translator
+import random
+import numpy as np
 
 app = Flask(__name__)
-CORS(app)
 
-# translator = Translator(timeout=10)
+# Initialize translator
+translator = Translator(timeout=10)
 
-# Paths
-CROP_MODEL_PATH = "C://Users//sreej//OneDrive//Documents//AgriBot//model//crop_model (2) (1).pkl"
-IRRIGATION_MODEL_PATH = "C://Users//sreej//OneDrive//Documents//AgriBot//model//irrigation_model (1).pkl"
-SOIL_MODEL_PATH = "C://Users//sreej//OneDrive//Documents//AgriBot//model//efficientnet_soil (1).pth"
+# Model paths
+SOIL_MODEL_PATH = "AgriBot-main/model/efficientnet_soil (1).pth"
+CROP_MODEL_PATH = "D:\AgriBot-main\AgriBot-main\model\crop_model (2) (1).pkl"
+IRRIGATION_MODEL_PATH = "D:\AgriBot-main\AgriBot-main\model\irrigation_model (1).pkl"
 
+# Supported languages
 SUPPORTED_LANGUAGES = {
     'en': 'English', 'hi': 'Hindi', 'te': 'Telugu', 'ta': 'Tamil',
     'kn': 'Kannada', 'ml': 'Malayalam', 'mr': 'Marathi', 'bn': 'Bengali',
     'gu': 'Gujarati', 'pa': 'Punjabi'
 }
 
-# Load EfficientNet-B0 for soil classification
+# Define CustomEfficientNet
 class CustomEfficientNet(torch.nn.Module):
-    def __init__(self):
-        super(CustomEfficientNet, self).__init__()
+    def _init_(self):
+        super(CustomEfficientNet, self)._init_()
         base_model = efficientnet_b0(weights=None)
         self.features = base_model.features
         self.pooling = base_model.avgpool
@@ -49,10 +48,7 @@ class CustomEfficientNet(torch.nn.Module):
         x = self.classifier(x)
         return x
 
-soil_model = CustomEfficientNet()
-soil_model.load_state_dict(torch.load(SOIL_MODEL_PATH, map_location=torch.device('cpu')))
-soil_model.eval()
-
+# Image transform
 transform = transforms.Compose([
     transforms.Resize((224, 224)),
     transforms.ToTensor(),
@@ -61,21 +57,48 @@ transform = transforms.Compose([
 
 soil_classes = ["Alluvial Soil", "Black Soil", "Clay Soil", "Red Soil"]
 
-# Load ML models
+# Load models
+soil_model = None
+crop_model = None
 try:
+    soil_model = CustomEfficientNet()
+    soil_model.load_state_dict(torch.load(SOIL_MODEL_PATH, map_location=torch.device('cpu')))
+    soil_model.eval()
     crop_model = joblib.load(CROP_MODEL_PATH)
-    irrigation_model = joblib.load(IRRIGATION_MODEL_PATH)
+    if hasattr(crop_model, 'classes_'):
+        print(f"Crop model classes: {crop_model.classes_}")
+    else:
+        print("Warning: Crop model has no classes_ attribute")
 except Exception as e:
-    print("Error loading models:", e)
+    print(f"Error loading models: {e}")
 
-@app.route('/')
-def home():
-    return render_template('login.html', languages=SUPPORTED_LANGUAGES)
+# Fallback crop labels
+crop_labels = {
+    0: "barley",
+    1: "cotton",
+    2: "groundnut",
+    3: "maize",
+    4: "millet",
+    5: "rice",
+    6: "sugarcane",
+    7: "wheat",
+    8: "sorghum",
+    9: "soybean",
+    10: "sunflower",
+    11: "lentil",
+    12: "chickpea",
+    13: "pea",
+    14: "mustard",
+    15: "safflower",
+    16: "sesame",
+    17: "jute",
+    18: "tobacco",
+    19: "sugarcane",
+    20: "rice",
+    21: "wheat"
+}
 
-@app.route('/index')
-def index():
-    return render_template('index.html')
-
+# Translation functions
 def translate_text(text, dest_lang='en'):
     if not text or dest_lang == 'en':
         return text
@@ -88,20 +111,25 @@ def translate_text(text, dest_lang='en'):
 def translate_response(data, lang='en'):
     if lang == 'en':
         return data
-    if isinstance(data, dict):
-        return {k: translate_response(v, lang) for k, v in data.items()}  # Keep keys as-is
-    elif isinstance(data, list):
-        return [translate_response(i, lang) for i in data]
-    elif isinstance(data, str):
-        return translate_text(data, lang)
-    else:
+    try:
+        if isinstance(data, dict):
+            return {k: translate_response(v, lang) for k, v in data.items()}
+        elif isinstance(data, list):
+            return [translate_response(i, lang) for i in data]
+        elif isinstance(data, str):
+            return translate_text(data, lang)
+        else:
+            return str(data)
+    except Exception as e:
+        print(f"Translation error in response ({lang}): {str(e)}")
         return data
 
-def check_irrigation(crop, soil_type):
-    crop = crop.lower()
+# Irrigation check
+def check_irrigation(crop, soil_type, features):
+    crop = str(crop).lower()
     soil_type = soil_type.lower()
+    nitrogen, phosphorus, potassium, temperature, humidity, ph, rainfall = features
 
-    # Define crop water needs (scale: high, moderate, low)
     crop_irrigation = {
         "rice": "high",
         "sugarcane": "high",
@@ -110,47 +138,59 @@ def check_irrigation(crop, soil_type):
         "cotton": "moderate",
         "groundnut": "low",
         "millet": "low",
-        "barley": "low"
+        "barley": "low",
+        "sorghum": "low",
+        "soybean": "moderate",
+        "sunflower": "moderate",
+        "lentil": "low",
+        "chickpea": "low",
+        "pea": "low",
+        "mustard": "low",
+        "safflower": "low",
+        "sesame": "low",
+        "jute": "high",
+        "tobacco": "moderate"
     }
-
-    # Define soil water retention
     soil_retention = {
         "clay": "high",
         "alluvial": "moderate",
         "black": "high",
         "red": "low"
     }
-
     crop_need = crop_irrigation.get(crop, "moderate")
     soil_hold = soil_retention.get(soil_type, "moderate")
 
-    # Decision logic
-    if crop_need == "high" and soil_hold == "low":
+    irrigation_score = 0
+    if rainfall < 50:
+        irrigation_score += 2
+    elif rainfall < 200:
+        irrigation_score += 1
+    if humidity < 60:
+        irrigation_score += 1
+    if temperature > 30:
+        irrigation_score += 1
+    if crop_need == "high":
+        irrigation_score += 2
+    elif crop_need == "moderate":
+        irrigation_score += 1
+    if soil_hold == "low":
+        irrigation_score += 1
+    elif soil_hold == "high":
+        irrigation_score -= 1
+
+    if irrigation_score >= 4:
         return "Very high irrigation required"
-    elif crop_need == "high" and soil_hold == "moderate":
+    elif irrigation_score == 3:
         return "High irrigation required"
-    elif crop_need == "high" and soil_hold == "high":
+    elif irrigation_score == 2:
         return "Moderate irrigation required"
-
-    elif crop_need == "moderate" and soil_hold == "low":
-        return "High irrigation required"
-    elif crop_need == "moderate" and soil_hold == "moderate":
-        return "Moderate irrigation required"
-    elif crop_need == "moderate" and soil_hold == "high":
+    elif irrigation_score == 1:
         return "Low irrigation required"
-
-    elif crop_need == "low" and soil_hold == "low":
-        return "Moderate irrigation required"
-    elif crop_need == "low" and soil_hold == "moderate":
-        return "Low irrigation required"
-    elif crop_need == "low" and soil_hold == "high":
+    else:
         return "Very low irrigation required"
 
-    return "Irrigation info not available"
-
-
+# Yield estimation
 def estimate_yield(crop, features):
-    # Dummy logic to simulate yield estimation
     rainfall = features[6]
     base_yield = {
         "rice": 3.5,
@@ -158,146 +198,52 @@ def estimate_yield(crop, features):
         "maize": 2.2,
         "sugarcane": 6.5,
         "cotton": 1.5,
-        "groundnut": 1.2
+        "groundnut": 1.2,
+        "barley": 2.0,
+        "millet": 1.8,
+        "sorghum": 2.0,
+        "soybean": 2.5,
+        "sunflower": 1.8,
+        "lentil": 1.5,
+        "chickpea": 1.6,
+        "pea": 1.7,
+        "mustard": 1.4,
+        "safflower": 1.3,
+        "sesame": 1.2,
+        "jute": 2.0,
+        "tobacco": 2.2
     }
-
-    crop = crop.lower()
-    yield_value = base_yield.get(crop, 2.0)  # default base
-
+    crop = str(crop).lower()
+    yield_value = base_yield.get(crop, 2.0)
     if rainfall > 200:
         yield_value *= 1.2
     elif rainfall < 50:
         yield_value *= 0.8
-
     return round(yield_value, 2)
 
-# @app.route('/recommend_crop', methods=['POST'])
-# def recommend_crop():
-#     data = request.get_json()
-#     lang = data.get("language", "en")
+@app.route('/')
+def home():
+    return render_template('login.html', languages=SUPPORTED_LANGUAGES)
 
-#     try:
-#         # Extract 7 input features
-#         features = [
-#             float(data.get("nitrogen", 0)),
-#             float(data.get("phosphorus", 0)),
-#             float(data.get("potassium", 0)),
-#             float(data.get("temperature", 0)),
-#             float(data.get("humidity", 0)),
-#             float(data.get("ph", 0)),
-#             float(data.get("rainfall", 0))
-#         ]
-#     except (TypeError, ValueError):
-#         response = {
-#             "success": False,
-#             "error": "Invalid input values provided"
-#         }
-#         return jsonify(translate_response(response, lang)), 400
-
-#     if len(features) != 7:
-#         response = {
-#             "success": False,
-#             "error": "All 7 features must be provided"
-#         }
-#         return jsonify(translate_response(response, lang)), 400
-
-#     try:
-#         # Predict top 3 crop recommendations
-#         probabilities = crop_model.predict_proba([features])[0]
-#         class_indices = probabilities.argsort()[::-1][:3]  # Top 3 indices
-#         top_crops = [crop_model.classes_[i] for i in class_indices]
-
-#         # Simple logic for irrigation status
-#         avg_temp = features[3]
-#         avg_rain = features[6]
-#         irrigation_status = "Irrigation Needed" if avg_temp > 30 and avg_rain < 50 else "No Irrigation Required"
-
-#         # Dummy yield estimate logic
-#         yield_estimate = f"{round(probabilities[class_indices[0]] * 4.0, 2)} tons/hectare"
-
-#         # Form final response
-#         response = {
-#             "success": True,
-#             "data": {
-#                 "recommended_crops": top_crops,
-#                 "irrigation_status": irrigation_status,
-#                 "estimated_yield": yield_estimate
-#             }
-#         }
-
-#         return jsonify(translate_response(response, lang))
-
-#     except Exception as e:
-#         response = {
-#             "success": False,
-#             "error": f"Prediction failed: {str(e)}"
-#         }
-#         return jsonify(translate_response(response, lang)), 500
-
-@app.route('/recommend_crop', methods=['POST'])
-def recommend_crop():
-    data = request.get_json()
-    lang = data.get("lang", "en")
-
-    try:
-        # Step 1: Extract features
-        features = [
-            float(data.get("nitrogen", 0)),
-            float(data.get("phosphorus", 0)),
-            float(data.get("potassium", 0)),
-            float(data.get("temperature", 0)),
-            float(data.get("humidity", 0)),
-            float(data.get("ph", 0)),
-            float(data.get("rainfall", 0))
-        ]
-
-        # Step 2: Extract & validate soil_type
-        soil_type = data.get("soil_type", "").capitalize()
-        valid_soils = ["Alluvial", "Black", "Clay", "Red"]
-        if soil_type not in valid_soils:
-            return jsonify(translate_response({"error": "Invalid soil type. Must be Alluvial, Black, Clay, or Red."}, lang)), 400
-
-        # Step 3: Crop prediction
-        crop = crop_model.predict([features])[0]
-
-        # Step 4: Irrigation suggestion
-        irrigation_status = check_irrigation(crop, soil_type)
-
-        # Step 5: Yield prediction (rule-based for now)
-        estimated_yield = estimate_yield(crop, features)
-
-        response = {
-            "crop": crop,
-            "irrigation": irrigation_status,
-            "estimated_yield": f"{estimated_yield} tons/ha"
-        }
-
-        return jsonify(translate_response(response, lang))
-
-    except Exception as e:
-        return jsonify(translate_response({"error": str(e)}, lang)), 400
+@app.route('/index')
+def index():
+    return render_template('index.html')
 
 @app.route('/predict_soil', methods=['POST'])
-def soil_prediction():
+def predict_soil():
+    print("Received /predict_soil request")
     if 'image' not in request.files:
-        return jsonify({"error": "No image provided."}), 400
+        print("Error: No image provided")
+        return jsonify({"error": "No image provided"}), 400
 
-    lang = request.form.get('language', 'en').lower()
+    lang = request.form.get("language", "en")
     if lang not in SUPPORTED_LANGUAGES:
-        lang = 'en'
-
-    image = request.files['image']
-    if image.filename == '':
-        return jsonify(translate_response({"error": "No selected file"}, lang)), 400
-
-    filename = secure_filename(image.filename)
-    upload_dir = "uploads"
-    os.makedirs(upload_dir, exist_ok=True)
-    image_path = os.path.join(upload_dir, filename)
-    image.save(image_path)
+        lang = "en"
 
     try:
-        img = Image.open(image_path).convert('RGB')
+        image_file = request.files['image']
+        print(f"Processing image: {image_file.filename}")
+        img = Image.open(image_file).convert('RGB')
         img_tensor = transform(img).unsqueeze(0)
 
         with torch.no_grad():
@@ -306,6 +252,7 @@ def soil_prediction():
 
         soil_type = soil_classes[predicted]
         pest_detection = random.choice(["None", "Locusts", "Aphids", "Armyworm"])
+        print(f"Prediction: soil_type={soil_type}, pest_detection={pest_detection}")
 
         response = {
             "success": True,
@@ -315,259 +262,232 @@ def soil_prediction():
             }
         }
         return jsonify(translate_response(response, lang))
+
     except Exception as e:
-        error_msg = {"error": f"Image processing failed: {str(e)}"}
-        return jsonify(translate_response(error_msg, lang)), 500
-    finally:
-        if os.path.exists(image_path):
-            os.remove(image_path)
+        print(f"Error processing image: {str(e)}")
+        return jsonify(translate_response({"error": f"Image processing failed: {str(e)}"}, lang)), 400
 
-@app.route("/get_schemes", methods=["POST"])
-@app.route("/government_aids", methods=["POST"])
-def government_aid():
+# @app.route('/recommend_crop', methods=['POST'])
+# def recommend_crop():
+#     print("Received /recommend_crop request")
+#     data = request.get_json()
+#     print(f"Request data: {data}")
+#     lang = data.get("lang", "en")
+#     try:
+#         features = [
+#             float(data.get("nitrogen", 0)),
+#             float(data.get("phosphorus", 0)),
+#             float(data.get("potassium", 0)),
+#             float(data.get("temperature", 0)),
+#             float(data.get("humidity", 0)),
+#             float(data.get("ph", 0)),
+#             float(data.get("rainfall", 0))
+#         ]
+#         soil_type = data.get("soil_type", "").capitalize()
+#         print(f"Features: {features}, Soil Type: {soil_type}")
+#         valid_soils = ["Alluvial", "Black", "Clay", "Red"]
+#         if soil_type not in valid_soils:
+#             print(f"Error: Invalid soil type {soil_type}")
+#             return jsonify(translate_response({"error": "Invalid soil type. Must be Alluvial, Black, Clay, or Red."}, lang)), 400
+
+#         # Crop prediction using 7 features
+#         feature_names = ["N", "P", "K", "temperature", "humidity", "ph", "rainfall"]
+#         input_df = pd.DataFrame([features], columns=feature_names)
+        
+#         if not hasattr(crop_model, 'predict_proba'):
+#             print("Error: Model does not support predict_proba")
+#             return jsonify(translate_response({"error": "Model does not support probability prediction"}, lang)), 400
+
+#         # Get probabilities
+#         probs = crop_model.predict_proba(input_df)[0]
+#         print(f"Probabilities: {probs}")
+        
+#         # Force fallback to crop_labels
+#         print("Using fallback crop labels")
+#         classes = [crop_labels.get(i, f"crop_{i}") for i in range(len(probs))]
+#         print(f"Classes: {classes}")
+        
+#         # Validate lengths
+#         if len(probs) != len(classes):
+#             print(f"Error: Mismatch between probs ({len(probs)}) and classes ({len(classes)})")
+#             return jsonify(translate_response({"error": "Model classes and probabilities mismatch"}, lang)), 400
+
+#         # Get top 5 crops
+#         indices = np.argsort(probs)[::-1][:5]
+#         print(f"Top indices: {indices}")
+#         top_crops = [
+#             {
+#                 "crop": crop_labels.get(idx, classes[idx]),
+#                 "probability": round(float(probs[idx]), 3)
+#             }
+#             for idx in indices
+#         ]
+#         print(f"Top crops: {top_crops}")
+
+#         # Use top crop for irrigation and yield
+#         top_crop = top_crops[0]["crop"] if top_crops else "unknown"
+#         irrigation_status = check_irrigation(top_crop, soil_type, features)
+#         estimated_yield = estimate_yield(top_crop, features)
+#         print(f"Top crop: {top_crop}, irrigation={irrigation_status}, yield={estimated_yield}")
+
+#         response = {
+#             "crops": top_crops,
+#             "irrigation": irrigation_status,
+#             "estimated_yield": f"{estimated_yield} tons/ha"
+#         }
+#         print(f"Response: {response}")
+#         return jsonify(translate_response(response, lang))
+
+#     except Exception as e:
+#         print(f"Error processing crop recommendation: {str(e)}")
+#         return jsonify(translate_response({"error": str(e)}, lang)), 400
+
+@app.route('/recommend_crop', methods=['POST'])
+def recommend_crop():
+    print("Received /recommend_crop request")
     data = request.get_json()
-    if not data:
-        return jsonify({"error": "No data provided"}), 400
-
-    state = data.get("state", "").strip()
-    lang = data.get("language", "en").lower()
-
-    # Validate land size
+    print(f"Request data: {data}")
+    lang = data.get("lang", "en")
     try:
-        land_size = float(data.get("land_size", 0))
-    except (ValueError, TypeError):
-        return jsonify(translate_response({"error": "Invalid land size format."}, lang)), 400
+        features = [
+            float(data.get("nitrogen", 0)),
+            float(data.get("phosphorus", 0)),
+            float(data.get("potassium", 0)),
+            float(data.get("temperature", 0)),
+            float(data.get("humidity", 0)),
+            float(data.get("ph", 0)),
+            float(data.get("rainfall", 0))
+        ]
+        soil_type = data.get("soil_type", "").capitalize()
+        print(f"Features: {features}, Soil Type: {soil_type}")
+        valid_soils = ["Alluvial", "Black", "Clay", "Red"]
+        if soil_type not in valid_soils:
+            print(f"Error: Invalid soil type {soil_type}")
+            return jsonify(translate_response({"error": "Invalid soil type. Must be Alluvial, Black, Clay, or Red."}, lang)), 400
 
-    if lang not in SUPPORTED_LANGUAGES:
-        lang = "en"
+        # Crop prediction using 7 features
+        feature_names = ["N", "P", "K", "temperature", "humidity", "ph", "rainfall"]
+        input_df = pd.DataFrame([features], columns=feature_names)
+        
+        if not hasattr(crop_model, 'predict_proba'):
+            print("Error: Model does not support predict_proba")
+            return jsonify(translate_response({"error": "Model does not support probability prediction"}, lang)), 400
 
-    if not state:
-        return jsonify(translate_response({"error": "State name is required."}, lang)), 400
+        # Get probabilities
+        probs = crop_model.predict_proba(input_df)[0]
+        print(f"Probabilities: {probs}")
+        
+        # Force fallback to crop_labels
+        print("Using fallback crop labels")
+        classes = [crop_labels.get(i, f"crop_{i}") for i in range(len(probs))]
+        print(f"Classes: {classes}")
+        
+        # Validate lengths
+        if len(probs) != len(classes):
+            print(f"Error: Mismatch between probs ({len(probs)}) and classes ({len(classes)})")
+            return jsonify(translate_response({"error": "Model classes and probabilities mismatch"}, lang)), 400
 
-    schemes = fetch_govt_schemes(state, land_size)
-
-    response = {
-        "success": True,
-        "data": {
-            "state": state.title(),
-            "land_size": land_size,
-            "available_schemes": schemes["schemes"],
-            "eligibility": schemes["eligibility"],
-            "contact": schemes["contact"]
-        }
-    }
-    return jsonify(translate_response(response, lang))
-
-
-def fetch_govt_schemes(state, land_size):
-    state = state.lower()
-
-    all_states = [
-        {
-    
-        "state": "Andhra Pradesh",
-        "available_schemes": [
-            "YSR Rythu Bharosa - ₹13,500/year financial assistance",
-            "YSR Free Crop Insurance - No premium crop insurance",
-            "YSR Sunna Vaddi Panta Runalu - Interest-free crop loans"
-        ],
-        "eligibility": "Farmers with any landholding in Andhra Pradesh are eligible for these state schemes.",
-        "contact": "Contact your local Rythu Bharosa Kendram for more details."
-        },
-        {
-        "state": "Arunachal Pradesh",
-        "available_schemes": [
-            "Chief Minister's Sashakt Kisan Yojana - Financial assistance for farm inputs",
-            "Chief Minister's Krishi Rinn Yojana - Interest subvention on crop loans"
-        ],
-        "eligibility": "All farmers in Arunachal Pradesh are eligible for these schemes.",
-        "contact": "Reach out to the Department of Agriculture, Arunachal Pradesh for more information."
-        },
-        {
-        "state": "Assam",
-        "available_schemes": [
-            "Assam Agribusiness and Rural Transformation Project (APART) - Support for agribusiness",
-            "Chief Minister's Samagra Gramya Unnayan Yojana - Comprehensive village development"
-        ],
-        "eligibility": "Farmers involved in agribusiness in Assam are eligible for these schemes.",
-        "contact": "Contact your nearest Krishi Vigyan Kendra in Assam."
-        },
-        {
-        "state": "Bihar",
-        "available_schemes": [
-            "Bihar Rajya Fasal Sahayata Yojana - Financial assistance for crop loss",
-            "Diesel Subsidy Scheme - Subsidy on diesel for irrigation"
-        ],
-        "eligibility": "Farmers with landholding in Bihar are eligible for these schemes.",
-        "contact": "Visit the Bihar Agriculture Department for more details."
-        },
-        {
-        "state": "Chhattisgarh",
-        "available_schemes": [
-            "Rajiv Gandhi Kisan Nyay Yojana - Direct benefit transfer to farmers",
-            "Godhan Nyay Yojana - Procurement of cow dung from farmers"
-        ],
-        "eligibility": "All farmers in Chhattisgarh are eligible for these schemes.",
-        "contact": "Contact your local cooperative society in Chhattisgarh."
-        },
-        {
-        "state": "Goa",
-        "available_schemes": [
-            "Shetkari Adhar Nidhi - Financial assistance to farmers",
-            "Krishi Card Scheme - Credit facility for farmers"
-        ],
-        "eligibility": "Farmers registered in Goa are eligible for these schemes.",
-        "contact": "Reach out to the Directorate of Agriculture, Goa."
-        },
-        {
-        "state": "Gujarat",
-        "available_schemes": [
-            "Mukhyamantri Kisan Sahay Yojana - Financial assistance during natural calamities",
-            "Jyotigram Yojana - 24-hour electricity supply to farmers"
-        ],
-        "eligibility": "All farmers in Gujarat are eligible for these schemes.",
-        "contact": "Contact your local Agricultural Technology Management Agency (ATMA) in Gujarat."
-        },
-        {
-        "state": "Haryana",
-        "available_schemes": [
-            "Meri Fasal Mera Byora - Online crop registration and assistance",
-            "Bhavantar Bharpai Yojana - Price deficiency support"
-        ],
-        "eligibility": "Farmers with landholding in Haryana are eligible for these schemes.",
-        "contact": "Visit the Haryana Agriculture Department for more information."
-        },
-        {
-        "state": "Himachal Pradesh",
-        "available_schemes": [
-            "Krishi Seva Kendra - One-stop centers for farmers",
-            "Mukhya Mantri Khet Sanrakshan Yojana - Subsidy for solar fencing"
-        ],
-        "eligibility": "All farmers in Himachal Pradesh are eligible for these schemes.",
-        "contact": "Contact your local Krishi Seva Kendra in Himachal Pradesh."
-        },
-        {
-        "state": "Jharkhand",
-        "available_schemes": [
-            "Mukhyamantri Krishi Ashirwad Yojana - Financial assistance per acre",
-            "Jharkhand State Crop Relief Scheme - Compensation for crop loss"
-        ],
-        "eligibility": "Farmers with landholding in Jharkhand are eligible for these schemes.",
-        "contact": "Reach out to the Department of Agriculture, Jharkhand."
-        },
-        {
-        "state": "Karnataka",
-        "available_schemes": [
-            "Raitha Siri - Financial assistance for millet cultivation",
-            "Krishi Bhagya Scheme - Support for rainwater harvesting structures"
-        ],
-        "eligibility": "Farmers in Karnataka engaged in specified crops are eligible.",
-        "contact": "Contact your local Raitha Samparka Kendra in Karnataka."
-        },
-        {
-        "state": "Kerala",
-        "available_schemes": [
-            "Karshaka Pension Scheme - Pension for elderly farmers",
-            "Subhiksha Keralam - Promotion of self-sufficiency in food production"
-        ],
-        "eligibility": "Registered farmers in Kerala are eligible for these schemes.",
-        "contact": "Visit the Krishi Bhavan in your locality in Kerala."
-        },
-        {
-        "state": "Madhya Pradesh",
-        "available_schemes": [
-            "Bhavantar Bhugtan Yojana - Price deficiency payment scheme",
-            "Mukhya Mantri Krishak Samriddhi Yojana - Incentives for wheat and paddy"
-        ],
-        "eligibility": "Farmers growing specified crops in Madhya Pradesh are eligible.",
-        "contact": "Contact your local Krishi Upaj Mandi in Madhya Pradesh."
-        },
-        {
-        "state": "Maharashtra",
-        "available_schemes": [
-            "Nanaji Deshmukh Krishi Sanjivani Yojana - Climate-resilient agriculture",
-            "Gopinath Munde Shetkari Apghat Vima Yojana - Accident insurance for farmers"
-        ],
-        "eligibility": "All farmers in Maharashtra are eligible for these schemes.",
-        "contact": "Reach out to the Maharashtra Agriculture Department."
-        },
-        {
-        "state": "Manipur",
-        "available_schemes": [
-            "Mission Organic Value Chain Development - Support for organic farming",
-            "Rashtriya Krishi Vikas Yojana - Holistic development of agriculture"
-        ],
-        "eligibility": "Farmers practicing organic farming in Manipur are eligible.",
-        "contact": "Contact the Department of Agriculture, Manipur."
-        },
-        {
-        "state": "Meghalaya",
-        "available_schemes": [
-            "Integrated Basin Development and Livelihood Promotion - Sustainable livelihoods",
-            "Mission Organic - Promotion of organic farming"
-        ],
-        "eligibility": "Farmers in Meghalaya engaged in sustainable practices are eligible.",
-        "contact": "Visit the Meghalaya Basin."
-        },
-        {
-        "state": "Tamil Nadu",
-        "available_schemes": [
-            "Uzhavar Aluvalar Thittam - Training and capacity building for farmers",
-            "Tamil Nadu Farmers' Insurance Scheme - Free crop insurance for farmers",
-            "Micro Irrigation Scheme - Subsidy for drip and sprinkler systems"
-        ],
-        "eligibility": "Registered farmers in Tamil Nadu are eligible based on crop and scheme-specific criteria.",
-        "contact": "Contact your local Agricultural Extension Centre or visit the Tamil Nadu Department of Agriculture website."
-        },
-        {
-        "state": "Delhi",
-        "available_schemes": [
-            "Soil Health Card Scheme - Free soil testing and nutrient advice",
-            "Subsidy on Agricultural Equipment - Financial aid for mechanized tools",
-            "Organic Farming Promotion Scheme - Support for adopting organic practices"
-        ],
-        "eligibility": "Farmers owning agricultural land in the National Capital Territory of Delhi are eligible.",
-        "contact": "Visit the Development Department (Agriculture), Government of NCT of Delhi for more information."
-    },
-]
-    
-    for s in all_states:
-        if s["state"].lower() == state:
-            # Optionally include land size in eligibility message
-            eligibility_msg = f"{s['eligibility']} You have {land_size} acres of land."
-            return {
-                "schemes": s["available_schemes"],
-                "eligibility": eligibility_msg,
-                "contact": s["contact"]
+        # Get top 5 crops
+        indices = np.argsort(probs)[::-1][:5]
+        print(f"Top indices: {indices}")
+        top_crops = [
+            {
+                "crop": crop_labels.get(idx, classes[idx]),
+                "probability": round(float(probs[idx]), 3)
             }
+            for idx in indices
+        ]
+        print(f"Top crops: {top_crops}")
 
-    # If no state match found
-    return {
-        "schemes": ["No official schemes found for your state."],
-        "eligibility": "Unknown",
-        "contact": "Visit your local agriculture office for accurate details."
-    }
+        # Use top crop for irrigation, yield, and response
+        top_crop = top_crops[0]["crop"] if top_crops else "unknown"
+        irrigation_status = check_irrigation(top_crop, soil_type, features)
+        estimated_yield = estimate_yield(top_crop, features)
+        print(f"Top crop: {top_crop}, irrigation={irrigation_status}, yield={estimated_yield}")
 
-    # query = f"{state} government farming schemes for {land_size} acres site:gov.in"
-    # url = f"https://www.google.com/search?q={query.replace(' ', '+')}"
-    # headers = {"User-Agent": "Mozilla/5.0"}
+        response = {
+            "crop": top_crop,  # Add top crop as a single field
+            "crops": top_crops,  # Keep the array for potential future use
+            "irrigation": irrigation_status,
+            "estimated_yield": f"{estimated_yield} tons/ha"
+        }
+        print(f"Response: {response}")
+        return jsonify(translate_response(response, lang))
 
-    # try:
-    #     response = requests.get(url, headers=headers, timeout=10)
-    #     response.raise_for_status()
-    #     soup = BeautifulSoup(response.text, "html.parser")
-    #     titles = [g.get_text() for g in soup.find_all("div", class_="BNeawe vvjwJb AP7Wnd")]
-    #     schemes = list({title for title in titles if title})
+    except Exception as e:
+        print(f"Error processing crop recommendation: {str(e)}")
+        return jsonify(translate_response({"error": str(e)}, lang)), 400
+    
+@app.route('/government_aids', methods=['POST'])
+def government_aids():
+    print("Received /government_aids request")
+    data = request.get_json()
+    print(f"Request data: {data}")
+    lang = data.get("lang", "en")
+    try:
+        state = data.get("state", "").strip().lower()
+        land_size = float(data.get("land_size", 0))
+        print(f"State: {state}, Land Size: {land_size}")
+        if not state:
+            print("Error: State name is required")
+            return jsonify(translate_response({"error": "State name is required."}, lang)), 400
+        if lang not in SUPPORTED_LANGUAGES:
+            lang = "en"
 
-    #     if not schemes:
-    #         return ["No official schemes found. Please check your state agricultural website."]
-    #     return schemes[:5]
+        all_states = [
+            {
+                "state": "tamil nadu",
+                "available_schemes": [
+                    "Uzhavar Aluvalar Thittam - Training and capacity building for farmers",
+                    "Tamil Nadu Farmers' Insurance Scheme - Free crop insurance for farmers",
+                    "Micro Irrigation Scheme - Subsidy for drip and sprinkler systems"
+                ],
+                "eligibility": "Registered farmers in Tamil Nadu are eligible based on crop and scheme-specific criteria.",
+                "contact": "Contact your local Agricultural Extension Centre or visit the Tamil Nadu Department of Agriculture website."
+            },
+            {
+                "state": "kerala",
+                "available_schemes": [
+                    "Karshaka Pension Scheme - Pension for elderly farmers",
+                    "Subhiksha Keralam - Promotion of self-sufficiency in food production"
+                ],
+                "eligibility": "Registered farmers in Kerala are eligible for these schemes.",
+                "contact": "Visit the Krishi Bhavan in your locality in Kerala."
+            }
+        ]
 
-    # except requests.RequestException:
-    #     return ["Error fetching data. Please check your internet connection or try again later."]
-    # except Exception as e:
-    #     print(f"Error scraping schemes: {str(e)}")
-    #     return ["Error retrieving scheme information. Please try again later."]
+        for s in all_states:
+            if s["state"].lower() == state:
+                eligibility_msg = f"{s['eligibility']} You have {land_size} acres of land."
+                response = {
+                    "success": True,
+                    "data": {
+                        "state": state.title(),
+                        "land_size": land_size,
+                        "available_schemes": s["available_schemes"],
+                        "eligibility": eligibility_msg,
+                        "contact": s["contact"]
+                    }
+                }
+                print(f"Response: {response}")
+                return jsonify(translate_response(response, lang))
 
-if __name__ == '__main__':
+        response = {
+            "success": True,
+            "data": {
+                "state": state.title(),
+                "land_size": land_size,
+                "available_schemes": ["No official schemes found for your state."],
+                "eligibility": "Unknown",
+                "contact": "Visit your local agriculture office for accurate details."
+            }
+        }
+        print(f"Response: {response}")
+        return jsonify(translate_response(response, lang))
+
+    except Exception as e:
+        print(f"Error processing government aids: {str(e)}")
+        return jsonify(translate_response({"error": str(e)}, lang)), 400
+
+if __name__ == "__main__":
     app.run(debug=True)
