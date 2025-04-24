@@ -1,0 +1,787 @@
+2025-04-24 19:44:11,732 - WARNING - Model file not found: S:\AgriBot\model\efficientnet_soil.pth. Related endpoints will not work.
+2025-04-24 19:44:11,732 - WARNING - Model file not found: S:\AgriBot\model\crop_model.pkl. Related endpoints will not work.
+2025-04-24 19:44:11,732 - INFO - Current working directory: S:\AgriBot
+2025-04-24 19:44:11,732 - INFO - Absolute path to crop model: S:\AgriBot\model\crop_model.pkl
+2025-04-24 19:44:11,732 - INFO - Loading soil model from S:\AgriBot\model\efficientnet_soil.pth
+2025-04-24 19:44:11,803 - ERROR - Error loading soil model: [Errno 2] No such file or directory: 'S:\\AgriBot\\model\\efficientnet_soil.pth'
+2025-04-24 19:44:11,803 - INFO - Loading crop model from S:\AgriBot\model\crop_model.pkl
+2025-04-24 19:44:11,811 - ERROR - Error loading crop model: [Errno 2] No such file or directory: 'S:\\AgriBot\\model\\crop_model.pkl'
+2025-04-24 19:44:11,811 - ERROR - Error loading API key: API key file 'S:\AgriBot\api\API_KEY.py' not found
+2025-04-24 19:49:15,221 - WARNING - Model file not found: S:\AgriBot\model\efficientnet_soil.pth. Related endpoints will not work.
+2025-04-24 19:49:15,221 - WARNING - Model file not found: S:\AgriBot\model\crop_model.pkl. Related endpoints will not work.
+2025-04-24 19:49:15,223 - INFO - Current working directory: S:\AgriBot
+2025-04-24 19:49:15,224 - INFO - Absolute path to crop model: S:\AgriBot\model\crop_model.pkl
+2025-04-24 19:49:15,224 - WARNING - Soil model file missing. /predict_soil endpoint will not work.
+2025-04-24 19:49:15,225 - WARNING - Crop model file missing. /recommend_crop endpoint will not work.
+2025-04-24 19:49:15,225 - INFO - API key loaded successfully from S:\AgriBot\API_KEY.py
+2025-04-24 19:49:15,225 - INFO - Gemini API initialized successfully
+2025-04-24 19:49:16,099 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.29.228:5000
+2025-04-24 19:49:16,099 - INFO - [33mPress CTRL+C to quit[0m
+2025-04-24 19:49:16,099 - INFO -  * Restarting with stat
+2025-04-24 19:49:22,384 - WARNING - Model file not found: S:\AgriBot\model\efficientnet_soil.pth. Related endpoints will not work.
+2025-04-24 19:49:22,384 - WARNING - Model file not found: S:\AgriBot\model\crop_model.pkl. Related endpoints will not work.
+2025-04-24 19:49:22,384 - INFO - Current working directory: S:\AgriBot
+2025-04-24 19:49:22,384 - INFO - Absolute path to crop model: S:\AgriBot\model\crop_model.pkl
+2025-04-24 19:49:22,384 - WARNING - Soil model file missing. /predict_soil endpoint will not work.
+2025-04-24 19:49:22,384 - WARNING - Crop model file missing. /recommend_crop endpoint will not work.
+2025-04-24 19:49:22,384 - INFO - API key loaded successfully from S:\AgriBot\API_KEY.py
+2025-04-24 19:49:22,384 - INFO - Gemini API initialized successfully
+2025-04-24 19:49:22,398 - WARNING -  * Debugger is active!
+2025-04-24 19:49:22,400 - INFO -  * Debugger PIN: 655-155-562
+2025-04-24 19:49:22,856 - INFO - 127.0.0.1 - - [24/Apr/2025 19:49:22] "GET / HTTP/1.1" 200 -
+2025-04-24 19:49:22,898 - INFO - 127.0.0.1 - - [24/Apr/2025 19:49:22] "[36mGET /styles/stylesLogin.css HTTP/1.1[0m" 304 -
+2025-04-24 19:49:30,817 - INFO - 127.0.0.1 - - [24/Apr/2025 19:49:30] "POST /login HTTP/1.1" 200 -
+2025-04-24 19:49:32,162 - INFO - 127.0.0.1 - - [24/Apr/2025 19:49:32] "GET /index HTTP/1.1" 200 -
+2025-04-24 19:49:32,206 - INFO - 127.0.0.1 - - [24/Apr/2025 19:49:32] "[36mGET /chatindex.html HTTP/1.1[0m" 304 -
+2025-04-24 19:49:32,223 - INFO - 127.0.0.1 - - [24/Apr/2025 19:49:32] "[36mGET /styles/style.css HTTP/1.1[0m" 304 -
+2025-04-24 19:49:32,223 - INFO - 127.0.0.1 - - [24/Apr/2025 19:49:32] "[36mGET /js/script.js HTTP/1.1[0m" 304 -
+2025-04-24 19:49:32,223 - INFO - 127.0.0.1 - - [24/Apr/2025 19:49:32] "[36mGET /images/farmer.png HTTP/1.1[0m" 304 -
+2025-04-24 19:49:32,259 - INFO - 127.0.0.1 - - [24/Apr/2025 19:49:32] "[33mGET /cdn-cgi/challenge-platform/scripts/jsd/main.js HTTP/1.1[0m" 404 -
+2025-04-24 19:49:32,259 - INFO - 127.0.0.1 - - [24/Apr/2025 19:49:32] "[36mGET /translations.json HTTP/1.1[0m" 304 -
+2025-04-24 19:49:37,841 - INFO - Received /api/grok request
+2025-04-24 19:49:40,330 - INFO - Response sent: Tamil Nadu offers several agricultural schemes aimed at boosting crop production and farmer welfare.  Here are some key schemes:
+
+1. Tamil Nadu Agricultural Marketing Infrastructure Development Scheme: This scheme focuses on improving market infrastructure, such as creating better storage facilities, improving transportation networks, and establishing regulated markets to ensure farmers receive better prices for their produce.  It often includes support for cold storage and processing units.
+
+2. National Agriculture Development Programme (NADP) - Tamil Nadu Component:  This centrally sponsored scheme provides assistance for various agricultural activities including soil health management, crop diversification, watershed development, and promotion of organic farming.  Funding is often allocated based on specific needs identified at the district level.
+
+3. Tamil Nadu Chief Minister's Integrated Agriculture Development Scheme (CMIADS): This scheme provides comprehensive support to farmers, encompassing improved seeds, fertilizers, irrigation, pest and disease control, and training programs. The goal is to increase productivity and income across various agricultural activities.
+
+4. Soil Health Card Scheme: This scheme is implemented across India, including Tamil Nadu, providing farmers with detailed information on the nutrient content of their soil. This allows for precise fertilizer application, reducing fertilizer costs and minimizing environmental impact.  Farmers receive personalized recommendations based on their soil test results.
+
+
+Note: Specific details and eligibility criteria for these schemes can vary and are best confirmed through the official website of the Tamil Nadu Department of Agriculture or relevant government offices.
+2025-04-24 19:49:40,330 - INFO - 127.0.0.1 - - [24/Apr/2025 19:49:40] "POST /api/grok HTTP/1.1" 200 -
+2025-04-24 19:49:52,403 - INFO - Received /api/grok request
+2025-04-24 19:49:54,279 - INFO - Response sent: Clay soils, while challenging to manage, offer several advantages:
+
+1. High Water Retention: Clay's fine particles and compact structure create excellent water holding capacity. This is beneficial in drier climates, reducing the frequency of irrigation needed.  However, it's crucial to manage drainage to prevent waterlogging.
+
+2. Nutrient Retention: Clay soils tend to hold onto nutrients well, preventing leaching.  This means fewer fertilizer applications might be needed compared to sandy soils, saving costs and reducing environmental impact.  However, nutrient availability can be limited due to the soil's structure.
+
+3. Good for Specific Crops: Certain crops, such as rice and some vegetables, thrive in clay's moisture-retentive properties.  The high nutrient content also benefits these plants.
+
+4. Structural Stability when Properly Managed: When properly managed, clay soils can develop good structure, improving aeration and drainage.  This is achieved through practices like adding organic matter (compost, manure) and avoiding heavy compaction from machinery.
+2025-04-24 19:49:54,279 - INFO - 127.0.0.1 - - [24/Apr/2025 19:49:54] "POST /api/grok HTTP/1.1" 200 -
+2025-04-24 19:50:22,667 - INFO - Received /api/grok request
+2025-04-24 19:50:31,917 - INFO - 127.0.0.1 - - [24/Apr/2025 19:50:31] "POST /api/grok HTTP/1.1" 200 -
+2025-04-24 19:51:16,401 - INFO - Received /api/grok request
+2025-04-24 19:51:19,315 - INFO - 127.0.0.1 - - [24/Apr/2025 19:51:19] "POST /api/grok HTTP/1.1" 200 -
+2025-04-24 19:51:37,063 - INFO - Received /api/grok request
+2025-04-24 19:51:37,580 - DEBUG - Translated to English from ta: Tamil Nadu's agricultural schemes/projects/plans.
+2025-04-24 19:51:49,394 - INFO - 127.0.0.1 - - [24/Apr/2025 19:51:49] "POST /api/grok HTTP/1.1" 200 -
+2025-04-24 19:52:26,405 - INFO - Received /predict_soil request
+2025-04-24 19:52:26,414 - ERROR - Soil model not loaded
+2025-04-24 19:52:26,415 - INFO - 127.0.0.1 - - [24/Apr/2025 19:52:26] "[35m[1mPOST /predict_soil HTTP/1.1[0m" 500 -
+2025-04-24 19:52:27,712 - INFO - Received /predict_soil request
+2025-04-24 19:52:27,719 - ERROR - Soil model not loaded
+2025-04-24 19:52:27,719 - INFO - 127.0.0.1 - - [24/Apr/2025 19:52:27] "[35m[1mPOST /predict_soil HTTP/1.1[0m" 500 -
+2025-04-24 19:52:28,816 - INFO - Received /predict_soil request
+2025-04-24 19:52:28,816 - ERROR - Soil model not loaded
+2025-04-24 19:52:28,816 - INFO - 127.0.0.1 - - [24/Apr/2025 19:52:28] "[35m[1mPOST /predict_soil HTTP/1.1[0m" 500 -
+2025-04-24 19:53:07,141 - INFO -  * Detected change in 'S:\\AgriBot\\main.py', reloading
+2025-04-24 19:53:09,913 - INFO -  * Restarting with stat
+2025-04-24 19:53:16,305 - WARNING - Model file not found: S:\AgriBot\model\crop_model.pkl. Related endpoints will not work.
+2025-04-24 19:53:16,305 - INFO - Current working directory: S:\AgriBot
+2025-04-24 19:53:16,307 - INFO - Absolute path to crop model: S:\AgriBot\model\crop_model.pkl
+2025-04-24 19:53:16,307 - INFO - Loading soil model from S:\AgriBot\model\efficientnet_soil (1).pth
+2025-04-24 19:53:16,439 - INFO - Soil model loaded successfully
+2025-04-24 19:53:16,439 - WARNING - Crop model file missing. /recommend_crop endpoint will not work.
+2025-04-24 19:53:16,439 - INFO - API key loaded successfully from S:\AgriBot\API_KEY.py
+2025-04-24 19:53:16,444 - INFO - Gemini API initialized successfully
+2025-04-24 19:53:16,449 - WARNING -  * Debugger is active!
+2025-04-24 19:53:16,461 - INFO -  * Debugger PIN: 655-155-562
+2025-04-24 19:57:05,476 - INFO - Received /government_aids request
+2025-04-24 19:57:05,477 - DEBUG - Request data: {'state': 'tamil nadu', 'land_size': 5, 'lang': 'en'}
+2025-04-24 19:57:05,479 - DEBUG - State: tamil nadu, Land Size: 5.0
+2025-04-24 19:57:05,480 - INFO - Response: {'success': True, 'data': {'state': 'Tamil Nadu', 'land_size': 5.0, 'available_schemes': ['Uzhavar Aluvalar Thittam - Training and capacity building for farmers', "Tamil Nadu Farmers' Insurance Scheme - Free crop insurance for farmers", 'Micro Irrigation Scheme - Subsidy for drip and sprinkler systems'], 'eligibility': 'Registered farmers in Tamil Nadu are eligible based on crop and scheme-specific criteria. You have 5.0 acres of land.', 'contact': 'Contact your local Agricultural Extension Centre or visit the Tamil Nadu Department of Agriculture website.'}}
+2025-04-24 19:57:05,482 - INFO - 127.0.0.1 - - [24/Apr/2025 19:57:05] "POST /government_aids HTTP/1.1" 200 -
+2025-04-24 19:57:05,676 - INFO - Received /government_aids request
+2025-04-24 19:57:05,676 - DEBUG - Request data: {'state': 'tamil nadu', 'land_size': 5, 'lang': 'en'}
+2025-04-24 19:57:05,676 - DEBUG - State: tamil nadu, Land Size: 5.0
+2025-04-24 19:57:05,676 - INFO - Response: {'success': True, 'data': {'state': 'Tamil Nadu', 'land_size': 5.0, 'available_schemes': ['Uzhavar Aluvalar Thittam - Training and capacity building for farmers', "Tamil Nadu Farmers' Insurance Scheme - Free crop insurance for farmers", 'Micro Irrigation Scheme - Subsidy for drip and sprinkler systems'], 'eligibility': 'Registered farmers in Tamil Nadu are eligible based on crop and scheme-specific criteria. You have 5.0 acres of land.', 'contact': 'Contact your local Agricultural Extension Centre or visit the Tamil Nadu Department of Agriculture website.'}}
+2025-04-24 19:57:05,691 - INFO - 127.0.0.1 - - [24/Apr/2025 19:57:05] "POST /government_aids HTTP/1.1" 200 -
+2025-04-24 19:58:12,273 - INFO -  * Detected change in 'S:\\AgriBot\\main.py', reloading
+2025-04-24 19:58:13,013 - INFO -  * Restarting with stat
+2025-04-24 19:58:19,016 - WARNING - Model file not found: S:\AgriBot\model\efficientnet_soil.pth. Related endpoints may not work.
+2025-04-24 19:58:19,016 - WARNING - Model file not found: S:\AgriBot\model\crop_model.pkl. Related endpoints may not work.
+2025-04-24 19:58:19,016 - WARNING - Model file not found: S:\AgriBot\model\irrigation_model.pkl. Related endpoints may not work.
+2025-04-24 19:58:19,016 - INFO - Current working directory: S:\AgriBot
+2025-04-24 19:58:19,016 - INFO - Absolute path to crop model: S:\AgriBot\model\crop_model (2) (1).pkl
+2025-04-24 19:58:19,016 - INFO - Absolute path to irrigation model: S:\AgriBot\model\irrigation_model.pkl
+2025-04-24 19:58:19,016 - INFO - Loading soil model from S:\AgriBot\model\efficientnet_soil (1).pth
+2025-04-24 19:58:19,147 - INFO - Soil model loaded successfully
+2025-04-24 19:58:19,147 - INFO - Loading crop model from S:\AgriBot\model\crop_model (2) (1).pkl
+2025-04-24 19:58:20,130 - INFO - Crop model classes: [ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21]
+2025-04-24 19:58:20,130 - WARNING - Irrigation model file missing. Using heuristic irrigation logic.
+2025-04-24 19:58:20,130 - INFO - API key loaded successfully from S:\AgriBot\API_KEY.py
+2025-04-24 19:58:20,130 - INFO - Gemini API initialized successfully
+2025-04-24 19:58:20,149 - WARNING -  * Debugger is active!
+2025-04-24 19:58:20,149 - INFO -  * Debugger PIN: 655-155-562
+2025-04-24 19:58:27,307 - INFO -  * Detected change in 'S:\\AgriBot\\main.py', reloading
+2025-04-24 19:58:28,130 - INFO -  * Restarting with stat
+2025-04-24 19:58:49,357 - WARNING - Model file not found: S:\AgriBot\model\efficientnet_soil.pth. Related endpoints may not work.
+2025-04-24 19:58:49,357 - WARNING - Model file not found: S:\AgriBot\model\crop_model.pkl. Related endpoints may not work.
+2025-04-24 19:58:49,357 - INFO - Current working directory: S:\AgriBot
+2025-04-24 19:58:49,357 - INFO - Absolute path to crop model: S:\AgriBot\model\crop_model (2) (1).pkl
+2025-04-24 19:58:49,357 - INFO - Absolute path to irrigation model: S:\AgriBot\model\irrigation_model (1).pkl
+2025-04-24 19:58:49,357 - INFO - Loading soil model from S:\AgriBot\model\efficientnet_soil (1).pth
+2025-04-24 19:58:49,473 - INFO - Soil model loaded successfully
+2025-04-24 19:58:49,473 - INFO - Loading crop model from S:\AgriBot\model\crop_model (2) (1).pkl
+2025-04-24 19:58:50,455 - INFO - Crop model classes: [ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21]
+2025-04-24 19:58:50,456 - INFO - Loading irrigation model from S:\AgriBot\model\irrigation_model (1).pkl
+2025-04-24 19:58:50,537 - INFO - Irrigation model loaded successfully
+2025-04-24 19:58:50,540 - INFO - API key loaded successfully from S:\AgriBot\API_KEY.py
+2025-04-24 19:58:50,540 - INFO - Gemini API initialized successfully
+2025-04-24 19:58:51,425 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.29.228:5000
+2025-04-24 19:58:51,425 - INFO - [33mPress CTRL+C to quit[0m
+2025-04-24 19:58:51,433 - INFO -  * Restarting with stat
+2025-04-24 19:58:57,379 - WARNING - Model file not found: S:\AgriBot\model\efficientnet_soil.pth. Related endpoints may not work.
+2025-04-24 19:58:57,379 - WARNING - Model file not found: S:\AgriBot\model\crop_model.pkl. Related endpoints may not work.
+2025-04-24 19:58:57,379 - INFO - Current working directory: S:\AgriBot
+2025-04-24 19:58:57,379 - INFO - Absolute path to crop model: S:\AgriBot\model\crop_model (2) (1).pkl
+2025-04-24 19:58:57,379 - INFO - Absolute path to irrigation model: S:\AgriBot\model\irrigation_model (1).pkl
+2025-04-24 19:58:57,379 - INFO - Loading soil model from S:\AgriBot\model\efficientnet_soil (1).pth
+2025-04-24 19:58:57,526 - INFO - Soil model loaded successfully
+2025-04-24 19:58:57,526 - INFO - Loading crop model from S:\AgriBot\model\crop_model (2) (1).pkl
+2025-04-24 19:58:58,670 - INFO - Crop model classes: [ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21]
+2025-04-24 19:58:58,671 - INFO - Loading irrigation model from S:\AgriBot\model\irrigation_model (1).pkl
+2025-04-24 19:58:58,729 - INFO - Irrigation model loaded successfully
+2025-04-24 19:58:58,729 - INFO - API key loaded successfully from S:\AgriBot\API_KEY.py
+2025-04-24 19:58:58,729 - INFO - Gemini API initialized successfully
+2025-04-24 19:58:58,754 - WARNING -  * Debugger is active!
+2025-04-24 19:58:58,761 - INFO -  * Debugger PIN: 655-155-562
+2025-04-24 20:01:12,544 - INFO - 127.0.0.1 - - [24/Apr/2025 20:01:12] "GET / HTTP/1.1" 200 -
+2025-04-24 20:01:12,561 - INFO - 127.0.0.1 - - [24/Apr/2025 20:01:12] "[36mGET /styles/stylesLogin.css HTTP/1.1[0m" 304 -
+2025-04-24 20:01:19,245 - INFO - 127.0.0.1 - - [24/Apr/2025 20:01:19] "POST /login HTTP/1.1" 200 -
+2025-04-24 20:01:21,044 - INFO - 127.0.0.1 - - [24/Apr/2025 20:01:21] "GET /index HTTP/1.1" 200 -
+2025-04-24 20:01:21,068 - INFO - 127.0.0.1 - - [24/Apr/2025 20:01:21] "[36mGET /chatindex.html HTTP/1.1[0m" 304 -
+2025-04-24 20:01:21,074 - INFO - 127.0.0.1 - - [24/Apr/2025 20:01:21] "[36mGET /styles/style.css HTTP/1.1[0m" 304 -
+2025-04-24 20:01:21,074 - INFO - 127.0.0.1 - - [24/Apr/2025 20:01:21] "[36mGET /js/script.js HTTP/1.1[0m" 304 -
+2025-04-24 20:01:21,074 - INFO - 127.0.0.1 - - [24/Apr/2025 20:01:21] "[36mGET /images/farmer.png HTTP/1.1[0m" 304 -
+2025-04-24 20:01:21,109 - INFO - 127.0.0.1 - - [24/Apr/2025 20:01:21] "[33mGET /cdn-cgi/challenge-platform/scripts/jsd/main.js HTTP/1.1[0m" 404 -
+2025-04-24 20:01:21,109 - INFO - 127.0.0.1 - - [24/Apr/2025 20:01:21] "[36mGET /translations.json HTTP/1.1[0m" 304 -
+2025-04-24 20:01:53,616 - INFO - Received /government_aids request
+2025-04-24 20:01:53,617 - DEBUG - Request data: {'state': 'tamil nadu', 'land_size': 5, 'lang': 'en'}
+2025-04-24 20:01:53,617 - DEBUG - State: tamil nadu, Land Size: 5.0
+2025-04-24 20:01:53,617 - INFO - Response: {'success': True, 'data': {'state': 'Tamil Nadu', 'land_size': 5.0, 'available_schemes': ['Uzhavar Aluvalar Thittam - Training and capacity building for farmers', "Tamil Nadu Farmers' Insurance Scheme - Free crop insurance for farmers", 'Micro Irrigation Scheme - Subsidy for drip and sprinkler systems'], 'eligibility': 'Registered farmers in Tamil Nadu are eligible based on crop and scheme-specific criteria. You have 5.0 acres of land.', 'contact': 'Contact your local Agricultural Extension Centre or visit the Tamil Nadu Department of Agriculture website.'}}
+2025-04-24 20:01:53,618 - INFO - 127.0.0.1 - - [24/Apr/2025 20:01:53] "POST /government_aids HTTP/1.1" 200 -
+2025-04-24 20:02:01,930 - INFO - Received /predict_soil request
+2025-04-24 20:02:01,935 - INFO - Processing image: Alluvial Soil.jpg
+2025-04-24 20:02:02,137 - INFO - Prediction: soil_type=Alluvial Soil, pest_detection=Aphids
+2025-04-24 20:02:02,137 - INFO - 127.0.0.1 - - [24/Apr/2025 20:02:02] "POST /predict_soil HTTP/1.1" 200 -
+2025-04-24 20:02:15,194 - INFO -  * Detected change in 'S:\\AgriBot\\main.py', reloading
+2025-04-24 20:02:16,026 - INFO -  * Restarting with stat
+2025-04-24 20:03:07,353 - WARNING - Model file not found: S:\AgriBot\model\efficientnet_soil.pth. Related endpoints may not work.
+2025-04-24 20:03:07,353 - INFO - Current working directory: S:\AgriBot
+2025-04-24 20:03:07,364 - INFO - Absolute path to crop model: S:\AgriBot\model\crop_model (2) (1).pkl
+2025-04-24 20:03:07,364 - INFO - Absolute path to irrigation model: S:\AgriBot\model\irrigation_model (1).pkl
+2025-04-24 20:03:07,364 - INFO - Loading soil model from S:\AgriBot\model\efficientnet_soil (1).pth
+2025-04-24 20:03:07,502 - INFO - Soil model loaded successfully
+2025-04-24 20:03:07,502 - INFO - Loading crop model from S:\AgriBot\model\crop_model (2) (1).pkl
+2025-04-24 20:03:17,185 - INFO - Crop model classes: [ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21]
+2025-04-24 20:03:17,185 - INFO - Loading irrigation model from S:\AgriBot\model\irrigation_model (1).pkl
+2025-04-24 20:03:17,235 - INFO - Irrigation model loaded successfully
+2025-04-24 20:03:17,235 - INFO - API key loaded successfully from S:\AgriBot\API_KEY.py
+2025-04-24 20:03:17,235 - INFO - Gemini API initialized successfully
+2025-04-24 20:03:18,200 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.29.228:5000
+2025-04-24 20:03:18,200 - INFO - [33mPress CTRL+C to quit[0m
+2025-04-24 20:03:18,211 - INFO -  * Restarting with stat
+2025-04-24 20:03:23,949 - WARNING - Model file not found: S:\AgriBot\model\efficientnet_soil.pth. Related endpoints may not work.
+2025-04-24 20:03:23,949 - INFO - Current working directory: S:\AgriBot
+2025-04-24 20:03:23,949 - INFO - Absolute path to crop model: S:\AgriBot\model\crop_model (2) (1).pkl
+2025-04-24 20:03:23,949 - INFO - Absolute path to irrigation model: S:\AgriBot\model\irrigation_model (1).pkl
+2025-04-24 20:03:23,949 - INFO - Loading soil model from S:\AgriBot\model\efficientnet_soil (1).pth
+2025-04-24 20:03:24,084 - INFO - Soil model loaded successfully
+2025-04-24 20:03:24,084 - INFO - Loading crop model from S:\AgriBot\model\crop_model (2) (1).pkl
+2025-04-24 20:03:25,009 - INFO - Crop model classes: [ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21]
+2025-04-24 20:03:25,009 - INFO - Loading irrigation model from S:\AgriBot\model\irrigation_model (1).pkl
+2025-04-24 20:03:25,073 - INFO - Irrigation model loaded successfully
+2025-04-24 20:03:25,073 - INFO - API key loaded successfully from S:\AgriBot\API_KEY.py
+2025-04-24 20:03:25,073 - INFO - Gemini API initialized successfully
+2025-04-24 20:03:25,083 - WARNING -  * Debugger is active!
+2025-04-24 20:03:25,092 - INFO -  * Debugger PIN: 655-155-562
+2025-04-24 20:03:25,666 - INFO - 127.0.0.1 - - [24/Apr/2025 20:03:25] "GET / HTTP/1.1" 200 -
+2025-04-24 20:03:25,683 - INFO - 127.0.0.1 - - [24/Apr/2025 20:03:25] "[36mGET /styles/stylesLogin.css HTTP/1.1[0m" 304 -
+2025-04-24 20:03:34,518 - INFO - 127.0.0.1 - - [24/Apr/2025 20:03:34] "POST /login HTTP/1.1" 200 -
+2025-04-24 20:03:35,966 - INFO - 127.0.0.1 - - [24/Apr/2025 20:03:35] "GET /index HTTP/1.1" 200 -
+2025-04-24 20:03:35,997 - INFO - 127.0.0.1 - - [24/Apr/2025 20:03:35] "[36mGET /chatindex.html HTTP/1.1[0m" 304 -
+2025-04-24 20:03:36,005 - INFO - 127.0.0.1 - - [24/Apr/2025 20:03:36] "[36mGET /styles/style.css HTTP/1.1[0m" 304 -
+2025-04-24 20:03:36,005 - INFO - 127.0.0.1 - - [24/Apr/2025 20:03:36] "[36mGET /js/script.js HTTP/1.1[0m" 304 -
+2025-04-24 20:03:36,005 - INFO - 127.0.0.1 - - [24/Apr/2025 20:03:36] "[36mGET /images/farmer.png HTTP/1.1[0m" 304 -
+2025-04-24 20:03:36,041 - INFO - 127.0.0.1 - - [24/Apr/2025 20:03:36] "[33mGET /cdn-cgi/challenge-platform/scripts/jsd/main.js HTTP/1.1[0m" 404 -
+2025-04-24 20:03:36,041 - INFO - 127.0.0.1 - - [24/Apr/2025 20:03:36] "[36mGET /translations.json HTTP/1.1[0m" 304 -
+2025-04-24 20:04:11,145 - INFO - Received /government_aids request
+2025-04-24 20:04:11,145 - DEBUG - Request data: {'state': 'tamil nadu', 'land_size': 5, 'lang': 'en'}
+2025-04-24 20:04:11,145 - DEBUG - State: tamil nadu, Land Size: 5.0
+2025-04-24 20:04:11,145 - INFO - Response: {'success': True, 'data': {'state': 'Tamil Nadu', 'land_size': 5.0, 'available_schemes': ['Uzhavar Aluvalar Thittam - Training and capacity building for farmers', "Tamil Nadu Farmers' Insurance Scheme - Free crop insurance for farmers", 'Micro Irrigation Scheme - Subsidy for drip and sprinkler systems'], 'eligibility': 'Registered farmers in Tamil Nadu are eligible based on crop and scheme-specific criteria. You have 5.0 acres of land.', 'contact': 'Contact your local Agricultural Extension Centre or visit the Tamil Nadu Department of Agriculture website.'}}
+2025-04-24 20:04:11,145 - INFO - 127.0.0.1 - - [24/Apr/2025 20:04:11] "POST /government_aids HTTP/1.1" 200 -
+2025-04-24 20:04:17,642 - INFO - Received /api/grok request
+2025-04-24 20:04:21,708 - INFO - Response sent: Tamil Nadu offers several agricultural schemes aimed at boosting productivity and farmer welfare.  Here are some prominent ones:
+
+1. Tamil Nadu Agricultural Marketing Infrastructure Development Scheme: This scheme focuses on improving market infrastructure for agricultural produce, including construction and modernization of market yards, cold storage facilities, and transportation networks.  It aims to reduce post-harvest losses and ensure better prices for farmers.
+
+2. National Agricultural Insurance Scheme (NAIS): While a national scheme, its implementation is crucial in Tamil Nadu.  It provides insurance coverage to farmers against crop losses due to various perils like natural calamities (floods, drought, etc.) and pest attacks. This safeguards farmers from financial risks.
+
+3. Soil Health Card Scheme: This scheme provides farmers with soil health cards containing details of their soil's nutrient content. This allows for precise application of fertilizers, optimizing nutrient use efficiency and reducing environmental impact while improving yields.
+
+4. Subsidy schemes for inputs: The Tamil Nadu government provides subsidies on various agricultural inputs such as seeds, fertilizers, and machinery.  Specific schemes and subsidy rates vary, and farmers should check with their local agricultural department for the most up-to-date information on eligibility and application procedures.  These subsidies aim to reduce the cost of farming and make it more accessible.
+
+
+Note:  The specific details of these schemes, including eligibility criteria and application processes, are subject to change.  Farmers are strongly advised to consult the official website of the Tamil Nadu Department of Agriculture or their local agricultural extension office for the latest information.
+2025-04-24 20:04:21,708 - INFO - 127.0.0.1 - - [24/Apr/2025 20:04:21] "POST /api/grok HTTP/1.1" 200 -
+2025-04-24 20:09:40,372 - INFO -  * Detected change in 'S:\\AgriBot\\main.py', reloading
+2025-04-24 20:09:43,262 - INFO -  * Restarting with stat
+2025-04-24 20:09:49,431 - WARNING - Model file not found: S:\AgriBot\model\efficientnet_soil.pth. Related endpoints may not work.
+2025-04-24 20:09:49,431 - WARNING - Model file not found: S:\AgriBot\model\crop_model.pkl. Related endpoints may not work.
+2025-04-24 20:09:49,431 - INFO - Current working directory: S:\AgriBot
+2025-04-24 20:09:49,431 - INFO - Absolute path to crop model: S:\AgriBot\model\crop_model (2) (1).pkl
+2025-04-24 20:09:49,431 - INFO - Absolute path to irrigation model: S:\AgriBot\model\irrigation_model (1).pkl
+2025-04-24 20:09:49,431 - INFO - Loading soil model from S:\AgriBot\model\efficientnet_soil (1).pth
+2025-04-24 20:09:49,570 - INFO - Soil model loaded successfully
+2025-04-24 20:09:49,570 - INFO - Loading crop model from S:\AgriBot\model\crop_model (2) (1).pkl
+2025-04-24 20:09:50,482 - INFO - Crop model expected features: ['N' 'P' 'K' 'temperature' 'humidity' 'ph' 'rainfall']
+2025-04-24 20:09:50,482 - INFO - Crop model classes: [ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21]
+2025-04-24 20:09:50,482 - INFO - Crop model loaded successfully
+2025-04-24 20:09:50,482 - INFO - Loading irrigation model from S:\AgriBot\model\irrigation_model (1).pkl
+2025-04-24 20:09:50,532 - INFO - Irrigation model loaded successfully
+2025-04-24 20:09:50,532 - INFO - API key loaded successfully from S:\AgriBot\API_KEY.py
+2025-04-24 20:09:50,532 - INFO - Gemini API initialized successfully
+2025-04-24 20:09:50,548 - WARNING -  * Debugger is active!
+2025-04-24 20:09:50,548 - INFO -  * Debugger PIN: 655-155-562
+2025-04-24 20:10:13,015 - INFO -  * Detected change in 'S:\\AgriBot\\main.py', reloading
+2025-04-24 20:10:40,536 - INFO - Current working directory: S:\AgriBot
+2025-04-24 20:10:40,536 - INFO - Absolute path to crop model: S:\AgriBot\model\crop_model (2) (1).pkl
+2025-04-24 20:10:40,536 - INFO - Absolute path to irrigation model: S:\AgriBot\model\irrigation_model (1).pkl
+2025-04-24 20:10:40,536 - INFO - Loading soil model from S:\AgriBot\model\efficientnet_soil (1).pth
+2025-04-24 20:10:40,655 - INFO - Soil model loaded successfully
+2025-04-24 20:10:40,655 - INFO - Loading crop model from S:\AgriBot\model\crop_model (2) (1).pkl
+2025-04-24 20:10:41,588 - INFO - Crop model expected features: ['N' 'P' 'K' 'temperature' 'humidity' 'ph' 'rainfall']
+2025-04-24 20:10:41,588 - INFO - Crop model classes: [ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21]
+2025-04-24 20:10:41,588 - INFO - Crop model loaded successfully
+2025-04-24 20:10:41,588 - INFO - Loading irrigation model from S:\AgriBot\model\irrigation_model (1).pkl
+2025-04-24 20:10:41,636 - INFO - Irrigation model loaded successfully
+2025-04-24 20:10:41,637 - INFO - API key loaded successfully from S:\AgriBot\API_KEY.py
+2025-04-24 20:10:41,637 - INFO - Gemini API initialized successfully
+2025-04-24 20:10:42,505 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.29.228:5000
+2025-04-24 20:10:42,505 - INFO - [33mPress CTRL+C to quit[0m
+2025-04-24 20:10:42,505 - INFO -  * Restarting with stat
+2025-04-24 20:10:48,901 - INFO - Current working directory: S:\AgriBot
+2025-04-24 20:10:48,901 - INFO - Absolute path to crop model: S:\AgriBot\model\crop_model (2) (1).pkl
+2025-04-24 20:10:48,901 - INFO - Absolute path to irrigation model: S:\AgriBot\model\irrigation_model (1).pkl
+2025-04-24 20:10:48,901 - INFO - Loading soil model from S:\AgriBot\model\efficientnet_soil (1).pth
+2025-04-24 20:10:49,034 - INFO - Soil model loaded successfully
+2025-04-24 20:10:49,034 - INFO - Loading crop model from S:\AgriBot\model\crop_model (2) (1).pkl
+2025-04-24 20:10:50,061 - INFO - Crop model expected features: ['N' 'P' 'K' 'temperature' 'humidity' 'ph' 'rainfall']
+2025-04-24 20:10:50,061 - INFO - Crop model classes: [ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21]
+2025-04-24 20:10:50,061 - INFO - Crop model loaded successfully
+2025-04-24 20:10:50,061 - INFO - Loading irrigation model from S:\AgriBot\model\irrigation_model (1).pkl
+2025-04-24 20:10:50,102 - INFO - Irrigation model loaded successfully
+2025-04-24 20:10:50,102 - INFO - API key loaded successfully from S:\AgriBot\API_KEY.py
+2025-04-24 20:10:50,102 - INFO - Gemini API initialized successfully
+2025-04-24 20:10:50,120 - WARNING -  * Debugger is active!
+2025-04-24 20:10:50,123 - INFO -  * Debugger PIN: 655-155-562
+2025-04-24 20:10:50,666 - INFO - 127.0.0.1 - - [24/Apr/2025 20:10:50] "GET / HTTP/1.1" 200 -
+2025-04-24 20:10:50,686 - INFO - 127.0.0.1 - - [24/Apr/2025 20:10:50] "[36mGET /styles/stylesLogin.css HTTP/1.1[0m" 304 -
+2025-04-24 20:10:56,993 - INFO - 127.0.0.1 - - [24/Apr/2025 20:10:56] "POST /login HTTP/1.1" 200 -
+2025-04-24 20:10:58,158 - INFO - 127.0.0.1 - - [24/Apr/2025 20:10:58] "GET /index HTTP/1.1" 200 -
+2025-04-24 20:10:58,186 - INFO - 127.0.0.1 - - [24/Apr/2025 20:10:58] "[36mGET /chatindex.html HTTP/1.1[0m" 304 -
+2025-04-24 20:10:58,192 - INFO - 127.0.0.1 - - [24/Apr/2025 20:10:58] "[36mGET /styles/style.css HTTP/1.1[0m" 304 -
+2025-04-24 20:10:58,192 - INFO - 127.0.0.1 - - [24/Apr/2025 20:10:58] "[36mGET /js/script.js HTTP/1.1[0m" 304 -
+2025-04-24 20:10:58,192 - INFO - 127.0.0.1 - - [24/Apr/2025 20:10:58] "[36mGET /images/farmer.png HTTP/1.1[0m" 304 -
+2025-04-24 20:10:58,210 - INFO - 127.0.0.1 - - [24/Apr/2025 20:10:58] "[36mGET /translations.json HTTP/1.1[0m" 304 -
+2025-04-24 20:10:58,210 - INFO - 127.0.0.1 - - [24/Apr/2025 20:10:58] "[33mGET /cdn-cgi/challenge-platform/scripts/jsd/main.js HTTP/1.1[0m" 404 -
+2025-04-24 20:11:35,263 - INFO - Received /api/grok request
+2025-04-24 20:11:38,351 - INFO - Response sent: Tamil Nadu offers several agricultural schemes aimed at boosting productivity and farmer welfare.  Here are some prominent ones:
+
+1. National Agricultural Insurance Scheme (NAIS): This central government scheme, implemented in Tamil Nadu, provides insurance coverage against crop losses due to natural calamities like drought, flood, and hailstorms.  Farmers can get financial assistance to mitigate losses.  Eligibility criteria and premium rates vary depending on the crop and location.
+
+2. Tamil Nadu Agricultural Marketing (Regulation) Act: This state-level act aims to improve the marketing infrastructure and efficiency for agricultural produce.  It promotes regulated markets, reducing exploitation of farmers by intermediaries.  The act focuses on establishing market yards, providing better storage facilities, and promoting transparency in pricing.
+
+3. Subsidy Schemes for Inputs: The Tamil Nadu government offers subsidies on various agricultural inputs like seeds, fertilizers, and pesticides.  Specific schemes and subsidy percentages vary and often target specific crops or vulnerable farmer groups.  Information on these subsidies is usually available at local agricultural offices and online portals of the Department of Agriculture, Tamil Nadu.
+
+4. Drip Irrigation and other Water Conservation Schemes:  Recognizing the importance of water conservation, Tamil Nadu promotes water-efficient irrigation techniques like drip irrigation and sprinkler irrigation.  Subsidies and support are available for adopting these technologies, reducing water usage and improving crop yields, especially crucial in water-stressed regions.  Contact your local agricultural department for details on eligibility and application processes for these schemes.  
+
+
+It's crucial to check the official websites of the Tamil Nadu Department of Agriculture and the Ministry of Agriculture & Farmers Welfare (Government of India) for the most up-to-date information on eligibility criteria, application procedures, and current scheme details.  These schemes frequently undergo revisions.
+2025-04-24 20:11:38,351 - INFO - 127.0.0.1 - - [24/Apr/2025 20:11:38] "POST /api/grok HTTP/1.1" 200 -
+2025-04-24 20:12:21,906 - INFO -  * Detected change in 'S:\\AgriBot\\main.py', reloading
+2025-04-24 20:12:24,732 - INFO -  * Restarting with stat
+2025-04-24 20:12:31,003 - WARNING - Model file not found: S:\AgriBot\model\efficientnet_soil.pth. Related endpoints may not work.
+2025-04-24 20:12:31,003 - WARNING - Model file not found: S:\AgriBot\model\crop_model.pkl. Related endpoints may not work.
+2025-04-24 20:12:31,014 - INFO - Current working directory: S:\AgriBot
+2025-04-24 20:12:31,014 - INFO - Absolute path to crop model: S:\AgriBot\model\crop_model (2) (1).pkl
+2025-04-24 20:12:31,014 - INFO - Absolute path to irrigation model: S:\AgriBot\model\irrigation_model (1).pkl
+2025-04-24 20:12:31,014 - INFO - Loading soil model from S:\AgriBot\model\efficientnet_soil (1).pth
+2025-04-24 20:12:31,151 - INFO - Soil model loaded successfully
+2025-04-24 20:12:31,151 - INFO - Loading crop model from S:\AgriBot\model\crop_model (2) (1).pkl
+2025-04-24 20:12:32,236 - INFO - Crop model expected features: ['N' 'P' 'K' 'temperature' 'humidity' 'ph' 'rainfall']
+2025-04-24 20:12:32,236 - INFO - Crop model classes: [ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21]
+2025-04-24 20:12:32,236 - INFO - Crop model loaded successfully
+2025-04-24 20:12:32,236 - INFO - Loading irrigation model from S:\AgriBot\model\irrigation_model (1).pkl
+2025-04-24 20:12:32,270 - INFO - Irrigation model loaded successfully
+2025-04-24 20:12:32,283 - INFO - API key loaded successfully from S:\AgriBot\API_KEY.py
+2025-04-24 20:12:32,284 - INFO - Gemini API initialized successfully
+2025-04-24 20:12:32,285 - WARNING -  * Debugger is active!
+2025-04-24 20:12:32,296 - INFO -  * Debugger PIN: 655-155-562
+2025-04-24 20:12:32,817 - INFO - 127.0.0.1 - - [24/Apr/2025 20:12:32] "GET /index HTTP/1.1" 200 -
+2025-04-24 20:12:32,845 - INFO - 127.0.0.1 - - [24/Apr/2025 20:12:32] "[36mGET /chatindex.html HTTP/1.1[0m" 304 -
+2025-04-24 20:12:32,854 - INFO - 127.0.0.1 - - [24/Apr/2025 20:12:32] "[36mGET /styles/style.css HTTP/1.1[0m" 304 -
+2025-04-24 20:12:32,854 - INFO - 127.0.0.1 - - [24/Apr/2025 20:12:32] "[36mGET /js/script.js HTTP/1.1[0m" 304 -
+2025-04-24 20:12:32,854 - INFO - 127.0.0.1 - - [24/Apr/2025 20:12:32] "[36mGET /images/farmer.png HTTP/1.1[0m" 304 -
+2025-04-24 20:12:32,874 - INFO - 127.0.0.1 - - [24/Apr/2025 20:12:32] "[36mGET /translations.json HTTP/1.1[0m" 304 -
+2025-04-24 20:12:32,881 - INFO - 127.0.0.1 - - [24/Apr/2025 20:12:32] "[33mGET /cdn-cgi/challenge-platform/scripts/jsd/main.js HTTP/1.1[0m" 404 -
+2025-04-24 20:18:49,298 - WARNING - Model file not found: S:\AgriBot\model\efficientnet_soil.pth. Related endpoints may not work.
+2025-04-24 20:18:49,299 - WARNING - Model file not found: S:\AgriBot\model\crop_model.pkl. Related endpoints may not work.
+2025-04-24 20:18:49,299 - INFO - Current working directory: S:\AgriBot
+2025-04-24 20:18:49,299 - INFO - Absolute path to crop model: S:\AgriBot\model\crop_model (2) (1).pkl
+2025-04-24 20:18:49,299 - INFO - Absolute path to irrigation model: S:\AgriBot\model\irrigation_model (1).pkl
+2025-04-24 20:18:49,301 - INFO - Scikit-learn version: 1.6.1
+2025-04-24 20:18:49,301 - INFO - Loading soil model from S:\AgriBot\model\efficientnet_soil (1).pth
+2025-04-24 20:18:49,410 - INFO - Soil model loaded successfully
+2025-04-24 20:18:49,410 - INFO - Loading crop model from S:\AgriBot\model\crop_model (2) (1).pkl
+2025-04-24 20:18:49,706 - INFO - Crop model expected features: ['N' 'P' 'K' 'temperature' 'humidity' 'ph' 'rainfall']
+2025-04-24 20:18:49,706 - INFO - Crop model classes: [ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21]
+2025-04-24 20:18:49,706 - INFO - Crop model loaded successfully
+2025-04-24 20:18:49,706 - INFO - Loading irrigation model from S:\AgriBot\model\irrigation_model (1).pkl
+2025-04-24 20:18:49,779 - INFO - Irrigation model loaded successfully
+2025-04-24 20:18:49,779 - INFO - API key loaded successfully from S:\AgriBot\API_KEY.py
+2025-04-24 20:18:49,779 - INFO - Gemini API initialized successfully
+2025-04-24 20:18:50,665 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.29.228:5000
+2025-04-24 20:18:50,673 - INFO - [33mPress CTRL+C to quit[0m
+2025-04-24 20:18:50,673 - INFO -  * Restarting with stat
+2025-04-24 20:18:59,377 - WARNING - Model file not found: S:\AgriBot\model\efficientnet_soil.pth. Related endpoints may not work.
+2025-04-24 20:18:59,377 - WARNING - Model file not found: S:\AgriBot\model\crop_model.pkl. Related endpoints may not work.
+2025-04-24 20:18:59,377 - INFO - Current working directory: S:\AgriBot
+2025-04-24 20:18:59,377 - INFO - Absolute path to crop model: S:\AgriBot\model\crop_model (2) (1).pkl
+2025-04-24 20:18:59,380 - INFO - Absolute path to irrigation model: S:\AgriBot\model\irrigation_model (1).pkl
+2025-04-24 20:18:59,380 - INFO - Scikit-learn version: 1.6.1
+2025-04-24 20:18:59,380 - INFO - Loading soil model from S:\AgriBot\model\efficientnet_soil (1).pth
+2025-04-24 20:18:59,498 - INFO - Soil model loaded successfully
+2025-04-24 20:18:59,506 - INFO - Loading crop model from S:\AgriBot\model\crop_model (2) (1).pkl
+2025-04-24 20:18:59,699 - INFO - Crop model expected features: ['N' 'P' 'K' 'temperature' 'humidity' 'ph' 'rainfall']
+2025-04-24 20:18:59,708 - INFO - Crop model classes: [ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21]
+2025-04-24 20:18:59,708 - INFO - Crop model loaded successfully
+2025-04-24 20:18:59,708 - INFO - Loading irrigation model from S:\AgriBot\model\irrigation_model (1).pkl
+2025-04-24 20:18:59,745 - INFO - Irrigation model loaded successfully
+2025-04-24 20:18:59,745 - INFO - API key loaded successfully from S:\AgriBot\API_KEY.py
+2025-04-24 20:18:59,745 - INFO - Gemini API initialized successfully
+2025-04-24 20:18:59,767 - WARNING -  * Debugger is active!
+2025-04-24 20:18:59,767 - INFO -  * Debugger PIN: 655-155-562
+2025-04-24 20:19:00,395 - INFO - 127.0.0.1 - - [24/Apr/2025 20:19:00] "GET / HTTP/1.1" 200 -
+2025-04-24 20:19:00,412 - INFO - 127.0.0.1 - - [24/Apr/2025 20:19:00] "[36mGET /styles/stylesLogin.css HTTP/1.1[0m" 304 -
+2025-04-24 20:19:07,159 - INFO - 127.0.0.1 - - [24/Apr/2025 20:19:07] "POST /login HTTP/1.1" 200 -
+2025-04-24 20:19:09,166 - INFO - 127.0.0.1 - - [24/Apr/2025 20:19:09] "GET /index HTTP/1.1" 200 -
+2025-04-24 20:19:09,229 - INFO - 127.0.0.1 - - [24/Apr/2025 20:19:09] "[36mGET /chatindex.html HTTP/1.1[0m" 304 -
+2025-04-24 20:19:09,237 - INFO - 127.0.0.1 - - [24/Apr/2025 20:19:09] "[36mGET /styles/style.css HTTP/1.1[0m" 304 -
+2025-04-24 20:19:09,242 - INFO - 127.0.0.1 - - [24/Apr/2025 20:19:09] "[36mGET /images/farmer.png HTTP/1.1[0m" 304 -
+2025-04-24 20:19:09,242 - INFO - 127.0.0.1 - - [24/Apr/2025 20:19:09] "[36mGET /js/script.js HTTP/1.1[0m" 304 -
+2025-04-24 20:19:09,274 - INFO - 127.0.0.1 - - [24/Apr/2025 20:19:09] "[36mGET /translations.json HTTP/1.1[0m" 304 -
+2025-04-24 20:19:09,274 - INFO - 127.0.0.1 - - [24/Apr/2025 20:19:09] "[33mGET /cdn-cgi/challenge-platform/scripts/jsd/main.js HTTP/1.1[0m" 404 -
+2025-04-24 20:20:05,157 - INFO -  * Detected change in 'S:\\AgriBot\\main.py', reloading
+2025-04-24 20:20:06,019 - INFO -  * Restarting with stat
+2025-04-24 20:20:13,341 - WARNING - Model file not found: S:\AgriBot\model\crop_model.pkl. Related endpoints may not work.
+2025-04-24 20:20:13,341 - INFO - Current working directory: S:\AgriBot
+2025-04-24 20:20:13,341 - INFO - Absolute path to crop model: S:\AgriBot\model\crop_model (2) (1).pkl
+2025-04-24 20:20:13,341 - INFO - Absolute path to irrigation model: S:\AgriBot\model\irrigation_model (1).pkl
+2025-04-24 20:20:13,341 - INFO - Scikit-learn version: 1.6.1
+2025-04-24 20:20:13,341 - INFO - Loading soil model from S:\AgriBot\model\efficientnet_soil (1).pth
+2025-04-24 20:20:13,461 - INFO - Soil model loaded successfully
+2025-04-24 20:20:13,465 - INFO - Loading crop model from S:\AgriBot\model\crop_model (2) (1).pkl
+2025-04-24 20:20:13,682 - INFO - Crop model expected features: ['N' 'P' 'K' 'temperature' 'humidity' 'ph' 'rainfall']
+2025-04-24 20:20:13,682 - INFO - Crop model classes: [ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21]
+2025-04-24 20:20:13,682 - INFO - Crop model loaded successfully
+2025-04-24 20:20:13,682 - INFO - Loading irrigation model from S:\AgriBot\model\irrigation_model (1).pkl
+2025-04-24 20:20:13,746 - INFO - Irrigation model loaded successfully
+2025-04-24 20:20:13,746 - INFO - API key loaded successfully from S:\AgriBot\API_KEY.py
+2025-04-24 20:20:13,749 - INFO - Gemini API initialized successfully
+2025-04-24 20:20:13,762 - WARNING -  * Debugger is active!
+2025-04-24 20:20:13,767 - INFO -  * Debugger PIN: 655-155-562
+2025-04-24 20:20:45,210 - INFO - Current working directory: S:\AgriBot
+2025-04-24 20:20:45,211 - INFO - Absolute path to crop model: S:\AgriBot\model\crop_model (2) (1).pkl
+2025-04-24 20:20:45,211 - INFO - Absolute path to irrigation model: S:\AgriBot\model\irrigation_model (1).pkl
+2025-04-24 20:20:45,211 - INFO - Scikit-learn version: 1.6.1
+2025-04-24 20:20:45,211 - INFO - Loading soil model from S:\AgriBot\model\efficientnet_soil (1).pth
+2025-04-24 20:20:45,333 - INFO - Soil model loaded successfully
+2025-04-24 20:20:45,333 - INFO - Loading crop model from S:\AgriBot\model\crop_model (2) (1).pkl
+2025-04-24 20:20:45,560 - INFO - Crop model expected features: ['N' 'P' 'K' 'temperature' 'humidity' 'ph' 'rainfall']
+2025-04-24 20:20:45,560 - INFO - Crop model classes: [ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21]
+2025-04-24 20:20:45,560 - INFO - Crop model loaded successfully
+2025-04-24 20:20:45,560 - INFO - Loading irrigation model from S:\AgriBot\model\irrigation_model (1).pkl
+2025-04-24 20:20:45,617 - INFO - Irrigation model loaded successfully
+2025-04-24 20:20:45,617 - INFO - API key loaded successfully from S:\AgriBot\API_KEY.py
+2025-04-24 20:20:45,617 - INFO - Gemini API initialized successfully
+2025-04-24 20:20:46,528 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.29.228:5000
+2025-04-24 20:20:46,528 - INFO - [33mPress CTRL+C to quit[0m
+2025-04-24 20:20:46,528 - INFO -  * Restarting with stat
+2025-04-24 20:20:54,395 - INFO - Current working directory: S:\AgriBot
+2025-04-24 20:20:54,395 - INFO - Absolute path to crop model: S:\AgriBot\model\crop_model (2) (1).pkl
+2025-04-24 20:20:54,395 - INFO - Absolute path to irrigation model: S:\AgriBot\model\irrigation_model (1).pkl
+2025-04-24 20:20:54,395 - INFO - Scikit-learn version: 1.6.1
+2025-04-24 20:20:54,395 - INFO - Loading soil model from S:\AgriBot\model\efficientnet_soil (1).pth
+2025-04-24 20:20:54,578 - INFO - Soil model loaded successfully
+2025-04-24 20:20:54,578 - INFO - Loading crop model from S:\AgriBot\model\crop_model (2) (1).pkl
+2025-04-24 20:20:54,809 - INFO - Crop model expected features: ['N' 'P' 'K' 'temperature' 'humidity' 'ph' 'rainfall']
+2025-04-24 20:20:54,809 - INFO - Crop model classes: [ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21]
+2025-04-24 20:20:54,809 - INFO - Crop model loaded successfully
+2025-04-24 20:20:54,809 - INFO - Loading irrigation model from S:\AgriBot\model\irrigation_model (1).pkl
+2025-04-24 20:20:54,861 - INFO - Irrigation model loaded successfully
+2025-04-24 20:20:54,861 - INFO - API key loaded successfully from S:\AgriBot\API_KEY.py
+2025-04-24 20:20:54,861 - INFO - Gemini API initialized successfully
+2025-04-24 20:20:54,861 - WARNING -  * Debugger is active!
+2025-04-24 20:20:54,876 - INFO -  * Debugger PIN: 655-155-562
+2025-04-24 20:20:55,570 - INFO - 127.0.0.1 - - [24/Apr/2025 20:20:55] "GET /index HTTP/1.1" 200 -
+2025-04-24 20:20:55,596 - INFO - 127.0.0.1 - - [24/Apr/2025 20:20:55] "[36mGET /styles/style.css HTTP/1.1[0m" 304 -
+2025-04-24 20:20:55,596 - INFO - 127.0.0.1 - - [24/Apr/2025 20:20:55] "[36mGET /images/farmer.png HTTP/1.1[0m" 304 -
+2025-04-24 20:20:55,597 - INFO - 127.0.0.1 - - [24/Apr/2025 20:20:55] "[36mGET /chatindex.html HTTP/1.1[0m" 304 -
+2025-04-24 20:20:55,599 - INFO - 127.0.0.1 - - [24/Apr/2025 20:20:55] "[36mGET /js/script.js HTTP/1.1[0m" 304 -
+2025-04-24 20:20:55,620 - INFO - 127.0.0.1 - - [24/Apr/2025 20:20:55] "[33mGET /cdn-cgi/challenge-platform/scripts/jsd/main.js HTTP/1.1[0m" 404 -
+2025-04-24 20:20:55,620 - INFO - 127.0.0.1 - - [24/Apr/2025 20:20:55] "[36mGET /translations.json HTTP/1.1[0m" 304 -
+2025-04-24 20:25:30,203 - INFO - Current working directory: S:\AgriBot
+2025-04-24 20:25:30,203 - INFO - Absolute path to crop model: S:\AgriBot\model\crop_model (2) (1).pkl
+2025-04-24 20:25:30,203 - INFO - Absolute path to irrigation model: S:\AgriBot\model\irrigation_model (1).pkl
+2025-04-24 20:25:30,203 - INFO - Scikit-learn version: 1.6.1
+2025-04-24 20:25:30,216 - INFO - Loading soil model from S:\AgriBot\model\efficientnet_soil (1).pth
+2025-04-24 20:25:30,360 - INFO - Soil model loaded successfully
+2025-04-24 20:25:30,360 - INFO - Loading crop model from S:\AgriBot\model\crop_model (2) (1).pkl
+2025-04-24 20:25:30,565 - INFO - Crop model expected features: ['N' 'P' 'K' 'temperature' 'humidity' 'ph' 'rainfall']
+2025-04-24 20:25:30,565 - INFO - Crop model classes: [ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21]
+2025-04-24 20:25:30,565 - INFO - Crop model loaded successfully
+2025-04-24 20:25:30,565 - INFO - Loading irrigation model from S:\AgriBot\model\irrigation_model (1).pkl
+2025-04-24 20:25:30,614 - INFO - Irrigation model loaded successfully
+2025-04-24 20:25:30,615 - INFO - API key loaded successfully from S:\AgriBot\API_KEY.py
+2025-04-24 20:25:30,615 - INFO - Gemini API initialized successfully
+2025-04-24 20:25:31,502 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.29.228:5000
+2025-04-24 20:25:31,502 - INFO - [33mPress CTRL+C to quit[0m
+2025-04-24 20:25:31,502 - INFO -  * Restarting with stat
+2025-04-24 20:25:38,283 - INFO - Current working directory: S:\AgriBot
+2025-04-24 20:25:38,284 - INFO - Absolute path to crop model: S:\AgriBot\model\crop_model (2) (1).pkl
+2025-04-24 20:25:38,284 - INFO - Absolute path to irrigation model: S:\AgriBot\model\irrigation_model (1).pkl
+2025-04-24 20:25:38,284 - INFO - Scikit-learn version: 1.6.1
+2025-04-24 20:25:38,284 - INFO - Loading soil model from S:\AgriBot\model\efficientnet_soil (1).pth
+2025-04-24 20:25:38,400 - INFO - Soil model loaded successfully
+2025-04-24 20:25:38,400 - INFO - Loading crop model from S:\AgriBot\model\crop_model (2) (1).pkl
+2025-04-24 20:25:38,589 - INFO - Crop model expected features: ['N' 'P' 'K' 'temperature' 'humidity' 'ph' 'rainfall']
+2025-04-24 20:25:38,590 - INFO - Crop model classes: [ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21]
+2025-04-24 20:25:38,590 - INFO - Crop model loaded successfully
+2025-04-24 20:25:38,590 - INFO - Loading irrigation model from S:\AgriBot\model\irrigation_model (1).pkl
+2025-04-24 20:25:38,637 - INFO - Irrigation model loaded successfully
+2025-04-24 20:25:38,637 - INFO - API key loaded successfully from S:\AgriBot\API_KEY.py
+2025-04-24 20:25:38,637 - INFO - Gemini API initialized successfully
+2025-04-24 20:25:38,651 - WARNING -  * Debugger is active!
+2025-04-24 20:25:38,658 - INFO -  * Debugger PIN: 655-155-562
+2025-04-24 20:26:25,910 - INFO - 127.0.0.1 - - [24/Apr/2025 20:26:25] "GET / HTTP/1.1" 200 -
+2025-04-24 20:26:25,935 - INFO - 127.0.0.1 - - [24/Apr/2025 20:26:25] "[36mGET /styles/stylesLogin.css HTTP/1.1[0m" 304 -
+2025-04-24 20:26:31,586 - INFO - 127.0.0.1 - - [24/Apr/2025 20:26:31] "POST /login HTTP/1.1" 200 -
+2025-04-24 20:26:33,050 - INFO - 127.0.0.1 - - [24/Apr/2025 20:26:33] "GET /index HTTP/1.1" 200 -
+2025-04-24 20:26:33,079 - INFO - 127.0.0.1 - - [24/Apr/2025 20:26:33] "[36mGET /chatindex.html HTTP/1.1[0m" 304 -
+2025-04-24 20:26:33,087 - INFO - 127.0.0.1 - - [24/Apr/2025 20:26:33] "[36mGET /styles/style.css HTTP/1.1[0m" 304 -
+2025-04-24 20:26:33,088 - INFO - 127.0.0.1 - - [24/Apr/2025 20:26:33] "[36mGET /js/script.js HTTP/1.1[0m" 304 -
+2025-04-24 20:26:33,088 - INFO - 127.0.0.1 - - [24/Apr/2025 20:26:33] "[36mGET /images/farmer.png HTTP/1.1[0m" 304 -
+2025-04-24 20:26:33,125 - INFO - 127.0.0.1 - - [24/Apr/2025 20:26:33] "[33mGET /cdn-cgi/challenge-platform/scripts/jsd/main.js HTTP/1.1[0m" 404 -
+2025-04-24 20:26:33,125 - INFO - 127.0.0.1 - - [24/Apr/2025 20:26:33] "[36mGET /translations.json HTTP/1.1[0m" 304 -
+2025-04-24 20:27:08,956 - INFO - Received /government_aids request
+2025-04-24 20:27:08,956 - DEBUG - Request data: {'state': 'tamil nadu', 'land_size': 5, 'lang': 'en'}
+2025-04-24 20:27:08,956 - DEBUG - State: tamil nadu, Land Size: 5.0
+2025-04-24 20:27:08,956 - INFO - Response: {'success': True, 'data': {'state': 'Tamil Nadu', 'land_size': 5.0, 'available_schemes': ['Uzhavar Aluvalar Thittam - Training and capacity building for farmers', "Tamil Nadu Farmers' Insurance Scheme - Free crop insurance for farmers", 'Micro Irrigation Scheme - Subsidy for drip and sprinkler systems'], 'eligibility': 'Registered farmers in Tamil Nadu are eligible based on crop and scheme-specific criteria. You have 5.0 acres of land.', 'contact': 'Contact your local Agricultural Extension Centre or visit the Tamil Nadu Department of Agriculture website.'}}
+2025-04-24 20:27:08,957 - INFO - 127.0.0.1 - - [24/Apr/2025 20:27:08] "POST /government_aids HTTP/1.1" 200 -
+2025-04-24 20:33:34,097 - INFO - Current working directory: S:\AgriBot
+2025-04-24 20:33:34,097 - INFO - Absolute path to crop model: S:\AgriBot\model\crop_model (2) (1).pkl
+2025-04-24 20:33:34,097 - INFO - Absolute path to irrigation model: S:\AgriBot\model\irrigation_model (1).pkl
+2025-04-24 20:33:34,097 - INFO - Scikit-learn version: 1.6.1
+2025-04-24 20:33:34,097 - INFO - Loading soil model from S:\AgriBot\model\efficientnet_soil (1).pth
+2025-04-24 20:33:34,314 - INFO - Soil model loaded successfully
+2025-04-24 20:33:34,314 - INFO - Loading crop model from S:\AgriBot\model\crop_model (2) (1).pkl
+2025-04-24 20:33:34,660 - INFO - Crop model expected features: ['N' 'P' 'K' 'temperature' 'humidity' 'ph' 'rainfall']
+2025-04-24 20:33:34,660 - INFO - Crop model classes: [ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21]
+2025-04-24 20:33:34,660 - INFO - Crop model loaded successfully
+2025-04-24 20:33:34,660 - INFO - Loading irrigation model from S:\AgriBot\model\irrigation_model (1).pkl
+2025-04-24 20:33:34,769 - INFO - Irrigation model loaded successfully
+2025-04-24 20:33:34,769 - INFO - API key loaded successfully from S:\AgriBot\API_KEY.py
+2025-04-24 20:33:34,769 - INFO - Gemini API initialized successfully
+2025-04-24 20:33:35,666 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.29.228:5000
+2025-04-24 20:33:35,667 - INFO - [33mPress CTRL+C to quit[0m
+2025-04-24 20:33:35,672 - INFO -  * Restarting with stat
+2025-04-24 20:33:47,434 - INFO - Current working directory: S:\AgriBot
+2025-04-24 20:33:47,434 - INFO - Absolute path to crop model: S:\AgriBot\model\crop_model (2) (1).pkl
+2025-04-24 20:33:47,434 - INFO - Absolute path to irrigation model: S:\AgriBot\model\irrigation_model (1).pkl
+2025-04-24 20:33:47,434 - INFO - Scikit-learn version: 1.6.1
+2025-04-24 20:33:47,444 - INFO - Loading soil model from S:\AgriBot\model\efficientnet_soil (1).pth
+2025-04-24 20:33:47,600 - INFO - Soil model loaded successfully
+2025-04-24 20:33:47,601 - INFO - Loading crop model from S:\AgriBot\model\crop_model (2) (1).pkl
+2025-04-24 20:33:47,949 - INFO - Crop model expected features: ['N' 'P' 'K' 'temperature' 'humidity' 'ph' 'rainfall']
+2025-04-24 20:33:47,949 - INFO - Crop model classes: [ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21]
+2025-04-24 20:33:47,949 - INFO - Crop model loaded successfully
+2025-04-24 20:33:47,949 - INFO - Loading irrigation model from S:\AgriBot\model\irrigation_model (1).pkl
+2025-04-24 20:33:48,038 - INFO - Irrigation model loaded successfully
+2025-04-24 20:33:48,038 - INFO - API key loaded successfully from S:\AgriBot\API_KEY.py
+2025-04-24 20:33:48,039 - INFO - Gemini API initialized successfully
+2025-04-24 20:33:48,060 - WARNING -  * Debugger is active!
+2025-04-24 20:33:48,066 - INFO -  * Debugger PIN: 655-155-562
+2025-04-24 20:33:48,909 - INFO - 127.0.0.1 - - [24/Apr/2025 20:33:48] "GET / HTTP/1.1" 200 -
+2025-04-24 20:33:48,946 - INFO - 127.0.0.1 - - [24/Apr/2025 20:33:48] "[36mGET /styles/stylesLogin.css HTTP/1.1[0m" 304 -
+2025-04-24 20:33:54,206 - INFO - 127.0.0.1 - - [24/Apr/2025 20:33:54] "POST /login HTTP/1.1" 200 -
+2025-04-24 20:33:55,635 - INFO - 127.0.0.1 - - [24/Apr/2025 20:33:55] "GET /index HTTP/1.1" 200 -
+2025-04-24 20:33:55,664 - INFO - 127.0.0.1 - - [24/Apr/2025 20:33:55] "[36mGET /chatindex.html HTTP/1.1[0m" 304 -
+2025-04-24 20:33:55,669 - INFO - 127.0.0.1 - - [24/Apr/2025 20:33:55] "[36mGET /styles/style.css HTTP/1.1[0m" 304 -
+2025-04-24 20:33:55,670 - INFO - 127.0.0.1 - - [24/Apr/2025 20:33:55] "GET /js/script.js HTTP/1.1" 200 -
+2025-04-24 20:33:55,670 - INFO - 127.0.0.1 - - [24/Apr/2025 20:33:55] "[36mGET /images/farmer.png HTTP/1.1[0m" 304 -
+2025-04-24 20:33:55,720 - INFO - 127.0.0.1 - - [24/Apr/2025 20:33:55] "[36mGET /translations.json HTTP/1.1[0m" 304 -
+2025-04-24 20:33:55,721 - INFO - 127.0.0.1 - - [24/Apr/2025 20:33:55] "[33mGET /cdn-cgi/challenge-platform/scripts/jsd/main.js HTTP/1.1[0m" 404 -
+2025-04-24 20:34:20,402 - INFO - 127.0.0.1 - - [24/Apr/2025 20:34:20] "GET /index HTTP/1.1" 200 -
+2025-04-24 20:34:20,431 - INFO - 127.0.0.1 - - [24/Apr/2025 20:34:20] "[36mGET /chatindex.html HTTP/1.1[0m" 304 -
+2025-04-24 20:34:20,435 - INFO - 127.0.0.1 - - [24/Apr/2025 20:34:20] "[36mGET /styles/style.css HTTP/1.1[0m" 304 -
+2025-04-24 20:34:20,440 - INFO - 127.0.0.1 - - [24/Apr/2025 20:34:20] "[36mGET /js/script.js HTTP/1.1[0m" 304 -
+2025-04-24 20:34:20,441 - INFO - 127.0.0.1 - - [24/Apr/2025 20:34:20] "[36mGET /images/farmer.png HTTP/1.1[0m" 304 -
+2025-04-24 20:34:20,465 - INFO - 127.0.0.1 - - [24/Apr/2025 20:34:20] "[36mGET /translations.json HTTP/1.1[0m" 304 -
+2025-04-24 20:34:20,465 - INFO - 127.0.0.1 - - [24/Apr/2025 20:34:20] "[33mGET /cdn-cgi/challenge-platform/scripts/jsd/main.js HTTP/1.1[0m" 404 -
+2025-04-24 20:34:26,641 - INFO - 127.0.0.1 - - [24/Apr/2025 20:34:26] "GET /index HTTP/1.1" 200 -
+2025-04-24 20:34:26,668 - INFO - 127.0.0.1 - - [24/Apr/2025 20:34:26] "[36mGET /chatindex.html HTTP/1.1[0m" 304 -
+2025-04-24 20:34:26,671 - INFO - 127.0.0.1 - - [24/Apr/2025 20:34:26] "[36mGET /styles/style.css HTTP/1.1[0m" 304 -
+2025-04-24 20:34:26,673 - INFO - 127.0.0.1 - - [24/Apr/2025 20:34:26] "[36mGET /images/farmer.png HTTP/1.1[0m" 304 -
+2025-04-24 20:34:26,675 - INFO - 127.0.0.1 - - [24/Apr/2025 20:34:26] "[36mGET /js/script.js HTTP/1.1[0m" 304 -
+2025-04-24 20:34:26,698 - INFO - 127.0.0.1 - - [24/Apr/2025 20:34:26] "[33mGET /cdn-cgi/challenge-platform/scripts/jsd/main.js HTTP/1.1[0m" 404 -
+2025-04-24 20:34:26,699 - INFO - 127.0.0.1 - - [24/Apr/2025 20:34:26] "[36mGET /translations.json HTTP/1.1[0m" 304 -
+2025-04-24 20:34:36,147 - INFO - 127.0.0.1 - - [24/Apr/2025 20:34:36] "GET /index HTTP/1.1" 200 -
+2025-04-24 20:34:36,195 - INFO - 127.0.0.1 - - [24/Apr/2025 20:34:36] "[36mGET /styles/style.css HTTP/1.1[0m" 304 -
+2025-04-24 20:34:36,199 - INFO - 127.0.0.1 - - [24/Apr/2025 20:34:36] "[36mGET /chatindex.html HTTP/1.1[0m" 304 -
+2025-04-24 20:34:36,201 - INFO - 127.0.0.1 - - [24/Apr/2025 20:34:36] "[36mGET /js/script.js HTTP/1.1[0m" 304 -
+2025-04-24 20:34:36,206 - INFO - 127.0.0.1 - - [24/Apr/2025 20:34:36] "[36mGET /images/farmer.png HTTP/1.1[0m" 304 -
+2025-04-24 20:34:36,232 - INFO - 127.0.0.1 - - [24/Apr/2025 20:34:36] "[36mGET /translations.json HTTP/1.1[0m" 304 -
+2025-04-24 20:34:36,232 - INFO - 127.0.0.1 - - [24/Apr/2025 20:34:36] "[33mGET /cdn-cgi/challenge-platform/scripts/jsd/main.js HTTP/1.1[0m" 404 -
+2025-04-24 20:35:28,762 - INFO - 127.0.0.1 - - [24/Apr/2025 20:35:28] "GET /index HTTP/1.1" 200 -
+2025-04-24 20:35:28,846 - INFO - 127.0.0.1 - - [24/Apr/2025 20:35:28] "[36mGET /chatindex.html HTTP/1.1[0m" 304 -
+2025-04-24 20:35:28,848 - INFO - 127.0.0.1 - - [24/Apr/2025 20:35:28] "[36mGET /styles/style.css HTTP/1.1[0m" 304 -
+2025-04-24 20:35:28,851 - INFO - 127.0.0.1 - - [24/Apr/2025 20:35:28] "GET /js/script.js HTTP/1.1" 200 -
+2025-04-24 20:35:28,852 - INFO - 127.0.0.1 - - [24/Apr/2025 20:35:28] "[36mGET /images/farmer.png HTTP/1.1[0m" 304 -
+2025-04-24 20:35:28,885 - INFO - 127.0.0.1 - - [24/Apr/2025 20:35:28] "[33mGET /cdn-cgi/challenge-platform/scripts/jsd/main.js HTTP/1.1[0m" 404 -
+2025-04-24 20:35:28,885 - INFO - 127.0.0.1 - - [24/Apr/2025 20:35:28] "[36mGET /translations.json HTTP/1.1[0m" 304 -
+2025-04-24 20:40:48,126 - INFO - Current working directory: S:\AgriBot
+2025-04-24 20:40:48,126 - INFO - Absolute path to crop model: S:\AgriBot\model\crop_model (2) (1).pkl
+2025-04-24 20:40:48,126 - INFO - Absolute path to irrigation model: S:\AgriBot\model\irrigation_model (1).pkl
+2025-04-24 20:40:48,127 - INFO - Scikit-learn version: 1.6.1
+2025-04-24 20:40:48,128 - INFO - Loading soil model from S:\AgriBot\model\efficientnet_soil (1).pth
+2025-04-24 20:40:48,291 - INFO - Soil model loaded successfully
+2025-04-24 20:40:48,292 - INFO - Loading crop model from S:\AgriBot\model\crop_model (2) (1).pkl
+2025-04-24 20:40:48,791 - INFO - Crop model expected features: ['N' 'P' 'K' 'temperature' 'humidity' 'ph' 'rainfall']
+2025-04-24 20:40:48,794 - INFO - Crop model classes: [ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21]
+2025-04-24 20:40:48,794 - INFO - Crop model loaded successfully
+2025-04-24 20:40:48,795 - INFO - Loading irrigation model from S:\AgriBot\model\irrigation_model (1).pkl
+2025-04-24 20:40:48,872 - INFO - Irrigation model loaded successfully
+2025-04-24 20:40:48,873 - INFO - API key loaded successfully from S:\AgriBot\API_KEY.py
+2025-04-24 20:40:48,873 - INFO - Gemini API initialized successfully
+2025-04-24 20:40:49,763 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.29.228:5000
+2025-04-24 20:40:49,763 - INFO - [33mPress CTRL+C to quit[0m
+2025-04-24 20:40:49,766 - INFO -  * Restarting with stat
+2025-04-24 20:41:00,887 - INFO - Current working directory: S:\AgriBot
+2025-04-24 20:41:00,887 - INFO - Absolute path to crop model: S:\AgriBot\model\crop_model (2) (1).pkl
+2025-04-24 20:41:00,889 - INFO - Absolute path to irrigation model: S:\AgriBot\model\irrigation_model (1).pkl
+2025-04-24 20:41:00,889 - INFO - Scikit-learn version: 1.6.1
+2025-04-24 20:41:00,890 - INFO - Loading soil model from S:\AgriBot\model\efficientnet_soil (1).pth
+2025-04-24 20:41:01,162 - INFO - Soil model loaded successfully
+2025-04-24 20:41:01,163 - INFO - Loading crop model from S:\AgriBot\model\crop_model (2) (1).pkl
+2025-04-24 20:41:01,508 - INFO - Crop model expected features: ['N' 'P' 'K' 'temperature' 'humidity' 'ph' 'rainfall']
+2025-04-24 20:41:01,508 - INFO - Crop model classes: [ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21]
+2025-04-24 20:41:01,508 - INFO - Crop model loaded successfully
+2025-04-24 20:41:01,509 - INFO - Loading irrigation model from S:\AgriBot\model\irrigation_model (1).pkl
+2025-04-24 20:41:01,587 - INFO - Irrigation model loaded successfully
+2025-04-24 20:41:01,589 - INFO - API key loaded successfully from S:\AgriBot\API_KEY.py
+2025-04-24 20:41:01,590 - INFO - Gemini API initialized successfully
+2025-04-24 20:41:01,603 - WARNING -  * Debugger is active!
+2025-04-24 20:41:01,608 - INFO -  * Debugger PIN: 655-155-562
+2025-04-24 20:41:02,701 - INFO - 192.168.29.228 - - [24/Apr/2025 20:41:02] "GET / HTTP/1.1" 200 -
+2025-04-24 20:41:02,752 - INFO - 192.168.29.228 - - [24/Apr/2025 20:41:02] "GET /styles/stylesLogin.css HTTP/1.1" 200 -
+2025-04-24 20:41:03,594 - INFO - 192.168.29.228 - - [24/Apr/2025 20:41:03] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-04-24 20:41:08,114 - INFO - Login request received
+2025-04-24 20:41:08,114 - INFO - 192.168.29.228 - - [24/Apr/2025 20:41:08] "POST /login HTTP/1.1" 200 -
+2025-04-24 20:41:08,750 - INFO - 192.168.29.228 - - [24/Apr/2025 20:41:08] "GET /index HTTP/1.1" 200 -
+2025-04-24 20:41:08,779 - INFO - 192.168.29.228 - - [24/Apr/2025 20:41:08] "GET /chatindex.html HTTP/1.1" 200 -
+2025-04-24 20:41:08,790 - INFO - 192.168.29.228 - - [24/Apr/2025 20:41:08] "GET /styles/style.css HTTP/1.1" 200 -
+2025-04-24 20:41:08,794 - INFO - 192.168.29.228 - - [24/Apr/2025 20:41:08] "GET /js/script.js HTTP/1.1" 200 -
+2025-04-24 20:41:08,797 - INFO - 192.168.29.228 - - [24/Apr/2025 20:41:08] "GET /images/farmer.png HTTP/1.1" 200 -
+2025-04-24 20:41:08,953 - INFO - 192.168.29.228 - - [24/Apr/2025 20:41:08] "[33mGET /cdn-cgi/challenge-platform/scripts/jsd/main.js HTTP/1.1[0m" 404 -
+2025-04-24 20:41:08,955 - INFO - 192.168.29.228 - - [24/Apr/2025 20:41:08] "GET /translations.json HTTP/1.1" 200 -
+2025-04-24 20:41:43,818 - INFO - Received /government_aids request
+2025-04-24 20:41:43,819 - DEBUG - Request data: {'state': 'tamil nadu', 'land_size': 5, 'lang': 'en'}
+2025-04-24 20:41:43,819 - DEBUG - State: tamil nadu, Land Size: 5.0
+2025-04-24 20:41:43,822 - INFO - Response: {'success': True, 'data': {'state': 'Tamil Nadu', 'land_size': 5.0, 'available_schemes': ['Uzhavar Aluvalar Thittam - Training and capacity building for farmers', "Tamil Nadu Farmers' Insurance Scheme - Free crop insurance for farmers", 'Micro Irrigation Scheme - Subsidy for drip and sprinkler systems'], 'eligibility': 'Registered farmers in Tamil Nadu are eligible based on crop and scheme-specific criteria. You have 5.0 acres of land.', 'contact': 'Contact your local Agricultural Extension Centre or visit the Tamil Nadu Department of Agriculture website.'}}
+2025-04-24 20:41:43,822 - INFO - 192.168.29.228 - - [24/Apr/2025 20:41:43] "POST /government_aids HTTP/1.1" 200 -
+2025-04-24 20:41:54,334 - INFO - Received /predict_soil request
+2025-04-24 20:41:54,334 - INFO - Processing image: Alluvial Soil.jpg
+2025-04-24 20:41:54,777 - INFO - Prediction: soil_type=Alluvial Soil, pest_detection=Armyworm
+2025-04-24 20:41:54,777 - INFO - 192.168.29.228 - - [24/Apr/2025 20:41:54] "POST /predict_soil HTTP/1.1" 200 -
+2025-04-24 20:42:06,148 - INFO - Received /api/grok request
+2025-04-24 20:42:10,081 - INFO - Response sent: Tamil Nadu offers several agricultural schemes aimed at boosting productivity and farmer welfare.  Here are some key initiatives:
+
+1. National Agricultural Insurance Scheme (NAIS): This scheme protects farmers from crop loss due to unforeseen events like natural calamities.  It provides financial assistance based on the extent of damage.  Farmers should ensure timely registration and accurate crop reporting for effective coverage.
+
+2. Tamil Nadu Agricultural Marketing (TNAM) Scheme: This scheme focuses on improving market access for farmers. It involves establishing better infrastructure like regulated markets and online trading platforms to ensure farmers get fair prices for their produce.  Understanding the market trends and utilizing the available platforms is crucial for farmers' benefit.
+
+3. Soil Health Card Scheme: This initiative provides farmers with detailed information about their soil's nutrient content. This enables them to apply the right fertilizers, optimizing crop yield and reducing input costs.  Regular soil testing and adhering to the recommendations are vital.
+
+4. Subsidy schemes for various inputs: The Tamil Nadu government offers subsidies on various agricultural inputs such as seeds, fertilizers, and equipment.  Farmers need to be aware of these schemes and follow the application processes to avail of the benefits.  These subsidies often vary based on the crop and farmer category.
+
+
+It's important to note that specific eligibility criteria, application processes, and subsidy amounts may vary for each scheme.  Farmers should contact their local agricultural department or relevant authorities for the most up-to-date and precise information.
+2025-04-24 20:42:10,081 - INFO - 192.168.29.228 - - [24/Apr/2025 20:42:10] "POST /api/grok HTTP/1.1" 200 -
+2025-04-24 20:42:18,699 - INFO - 192.168.29.228 - - [24/Apr/2025 20:42:18] "[36mGET /styles/style.css HTTP/1.1[0m" 304 -
+2025-04-24 20:44:48,839 - INFO - Received /government_aids request
+2025-04-24 20:44:48,839 - DEBUG - Request data: {'state': 'tamil nadu', 'land_size': 5, 'lang': 'en'}
+2025-04-24 20:44:48,839 - DEBUG - State: tamil nadu, Land Size: 5.0
+2025-04-24 20:44:48,840 - INFO - Response: {'success': True, 'data': {'state': 'Tamil Nadu', 'land_size': 5.0, 'available_schemes': ['Uzhavar Aluvalar Thittam - Training and capacity building for farmers', "Tamil Nadu Farmers' Insurance Scheme - Free crop insurance for farmers", 'Micro Irrigation Scheme - Subsidy for drip and sprinkler systems'], 'eligibility': 'Registered farmers in Tamil Nadu are eligible based on crop and scheme-specific criteria. You have 5.0 acres of land.', 'contact': 'Contact your local Agricultural Extension Centre or visit the Tamil Nadu Department of Agriculture website.'}}
+2025-04-24 20:44:48,840 - INFO - 192.168.29.228 - - [24/Apr/2025 20:44:48] "POST /government_aids HTTP/1.1" 200 -
+2025-04-24 20:49:33,526 - INFO - Current working directory: S:\AgriBot
+2025-04-24 20:49:33,527 - INFO - Absolute path to crop model: S:\AgriBot\model\crop_model (2) (1).pkl
+2025-04-24 20:49:33,527 - INFO - Absolute path to irrigation model: S:\AgriBot\model\irrigation_model (1).pkl
+2025-04-24 20:49:33,527 - INFO - Scikit-learn version: 1.6.1
+2025-04-24 20:49:33,527 - INFO - Loading soil model from S:\AgriBot\model\efficientnet_soil (1).pth
+2025-04-24 20:49:33,763 - INFO - Soil model loaded successfully
+2025-04-24 20:49:33,763 - INFO - Loading crop model from S:\AgriBot\model\crop_model (2) (1).pkl
+2025-04-24 20:49:34,060 - INFO - Crop model expected features: ['N' 'P' 'K' 'temperature' 'humidity' 'ph' 'rainfall']
+2025-04-24 20:49:34,061 - INFO - Crop model classes: [ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21]
+2025-04-24 20:49:34,062 - INFO - Crop model loaded successfully
+2025-04-24 20:49:34,062 - INFO - Loading irrigation model from S:\AgriBot\model\irrigation_model (1).pkl
+2025-04-24 20:49:34,146 - INFO - Irrigation model loaded successfully
+2025-04-24 20:49:34,147 - INFO - API key loaded successfully from S:\AgriBot\API_KEY.py
+2025-04-24 20:49:34,148 - INFO - Gemini API initialized successfully
+2025-04-24 20:49:35,027 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.29.228:5000
+2025-04-24 20:49:35,027 - INFO - [33mPress CTRL+C to quit[0m
+2025-04-24 20:49:35,027 - INFO -  * Restarting with stat
+2025-04-24 20:49:44,831 - INFO - Current working directory: S:\AgriBot
+2025-04-24 20:49:44,831 - INFO - Absolute path to crop model: S:\AgriBot\model\crop_model (2) (1).pkl
+2025-04-24 20:49:44,831 - INFO - Absolute path to irrigation model: S:\AgriBot\model\irrigation_model (1).pkl
+2025-04-24 20:49:44,831 - INFO - Scikit-learn version: 1.6.1
+2025-04-24 20:49:44,831 - INFO - Loading soil model from S:\AgriBot\model\efficientnet_soil (1).pth
+2025-04-24 20:49:44,995 - INFO - Soil model loaded successfully
+2025-04-24 20:49:44,996 - INFO - Loading crop model from S:\AgriBot\model\crop_model (2) (1).pkl
+2025-04-24 20:49:45,401 - INFO - Crop model expected features: ['N' 'P' 'K' 'temperature' 'humidity' 'ph' 'rainfall']
+2025-04-24 20:49:45,401 - INFO - Crop model classes: [ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21]
+2025-04-24 20:49:45,402 - INFO - Crop model loaded successfully
+2025-04-24 20:49:45,402 - INFO - Loading irrigation model from S:\AgriBot\model\irrigation_model (1).pkl
+2025-04-24 20:49:45,467 - INFO - Irrigation model loaded successfully
+2025-04-24 20:49:45,468 - INFO - API key loaded successfully from S:\AgriBot\API_KEY.py
+2025-04-24 20:49:45,468 - INFO - Gemini API initialized successfully
+2025-04-24 20:49:45,484 - WARNING -  * Debugger is active!
+2025-04-24 20:49:45,492 - INFO -  * Debugger PIN: 655-155-562
+2025-04-24 20:49:50,283 - INFO - 192.168.29.228 - - [24/Apr/2025 20:49:50] "GET /index HTTP/1.1" 200 -
+2025-04-24 20:49:50,313 - INFO - 192.168.29.228 - - [24/Apr/2025 20:49:50] "[36mGET /styles/style.css HTTP/1.1[0m" 304 -
+2025-04-24 20:49:50,314 - INFO - 192.168.29.228 - - [24/Apr/2025 20:49:50] "[36mGET /images/farmer.png HTTP/1.1[0m" 304 -
+2025-04-24 20:49:50,319 - INFO - 192.168.29.228 - - [24/Apr/2025 20:49:50] "GET /js/script.js HTTP/1.1" 200 -
+2025-04-24 20:49:50,322 - INFO - 192.168.29.228 - - [24/Apr/2025 20:49:50] "[36mGET /chatindex.html HTTP/1.1[0m" 304 -
+2025-04-24 20:49:50,351 - INFO - 192.168.29.228 - - [24/Apr/2025 20:49:50] "[36mGET /translations.json HTTP/1.1[0m" 304 -
+2025-04-24 20:49:50,353 - INFO - 192.168.29.228 - - [24/Apr/2025 20:49:50] "[33mGET /cdn-cgi/challenge-platform/scripts/jsd/main.js HTTP/1.1[0m" 404 -
+2025-04-24 20:50:45,004 - INFO - 127.0.0.1 - - [24/Apr/2025 20:50:45] "GET / HTTP/1.1" 200 -
+2025-04-24 20:50:45,021 - INFO - 127.0.0.1 - - [24/Apr/2025 20:50:45] "[36mGET /styles/stylesLogin.css HTTP/1.1[0m" 304 -
+2025-04-24 20:50:50,728 - INFO - Login request received
+2025-04-24 20:50:50,729 - INFO - 127.0.0.1 - - [24/Apr/2025 20:50:50] "POST /login HTTP/1.1" 200 -
+2025-04-24 20:50:51,940 - INFO - 127.0.0.1 - - [24/Apr/2025 20:50:51] "GET /index HTTP/1.1" 200 -
+2025-04-24 20:50:52,003 - INFO - 127.0.0.1 - - [24/Apr/2025 20:50:52] "[36mGET /chatindex.html HTTP/1.1[0m" 304 -
+2025-04-24 20:50:52,016 - INFO - 127.0.0.1 - - [24/Apr/2025 20:50:52] "[36mGET /styles/style.css HTTP/1.1[0m" 304 -
+2025-04-24 20:50:52,017 - INFO - 127.0.0.1 - - [24/Apr/2025 20:50:52] "GET /js/script.js HTTP/1.1" 200 -
+2025-04-24 20:50:52,017 - INFO - 127.0.0.1 - - [24/Apr/2025 20:50:52] "[36mGET /images/farmer.png HTTP/1.1[0m" 304 -
+2025-04-24 20:50:52,069 - INFO - 127.0.0.1 - - [24/Apr/2025 20:50:52] "[36mGET /translations.json HTTP/1.1[0m" 304 -
+2025-04-24 20:50:52,073 - INFO - 127.0.0.1 - - [24/Apr/2025 20:50:52] "[33mGET /cdn-cgi/challenge-platform/scripts/jsd/main.js HTTP/1.1[0m" 404 -
+2025-04-24 20:50:59,730 - INFO - Received /predict_soil request
+2025-04-24 20:50:59,732 - INFO - Processing image: Alluvial Soil.jpg
+2025-04-24 20:50:59,836 - INFO - Prediction: soil_type=Alluvial Soil, pest_detection=Armyworm
+2025-04-24 20:50:59,836 - INFO - 127.0.0.1 - - [24/Apr/2025 20:50:59] "POST /predict_soil HTTP/1.1" 200 -
+2025-04-24 20:51:08,834 - INFO - Received /government_aids request
+2025-04-24 20:51:08,835 - DEBUG - Request data: {'state': 'tamil nadu', 'land_size': 5, 'lang': 'en'}
+2025-04-24 20:51:08,835 - DEBUG - State: tamil nadu, Land Size: 5.0
+2025-04-24 20:51:08,836 - INFO - Response: {'success': True, 'data': {'state': 'Tamil Nadu', 'land_size': 5.0, 'available_schemes': ['Uzhavar Aluvalar Thittam - Training and capacity building for farmers', "Tamil Nadu Farmers' Insurance Scheme - Free crop insurance for farmers", 'Micro Irrigation Scheme - Subsidy for drip and sprinkler systems'], 'eligibility': 'Registered farmers in Tamil Nadu are eligible based on crop and scheme-specific criteria. You have 5.0 acres of land.', 'contact': 'Contact your local Agricultural Extension Centre or visit the Tamil Nadu Department of Agriculture website.'}}
+2025-04-24 20:51:08,836 - INFO - 127.0.0.1 - - [24/Apr/2025 20:51:08] "POST /government_aids HTTP/1.1" 200 -
+2025-04-24 20:51:39,867 - INFO - Received /api/grok request
+2025-04-24 20:51:44,249 - INFO - Response sent: Tamil Nadu offers several agricultural schemes aimed at boosting productivity and farmer welfare.  Here are some prominent ones:
+
+1. National Agricultural Insurance Scheme (NAIS): This central government scheme, implemented in Tamil Nadu, provides financial support to farmers suffering crop losses due to natural calamities like drought, floods, or hailstorms.  Farmers can insure their crops against these risks, minimizing potential economic hardship.
+
+2. Tamil Nadu Agricultural Marketing Infrastructure Development Fund:  This state-level scheme focuses on improving agricultural marketing infrastructure. This includes funding for the development of cold storage facilities, regulated markets, and transportation networks, aiming to reduce post-harvest losses and improve farmers' access to better markets.
+
+3. Soil Health Card Scheme: This scheme provides farmers with detailed information on the health of their soil, including nutrient levels. Based on this analysis, farmers receive customized recommendations for fertilizers and soil amendments, promoting efficient and sustainable farming practices.  This scheme helps in precision farming in Tamil Nadu.
+
+4. Krishi Bhagya Scheme: This scheme offers various subsidies and support to farmers for purchasing agricultural inputs like seeds, fertilizers, and equipment.  Specific benefits and eligibility criteria vary, but it is designed to reduce the financial burden on farmers and encourage adoption of improved farming technologies.
+
+
+Note:  The specifics of these schemes, including eligibility criteria and application processes, can change.  It's recommended to check the official websites of the Tamil Nadu Department of Agriculture and the Ministry of Agriculture & Farmers Welfare (Government of India) for the most up-to-date information.
+2025-04-24 20:51:44,249 - INFO - 127.0.0.1 - - [24/Apr/2025 20:51:44] "POST /api/grok HTTP/1.1" 200 -
+2025-04-24 20:56:49,522 - INFO - Current working directory: S:\AgriBot
+2025-04-24 20:56:49,523 - INFO - Absolute path to crop model: S:\AgriBot\model\crop_model (2) (1).pkl
+2025-04-24 20:56:49,523 - INFO - Absolute path to irrigation model: S:\AgriBot\model\irrigation_model (1).pkl
+2025-04-24 20:56:49,523 - INFO - Scikit-learn version: 1.6.1
+2025-04-24 20:56:49,524 - INFO - Loading soil model from S:\AgriBot\model\efficientnet_soil (1).pth
+2025-04-24 20:56:49,712 - INFO - Soil model loaded successfully
+2025-04-24 20:56:49,713 - INFO - Loading crop model from S:\AgriBot\model\crop_model (2) (1).pkl
+2025-04-24 20:56:50,054 - INFO - Crop model expected features: ['N' 'P' 'K' 'temperature' 'humidity' 'ph' 'rainfall']
+2025-04-24 20:56:50,055 - INFO - Crop model classes: [ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21]
+2025-04-24 20:56:50,056 - INFO - Crop model loaded successfully
+2025-04-24 20:56:50,057 - INFO - Loading irrigation model from S:\AgriBot\model\irrigation_model (1).pkl
+2025-04-24 20:56:50,134 - INFO - Irrigation model loaded successfully
+2025-04-24 20:56:50,135 - INFO - API key loaded successfully from S:\AgriBot\API_KEY.py
+2025-04-24 20:56:50,135 - INFO - Gemini API initialized successfully
+2025-04-24 20:56:51,021 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.29.228:5000
+2025-04-24 20:56:51,022 - INFO - [33mPress CTRL+C to quit[0m
+2025-04-24 20:56:51,029 - INFO -  * Restarting with stat
+2025-04-24 20:57:02,856 - INFO - Current working directory: S:\AgriBot
+2025-04-24 20:57:02,856 - INFO - Absolute path to crop model: S:\AgriBot\model\crop_model (2) (1).pkl
+2025-04-24 20:57:02,857 - INFO - Absolute path to irrigation model: S:\AgriBot\model\irrigation_model (1).pkl
+2025-04-24 20:57:02,857 - INFO - Scikit-learn version: 1.6.1
+2025-04-24 20:57:02,858 - INFO - Loading soil model from S:\AgriBot\model\efficientnet_soil (1).pth
+2025-04-24 20:57:03,077 - INFO - Soil model loaded successfully
+2025-04-24 20:57:03,077 - INFO - Loading crop model from S:\AgriBot\model\crop_model (2) (1).pkl
+2025-04-24 20:57:03,426 - INFO - Crop model expected features: ['N' 'P' 'K' 'temperature' 'humidity' 'ph' 'rainfall']
+2025-04-24 20:57:03,427 - INFO - Crop model classes: [ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21]
+2025-04-24 20:57:03,427 - INFO - Crop model loaded successfully
+2025-04-24 20:57:03,427 - INFO - Loading irrigation model from S:\AgriBot\model\irrigation_model (1).pkl
+2025-04-24 20:57:03,655 - INFO - Irrigation model loaded successfully
+2025-04-24 20:57:03,655 - INFO - API key loaded successfully from S:\AgriBot\API_KEY.py
+2025-04-24 20:57:03,655 - INFO - Gemini API initialized successfully
+2025-04-24 20:57:03,670 - WARNING -  * Debugger is active!
+2025-04-24 20:57:03,677 - INFO -  * Debugger PIN: 655-155-562
+2025-04-24 20:57:04,688 - INFO - 127.0.0.1 - - [24/Apr/2025 20:57:04] "GET / HTTP/1.1" 200 -
+2025-04-24 20:57:04,713 - INFO - 127.0.0.1 - - [24/Apr/2025 20:57:04] "[36mGET /styles/stylesLogin.css HTTP/1.1[0m" 304 -
+2025-04-24 20:57:09,310 - INFO - Login request received
+2025-04-24 20:57:09,310 - INFO - 127.0.0.1 - - [24/Apr/2025 20:57:09] "POST /login HTTP/1.1" 200 -
+2025-04-24 20:57:12,163 - INFO - 127.0.0.1 - - [24/Apr/2025 20:57:12] "GET /index HTTP/1.1" 200 -
+2025-04-24 20:57:12,188 - INFO - 127.0.0.1 - - [24/Apr/2025 20:57:12] "[36mGET /chatindex.html HTTP/1.1[0m" 304 -
+2025-04-24 20:57:12,199 - INFO - 127.0.0.1 - - [24/Apr/2025 20:57:12] "[36mGET /styles/style.css HTTP/1.1[0m" 304 -
+2025-04-24 20:57:12,200 - INFO - 127.0.0.1 - - [24/Apr/2025 20:57:12] "GET /js/script.js HTTP/1.1" 200 -
+2025-04-24 20:57:12,201 - INFO - 127.0.0.1 - - [24/Apr/2025 20:57:12] "[36mGET /images/farmer.png HTTP/1.1[0m" 304 -
+2025-04-24 20:57:12,257 - INFO - 127.0.0.1 - - [24/Apr/2025 20:57:12] "[33mGET /cdn-cgi/challenge-platform/scripts/jsd/main.js HTTP/1.1[0m" 404 -
+2025-04-24 20:57:12,257 - INFO - 127.0.0.1 - - [24/Apr/2025 20:57:12] "[36mGET /translations.json HTTP/1.1[0m" 304 -
+2025-04-24 20:58:08,189 - INFO - Received /predict_soil request
+2025-04-24 20:58:08,194 - INFO - Processing image: Alluvial Soil.jpg
+2025-04-24 20:58:08,283 - INFO - Prediction: soil_type=Alluvial Soil, pest_detection=Locusts
+2025-04-24 20:58:08,283 - INFO - 127.0.0.1 - - [24/Apr/2025 20:58:08] "POST /predict_soil HTTP/1.1" 200 -

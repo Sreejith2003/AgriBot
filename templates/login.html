@@ -78,7 +78,6 @@
     </div>
 
     <!-- Linked JavaScript -->
-    <script src="{{ url_for('static', filename='js/scriptLogin.js') }}"></script>
     <script>
         // Tab switching
         const tabButtons = document.querySelectorAll(".tab-btn");
@@ -93,43 +92,73 @@
             });
         });
 
-        // Login redirect logic with validation
-        document.getElementById("loginForm").addEventListener("submit", function(e) {
+        // LOGIN form submission
+        document.getElementById("loginForm").addEventListener("submit", async function(e) {
             e.preventDefault();
-            const emailInput = document.getElementById("loginEmail");
-            const passwordInput = document.getElementById("loginPassword");
-            const email = emailInput.value.trim();
-            const password = passwordInput.value.trim();
+            const email = document.getElementById("loginEmail").value.trim();
+            const password = document.getElementById("loginPassword").value.trim();
 
             const emailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
-
             if (!emailRegex.test(email)) {
                 alert("Please enter a valid Gmail address (must end with @gmail.com)");
-                emailInput.focus();
                 return;
             }
 
-            if (password === "") {
-                alert("Please enter your password");
-                passwordInput.focus();
-                return;
+            try {
+                const response = await fetch('/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    alert("Login successful! Welcome, " + result.user.full_name);
+                    window.location.href = "/index";
+                } else {
+                    alert(result.error || "Login failed");
+                }
+            } catch (err) {
+                alert("Login error: " + err.message);
             }
-
-            // Save to localStorage
-            localStorage.setItem("savedEmail", email);
-            localStorage.setItem("savedPassword", password);
-
-            // Redirect to home
-            window.location.href = "index.html";
         });
 
-        // Load saved credentials if any
-        window.addEventListener("DOMContentLoaded", function () {
-            const savedEmail = localStorage.getItem("savedEmail");
-            const savedPassword = localStorage.getItem("savedPassword");
+        // REGISTER form submission
+        document.getElementById("registerForm").addEventListener("submit", async function(e) {
+            e.preventDefault();
+            const full_name = document.getElementById("registerName").value.trim();
+            const email = document.getElementById("registerEmail").value.trim();
+            const password = document.getElementById("registerPassword").value.trim();
+            const confirmPassword = document.getElementById("confirmPassword").value.trim();
 
-            if (savedEmail) document.getElementById("loginEmail").value = savedEmail;
-            if (savedPassword) document.getElementById("loginPassword").value = savedPassword;
+            const emailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+            if (!emailRegex.test(email)) {
+                alert("Please enter a valid Gmail address (must end with @gmail.com)");
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                alert("Passwords do not match");
+                return;
+            }
+
+            try {
+                const response = await fetch('/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ full_name, email, password })
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    alert("Registration successful! Please log in.");
+                    document.querySelector('.tab-btn[data-tab="login"]').click();
+                } else {
+                    alert(result.error || "Registration failed");
+                }
+            } catch (err) {
+                alert("Registration error: " + err.message);
+            }
         });
 
         // Slogan rotation
@@ -139,7 +168,7 @@
             { text: "உழவர்களுக்கு அறிவாற்றல் வழிகாட்டி", lang: "Tamil" },
             { text: "കർഷകർക്ക് സ്മാർട്ട് സഹായം", lang: "Malayalam" },
             { text: "రైతులకు మేధో సహాయం", lang: "Telugu" },
-            { text: "ರೈತರಿಗೆ ಸ್ಮಾರ್ಟ್ ಸಲಹೆಗಾರ", lang: "Kannada" },
+            { text: "ರೈತರಿಗೆ ಸ್ಮಾರ್ಟ್ ಸಲಹೆಗಾರ", lang: "Kannada" }
         ];
         let i = 0;
         const sloganText = document.getElementById("dynamic-slogan");
@@ -156,4 +185,3 @@
     </script>
 </body>
 </html>
-

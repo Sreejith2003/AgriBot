@@ -6,26 +6,71 @@ let translations = {};
 async function loadTranslations() {
     console.log('Loading translations...');
     try {
-        const response = await fetch('/static/translations.json');
+        const response = await fetch('/translations.json');
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
         translations = await response.json();
         console.log('Translations loaded:', Object.keys(translations));
         updateUIText();
     } catch (error) {
         console.error('Error loading translations:', error);
-        showToast('Failed to load translations');
+        showToast('Failed to load translations - using default English');
+        translations = { 
+            en: {
+                appTitle: 'AgriBot - Smart Farming Assistant',
+                soilOption: 'Soil & Pest Detection',
+                cropOption: 'Crop & Irrigation Management',
+                aidOption: 'Government Aids',
+                soilTitle: 'Soil & Pest Detection',
+                soilImageLabel: 'Upload Soil Image',
+                soilButton: 'Analyze Soil',
+                cropTitle: 'Crop & Irrigation Management',
+                nitrogenLabel: 'Nitrogen (N) Level',
+                phosphorousLabel: 'Phosphorous (P) Level',
+                potassiumLabel: 'Potassium (K) Level',
+                tempLabel: 'Temperature (°C)',
+                humidityLabel: 'Humidity (%)',
+                phLabel: 'Soil pH',
+                rainfallLabel: 'Rainfall (mm)',
+                soilTypeLabel: 'Soil Type',
+                cropButton: 'Recommend Crop & Irrigation',
+                aidTitle: 'Government Aids',
+                stateLabel: 'State',
+                landLabel: 'Land Size (acres)',
+                aidButton: 'Get Government Schemes',
+                backButton: 'Back',
+                resultFields: {
+                    'Soil Type': 'Soil Type',
+                    'Pest Detection': 'Pest Detection',
+                    'Recommended Crops': 'Recommended Crops',
+                    'Irrigation Status': 'Irrigation Status',
+                    'Estimated Yield': 'Estimated Yield',
+                    'State': 'State',
+                    'Land Size': 'Land Size',
+                    'Available Schemes': 'Available Schemes',
+                    'Eligibility': 'Eligibility',
+                    'Contact': 'Contact'
+                }
+            } 
+        };
+        updateUIText();
     }
 }
 
 function updateUIText() {
     console.log('Updating UI for language:', currentLanguage);
     const lang = translations[currentLanguage] || translations['en'] || {};
+    
     document.getElementById('appTitle').textContent = lang.appTitle || 'AgriBot - Smart Farming Assistant';
     document.getElementById('soilOption').textContent = lang.soilOption || 'Soil & Pest Detection';
     document.getElementById('cropOption').textContent = lang.cropOption || 'Crop & Irrigation Management';
     document.getElementById('aidOption').textContent = lang.aidOption || 'Government Aids';
+    
     document.getElementById('soilTitle').textContent = lang.soilTitle || 'Soil & Pest Detection';
     document.getElementById('soilImageLabel').textContent = lang.soilImageLabel || 'Upload Soil Image';
     document.getElementById('soilButton').textContent = lang.soilButton || 'Analyze Soil';
+    
     document.getElementById('cropTitle').textContent = lang.cropTitle || 'Crop & Irrigation Management';
     document.getElementById('nitrogenLabel').textContent = lang.nitrogenLabel || 'Nitrogen (N) Level';
     document.getElementById('phosphorousLabel').textContent = lang.phosphorousLabel || 'Phosphorous (P) Level';
@@ -36,10 +81,12 @@ function updateUIText() {
     document.getElementById('rainfallLabel').textContent = lang.rainfallLabel || 'Rainfall (mm)';
     document.getElementById('soilTypeLabel').textContent = lang.soilTypeLabel || 'Soil Type';
     document.getElementById('cropButton').textContent = lang.cropButton || 'Recommend Crop & Irrigation';
+    
     document.getElementById('aidTitle').textContent = lang.aidTitle || 'Government Aids';
     document.getElementById('stateLabel').textContent = lang.stateLabel || 'State';
     document.getElementById('landLabel').textContent = lang.landLabel || 'Land Size (acres)';
     document.getElementById('aidButton').textContent = lang.aidButton || 'Get Government Schemes';
+    
     document.getElementById('backButton1').textContent = lang.backButton || 'Back';
     document.getElementById('backButton2').textContent = lang.backButton || 'Back';
     document.getElementById('backButton3').textContent = lang.backButton || 'Back';
@@ -84,206 +131,210 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Soil Form
     const soilForm = document.getElementById('soilForm');
-    if (!soilForm) {
-        console.error('Soil form not found');
-        showToast('Error: Soil form not found');
-        return;
-    }
-    console.log('Attaching submit listener to soilForm');
-    soilForm.addEventListener('submit', async (e) => {
-        console.log('Soil form submit triggered');
-        e.preventDefault();
+    if (soilForm) {
+        soilForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const loading = document.getElementById('soilLoading');
+            const resultDiv = document.getElementById('soilResult');
+            const soilImage = document.getElementById('soilImage').files[0];
 
-        const loading = document.getElementById('soilLoading');
-        const resultDiv = document.getElementById('soilResult');
-        const soilImage = document.getElementById('soilImage').files[0];
-
-        if (!soilImage) {
-            console.log('No image selected');
-            showToast('Please select an image');
-            return;
-        }
-
-        const formData = new FormData();
-        formData.append('image', soilImage);
-        formData.append('language', currentLanguage);
-
-        console.log('Sending fetch to /predict_soil');
-        loading.style.display = 'block';
-        resultDiv.innerHTML = '';
-
-        try {
-            const response = await fetch('/predict_soil', {
-                method: 'POST',
-                body: formData
-            });
-            console.log('Fetch response status:', response.status);
-            const data = await response.json();
-            console.log('Response data:', data);
-
-            loading.style.display = 'none';
-
-            if (response.ok && data.success) {
-                resultDiv.innerHTML = `
-                    <div class="result">
-                        <div class="result-item"><span class="result-title">Soil Type:</span> ${data.data.soil_type}</div>
-                        <div class="result-item"><span class="result-title">Pest Detection:</span> ${data.data.pest_detection}</div>
-                    </div>
-                `;
-            } else {
-                console.log('Server error:', data);
-                resultDiv.innerHTML = <div class="error">Error: ${data.error || 'Failed to analyze soil'}</div>;
+            if (!soilImage) {
+                showToast('Please select an image');
+                return;
             }
-        } catch (error) {
-            console.error('Fetch error:', error);
-            loading.style.display = 'none';
-            resultDiv.innerHTML = <div class="error">Network error: ${error.message}</div>;
-        }
-    });
+
+            const formData = new FormData();
+            formData.append('image', soilImage);
+            formData.append('language', currentLanguage);
+
+            loading.style.display = 'block';
+            resultDiv.innerHTML = '';
+
+            try {
+                const response = await fetch('/predict_soil', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+                loading.style.display = 'none';
+
+                if (response.ok && data.success) {
+                    resultDiv.innerHTML = `
+                        <div class="result">
+                            <div class="result-item"><span class="result-title">${translations[currentLanguage]?.resultFields?.['Soil Type'] || 'Soil Type'}:</span> ${data.data.soil_type}</div>
+                            <div class="result-item"><span class="result-title">${translations[currentLanguage]?.resultFields?.['Pest Detection'] || 'Pest Detection'}:</span> ${data.data.pest_detection}</div>
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `<div class="error">Error: ${data.error || 'Failed to analyze soil'}</div>`;
+                }
+            } catch (error) {
+                loading.style.display = 'none';
+                resultDiv.innerHTML = `<div class="error">Network error: ${error.message}</div>`;
+            }
+        });
+    }
 
     // Crop Form
     const cropForm = document.getElementById('cropForm');
-    if (!cropForm) {
-        console.error('Crop form not found');
-        showToast('Error: Crop form not found');
-        return;
-    }
-    console.log('Attaching submit listener to cropForm');
-    cropForm.addEventListener('submit', async (e) => {
-        console.log('Crop form submit triggered');
-        e.preventDefault();
+    if (cropForm) {
+        cropForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            console.log('Crop form submitted');
+            const loading = document.getElementById('cropLoading');
+            const resultDiv = document.getElementById('cropResult');
 
-        const loading = document.getElementById('cropLoading');
-        const resultDiv = document.getElementById('cropResult');
-        const data = {
-            nitrogen: document.getElementById('nitrogen').value,
-            phosphorus: document.getElementById('phosphorus').value,
-            potassium: document.getElementById('potassium').value,
-            temperature: document.getElementById('temperature').value,
-            humidity: document.getElementById('humidity').value,
-            ph: document.getElementById('ph').value,
-            rainfall: document.getElementById('rainfall').value,
-            soil_type: document.getElementById('soil_type').value.trim().replace(/\b\w/g, c => c.toUpperCase()),
-            lang: currentLanguage
-        };
+            // Log form elements to verify existence
+            const inputs = {
+                nitrogen: document.getElementById('nitrogen'),
+                phosphorous: document.getElementById('phosphorous'),
+                potassium: document.getElementById('potassium'),
+                temperature: document.getElementById('temperature'),
+                humidity: document.getElementById('humidity'),
+                ph: document.getElementById('ph'),
+                rainfall: document.getElementById('rainfall'),
+                soil_type: document.getElementById('soil_type')
+            };
+            console.log('Form inputs:', Object.keys(inputs).map(k => `${k}: ${inputs[k] ? 'found' : 'missing'}`));
 
-        // Input validation
-        if (!data.nitrogen || !data.phosphorus || !data.potassium || !data.temperature ||
-            !data.humidity || !data.ph || !data.rainfall || !data.soil_type) {
-            console.log('Missing crop form data');
-            showToast('Please fill all fields');
-            return;
-        }
-        if (data.nitrogen < 0 || data.phosphorus < 0 || data.potassium < 0 ||
-            data.temperature < -50 || data.temperature > 50 ||
-            data.humidity < 0 || data.humidity > 200 ||
-            data.ph < 0 || data.ph > 14 ||
-            data.rainfall < 0) {
-            console.log('Invalid crop form data');
-            showToast('Please enter valid values (e.g., positive numbers, pH 0-14)');
-            return;
-        }
-
-        console.log('Sending fetch to /recommend_crop with data:', data);
-        loading.style.display = 'block';
-        resultDiv.innerHTML = '';
-
-        try {
-            const response = await fetch('/recommend_crop', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            });
-            console.log('Fetch response status:', response.status);
-            const result = await response.json();
-            console.log('Response data:', result);
-
-            loading.style.display = 'none';
-
-            if (response.ok) {
-                // Format crops into a single line (up to 4)
-                const cropsText = (result.crops || []).slice(0, 4).map(crop => 
-                    ${crop.crop} (${crop.probability}%)
-                ).join(', ');
-                
-                resultDiv.innerHTML = `
-                    <div class="result">
-                        <div class="result-item"><span class="result-title">Crop:</span> ${cropsText || 'No crops recommended'}</div>
-                        <div class="result-item"><span class="result-title">Irrigation:</span> ${result.irrigation || 'Not specified'}</div>
-                        <div class="result-item"><span class="result-title">Estimated Yield:</span> ${result.estimated_yield || 'Not available'}</div>
-                    </div>
-                `;
-            } else {
-                console.log('Server error:', result);
-                resultDiv.innerHTML = <div class="error">Error: ${result.error || 'Failed to recommend crop'}</div>;
+            // Check for missing inputs
+            const missingInputs = Object.entries(inputs).filter(([_, el]) => !el);
+            if (missingInputs.length > 0) {
+                const errorMsg = `Missing form elements: ${missingInputs.map(([k]) => k).join(', ')}`;
+                console.error(errorMsg);
+                showToast(errorMsg);
+                return;
             }
-        } catch (error) {
-            console.error('Fetch error:', error);
-            loading.style.display = 'none';
-            resultDiv.innerHTML = <div class="error">Network error: ${error.message}</div>;
-        }
-    });
+
+            const data = {
+                nitrogen: parseFloat(inputs.nitrogen.value) || 0,
+                phosphorus: parseFloat(inputs.phosphorous.value) || 0,
+                potassium: parseFloat(inputs.potassium.value) || 0,
+                temperature: parseFloat(inputs.temperature.value) || 0,
+                humidity: parseFloat(inputs.humidity.value) || 0,
+                ph: parseFloat(inputs.ph.value) || 0,
+                rainfall: parseFloat(inputs.rainfall.value) || 0,
+                soil_type: inputs.soil_type.value.trim() || 'Alluvial',
+                lang: currentLanguage
+            };
+
+            // Validate numeric fields
+            const numericFields = {
+                nitrogen: data.nitrogen,
+                phosphorus: data.phosphorus,
+                potassium: data.potassium,
+                temperature: data.temperature,
+                humidity: data.humidity,
+                ph: data.ph,
+                rainfall: data.rainfall
+            };
+            if (Object.values(numericFields).some(val => isNaN(val))) {
+                showToast('Please fill all numeric fields with valid numbers');
+                console.error('Invalid numeric fields:', numericFields);
+                return;
+            }
+
+            console.log('Sending crop data:', data);
+            loading.style.display = 'block';
+            resultDiv.innerHTML = '';
+
+            try {
+                console.log('Sending crop recommendation request');
+                const response = await fetch('/recommend_crop', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                const text = await response.text();
+                console.log('Crop response raw:', text, 'Status:', response.status, 'Headers:', Object.fromEntries(response.headers));
+                let result;
+                try {
+                    result = JSON.parse(text);
+                } catch (parseError) {
+                    console.error('JSON parse error:', parseError);
+                    throw new Error(`Invalid response format: ${text}`);
+                }
+                console.log('Crop response parsed:', result);
+                loading.style.display = 'none';
+
+                if (response.ok) {
+                    const cropsText = (result.crops || [])
+                        .slice(0, 4)
+                        .map(crop => `${crop.crop} (${(crop.probability * 100).toFixed(1)}%)`)
+                        .join(', ');
+                    resultDiv.innerHTML = `
+                        <div class="result">
+                            <div class="result-item"><span class="result-title">${translations[currentLanguage]?.resultFields?.['Recommended Crops'] || 'Recommended Crops'}:</span> ${cropsText || 'No crops recommended'}</div>
+                            <div class="result-item"><span class="result-title">${translations[currentLanguage]?.resultFields?.['Irrigation Status'] || 'Irrigation Status'}:</span> ${result.irrigation || 'Not specified'}</div>
+                            <div class="result-item"><span class="result-title">${translations[currentLanguage]?.resultFields?.['Estimated Yield'] || 'Estimated Yield'}:</span> ${result.estimated_yield || 'Not available'}</div>
+                            ${result.note ? `<div class="result-item"><span class="result-title">Note:</span> ${result.note}</div>` : ''}
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `<div class="error">Error: ${result.error || 'Failed to recommend crop'} (Status: ${response.status})</div>`;
+                }
+            } catch (error) {
+                console.error('Crop form error:', error);
+                loading.style.display = 'none';
+                resultDiv.innerHTML = `<div class="error">Error: ${error.message} (Check console for details)</div>`;
+            }
+        });
+    } else {
+        console.error('Crop form not found');
+    }
 
     // Government Aid Form
     const aidForm = document.getElementById('aidForm');
-    if (!aidForm) {
-        console.error('Aid form not found');
-        showToast('Error: Aid form not found');
-        return;
-    }
-    console.log('Attaching submit listener to aidForm');
-    aidForm.addEventListener('submit', async (e) => {
-        console.log('Aid form submit triggered');
-        e.preventDefault();
+    if (aidForm) {
+        aidForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const loading = document.getElementById('aidLoading');
+            const resultDiv = document.getElementById('aidResult');
+            const data = {
+                state: document.getElementById('state').value.trim().toLowerCase(),
+                land_size: parseFloat(document.getElementById('land_size').value) || 0,
+                lang: currentLanguage
+            };
 
-        const loading = document.getElementById('aidLoading');
-        const resultDiv = document.getElementById('aidResult');
-        const data = {
-            state: document.getElementById('state').value,
-            land_size: document.getElementById('land_size').value,
-            lang: currentLanguage
-        };
-
-        if (!data.state || !data.land_size) {
-            console.log('Missing aid form data');
-            showToast('Please fill all fields');
-            return;
-        }
-
-        console.log('Sending fetch to /government_aids with data:', data);
-        loading.style.display = 'block';
-        resultDiv.innerHTML = '';
-
-        try {
-            const response = await fetch('/government_aids', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            });
-            console.log('Fetch response status:', response.status);
-            const result = await response.json();
-            console.log('Response data:', result);
-
-            loading.style.display = 'none';
-
-            if (response.ok && result.success) {
-                resultDiv.innerHTML = `
-                    <div class="result">
-                        <div class="result-item"><span class="result-title">State:</span> ${result.data.state}</div>
-                        <div class="result-item"><span class="result-title">Land Size:</span> ${result.data.land_size} acres</div>
-                        <div class="result-item"><span class="result-title">Schemes:</span> ${result.data.available_schemes.join(', ')}</div>
-                        <div class="result-item"><span class="result-title">Eligibility:</span> ${result.data.eligibility}</div>
-                        <div class="result-item"><span class="result-title">Contact:</span> ${result.data.contact}</div>
-                    </div>
-                `;
-            } else {
-                console.log('Server error:', result);
-                resultDiv.innerHTML = <div class="error">Error: ${result.error || 'Failed to fetch schemes'}</div>;
+            if (!data.state || isNaN(data.land_size) || data.land_size < 0) {
+                showToast('Please fill all fields with a valid state and non-negative land size');
+                return;
             }
-        } catch (error) {
-            console.error('Fetch error:', error);
-            loading.style.display = 'none';
-            resultDiv.innerHTML = <div class="error">Network error: ${error.message}</div>;
-        }
-    });
+
+            console.log('Sending aid data:', data);
+            loading.style.display = 'block';
+            resultDiv.innerHTML = '';
+
+            try {
+                const response = await fetch('/government_aids', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                const result = await response.json();
+                console.log('Received aid response:', result);
+                loading.style.display = 'none';
+
+                if (response.ok && result.success) {
+                    const schemesHTML = (result.data.available_schemes || [])
+                        .map(s => `<li>${s}</li>`)
+                        .join('');
+                    resultDiv.innerHTML = `
+                        <div class="result">
+                            <div class="result-item"><span class="result-title">${translations[currentLanguage]?.resultFields?.['State'] || 'State'}:</span> ${result.data.state}</div>
+                            <div class="result-item"><span class="result-title">${translations[currentLanguage]?.resultFields?.['Land Size'] || 'Land Size'}:</span> ${result.data.land_size} acres</div>
+                            <div class="result-item"><span class="result-title">${translations[currentLanguage]?.resultFields?.['Available Schemes'] || 'Available Schemes'}:</span> <ul class="result-list">${schemesHTML}</ul></div>
+                            <div class="result-item"><span class="result-title">${translations[currentLanguage]?.resultFields?.['Eligibility'] || 'Eligibility'}:</span> ${result.data.eligibility || 'Unknown'}</div>
+                            <div class="result-item"><span class="result-title">${translations[currentLanguage]?.resultFields?.['Contact'] || 'Contact'}:</span> ${result.data.contact || 'Not available'}</div>
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `<div class="error">Error: ${result.error || 'No schemes found'}</div>`;
+                }
+            } catch (error) {
+                loading.style.display = 'none';
+                resultDiv.innerHTML = `<div class="error">Network error: ${error.message}</div>`;
+            }
+        });
+    }
 });
