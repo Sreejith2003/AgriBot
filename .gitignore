@@ -1,2 +1,11 @@
+venv/
+env/
+ENV/
 host/
-*.host
+__pychache__/
+*.pyc
+*.pyd
+*.dll
+*.lib
+*.so
+*.log
