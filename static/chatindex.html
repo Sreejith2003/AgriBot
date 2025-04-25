@@ -470,6 +470,7 @@
                     type: 'languageChange', 
                     language: currentLanguage 
                 }, trustedOrigin);
+                console.log('Language changed to:', currentLanguage); // Debug log
             });
 
             window.addEventListener('message', function(event) {
@@ -626,7 +627,6 @@
                 scrollToBottom();
                 
                 try {
-                    // Simulated Grok API call (replace with actual endpoint)
                     const response = await fetch('/api/grok', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -672,7 +672,7 @@
                 playBtn.className = 'audio-btn';
                 playBtn.innerHTML = '<i class="fas fa-play"></i> Play';
                 playBtn.setAttribute('aria-label', 'Play audio response');
-                playBtn.addEventListener('click', () => playTextAsAudio(message));
+                playBtn.addEventListener('click', () => playTextAsAudio(message, currentLanguage));
                 const stopBtn = document.createElement('button');
                 stopBtn.className = 'audio-btn stop-btn';
                 stopBtn.innerHTML = '<i class="fas fa-stop"></i> Stop';
@@ -686,17 +686,17 @@
                 scrollToBottom();
             }
 
-            async function playTextAsAudio(text) {
+            async function playTextAsAudio(text, lang) {
                 stopAudio(); // Stop any ongoing speech
+                console.log('Playing audio for text:', text, 'in language:', lang); // Debug log
                 try {
-                    // Option 1: Use server-side TTS API (uncomment and configure with actual endpoint)
-                    /*
+                    // Use server-side TTS API
                     const response = await fetch('/api/tts', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
                             text: text,
-                            language: languageMap[currentLanguage]?.synthesis || 'en-US'
+                            language: lang
                         })
                     });
                     const data = await response.json();
@@ -709,19 +709,18 @@
                     } else {
                         throw new Error('No audio URL in response');
                     }
-                    */
-
-                    // Option 2: Use browser SpeechSynthesis as fallback
+                } catch (error) {
+                    console.error('TTS request failed:', error);
+                    // Fallback to browser SpeechSynthesis if server fails
                     if ('speechSynthesis' in window) {
                         currentSpeech = new SpeechSynthesisUtterance(text);
-                        currentSpeech.lang = languageMap[currentLanguage]?.synthesis || 'en-US';
+                        currentSpeech.lang = languageMap[lang]?.synthesis || 'en-US';
+                        currentSpeech.onend = () => { currentSpeech = null; };
                         window.speechSynthesis.speak(currentSpeech);
+                        console.log('Falling back to browser TTS with lang:', currentSpeech.lang);
                     } else {
                         addBotMessage("Text-to-speech is not supported in your browser.");
                     }
-                } catch (error) {
-                    console.error('Error playing audio:', error);
-                    addBotMessage("Sorry, there was an error playing the audio.");
                 }
             }
 

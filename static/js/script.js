@@ -27,7 +27,7 @@ async function loadTranslations() {
                 soilButton: 'Analyze Soil',
                 cropTitle: 'Crop & Irrigation Management',
                 nitrogenLabel: 'Nitrogen (N) Level',
-                phosphorousLabel: 'Phosphorous (P) Level',
+                phosphorusLabel: 'Phosphorus (P) Level', // Updated spelling
                 potassiumLabel: 'Potassium (K) Level',
                 tempLabel: 'Temperature (°C)',
                 humidityLabel: 'Humidity (%)',
@@ -73,7 +73,7 @@ function updateUIText() {
     
     document.getElementById('cropTitle').textContent = lang.cropTitle || 'Crop & Irrigation Management';
     document.getElementById('nitrogenLabel').textContent = lang.nitrogenLabel || 'Nitrogen (N) Level';
-    document.getElementById('phosphorousLabel').textContent = lang.phosphorousLabel || 'Phosphorous (P) Level';
+    document.getElementById('phosphorusLabel').textContent = lang.phosphorusLabel || 'Phosphorus (P) Level'; // Updated spelling
     document.getElementById('potassiumLabel').textContent = lang.potassiumLabel || 'Potassium (K) Level';
     document.getElementById('tempLabel').textContent = lang.tempLabel || 'Temperature (°C)';
     document.getElementById('humidityLabel').textContent = lang.humidityLabel || 'Humidity (%)';
@@ -187,7 +187,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Log form elements to verify existence
             const inputs = {
                 nitrogen: document.getElementById('nitrogen'),
-                phosphorous: document.getElementById('phosphorous'),
+                phosphorus: document.getElementById('phosphorus'), // Updated spelling
                 potassium: document.getElementById('potassium'),
                 temperature: document.getElementById('temperature'),
                 humidity: document.getElementById('humidity'),
@@ -208,7 +208,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const data = {
                 nitrogen: parseFloat(inputs.nitrogen.value) || 0,
-                phosphorus: parseFloat(inputs.phosphorous.value) || 0,
+                phosphorus: parseFloat(inputs.phosphorus.value) || 0, // Updated spelling
                 potassium: parseFloat(inputs.potassium.value) || 0,
                 temperature: parseFloat(inputs.temperature.value) || 0,
                 humidity: parseFloat(inputs.humidity.value) || 0,
@@ -219,45 +219,68 @@ document.addEventListener('DOMContentLoaded', () => {
             };
 
             // Validate numeric fields
-            const numericFields = {
-                nitrogen: data.nitrogen,
-                phosphorus: data.phosphorus,
-                potassium: data.potassium,
-                temperature: data.temperature,
-                humidity: data.humidity,
-                ph: data.ph,
-                rainfall: data.rainfall
+            const validationRules = {
+                nitrogen: { min: 0, max: 300, label: 'Nitrogen' },
+                phosphorus: { min: 0, max: 300, label: 'Phosphorus' }, // Updated spelling
+                potassium: { min: 0, max: 300, label: 'Potassium' },
+                temperature: { min: -50, max: 60, label: 'Temperature' },
+                humidity: { min: 0, max: 100, label: 'Humidity' },
+                ph: { min: 0, max: 14, label: 'pH' },
+                rainfall: { min: 0, max: 5000, label: 'Rainfall' }
             };
-            if (Object.values(numericFields).some(val => isNaN(val))) {
-                showToast('Please fill all numeric fields with valid numbers');
-                console.error('Invalid numeric fields:', numericFields);
+
+            const validationErrors = [];
+            for (const [field, value] of Object.entries(data)) {
+                const rule = validationRules[field];
+                if (rule) {
+                    if (isNaN(value)) {
+                        validationErrors.push(`${rule.label} must be a valid number`);
+                    } else if (value < rule.min || value > rule.max) {
+                        validationErrors.push(`${rule.label} must be between ${rule.min} and ${rule.max}`);
+                    }
+                }
+            }
+
+            // Validate soil type
+            const validSoilTypes = ['Alluvial', 'Black', 'Clay', 'Red'];
+            if (!validSoilTypes.includes(data.soil_type)) {
+                validationErrors.push(`Soil type must be one of: ${validSoilTypes.join(', ')}`);
+            }
+
+            if (validationErrors.length > 0) {
+                showToast(validationErrors.join('; '));
+                console.error('Validation errors:', validationErrors);
                 return;
             }
 
-            console.log('Sending crop data:', data);
+            console.log('Sending crop data:', JSON.stringify(data));
             loading.style.display = 'block';
             resultDiv.innerHTML = '';
 
             try {
-                console.log('Sending crop recommendation request');
+                console.log('Sending crop recommendation request to /recommend_crop');
                 const response = await fetch('/recommend_crop', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(data)
                 });
                 const text = await response.text();
-                console.log('Crop response raw:', text, 'Status:', response.status, 'Headers:', Object.fromEntries(response.headers));
+                console.log('Crop response raw:', text, 'Status:', response.status, 'Headers:', Object.fromEntries(response.headers.entries()));
+                
                 let result;
                 try {
                     result = JSON.parse(text);
                 } catch (parseError) {
                     console.error('JSON parse error:', parseError);
-                    throw new Error(`Invalid response format: ${text}`);
+                    throw new Error(`Invalid server response format: ${text}`);
                 }
                 console.log('Crop response parsed:', result);
                 loading.style.display = 'none';
 
                 if (response.ok) {
+                    if (result.error) {
+                        throw new Error(result.error);
+                    }
                     const cropsText = (result.crops || [])
                         .slice(0, 4)
                         .map(crop => `${crop.crop} (${(crop.probability * 100).toFixed(1)}%)`)
@@ -271,7 +294,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                     `;
                 } else {
-                    resultDiv.innerHTML = `<div class="error">Error: ${result.error || 'Failed to recommend crop'} (Status: ${response.status})</div>`;
+                    throw new Error(result.error || `Server error (Status: ${response.status})`);
                 }
             } catch (error) {
                 console.error('Crop form error:', error);
