@@ -4123,3 +4123,128 @@ Feature names seen at fit time, yet now missing:
 
 4. Structural Stability (when managed properly):  When properly managed with organic matter additions (like compost or farmyard manure), clay soils can develop a better structure, improving drainage and aeration, mitigating some of their inherent drawbacks.  Without proper management, however, they can become compacted and poorly aerated.
 2025-04-25 18:53:16,086 - INFO - 127.0.0.1 - - [25/Apr/2025 18:53:16] "POST /api/grok HTTP/1.1" 200 -
+2025-04-25 21:09:53,580 - INFO - Current working directory: S:\AgriBot
+2025-04-25 21:09:53,580 - INFO - Absolute path to crop model: S:\AgriBot\model\crop_model (2) (1).pkl
+2025-04-25 21:09:53,580 - INFO - Absolute path to irrigation model: S:\AgriBot\model\irrigation_model (1).pkl
+2025-04-25 21:09:53,580 - INFO - Scikit-learn version: 1.6.1
+2025-04-25 21:09:53,600 - INFO - API key loaded successfully from S:\AgriBot\API_KEY.py
+2025-04-25 21:09:53,600 - INFO - Gemini API initialized successfully
+2025-04-25 21:09:54,529 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.29.228:5000
+2025-04-25 21:09:54,529 - INFO - [33mPress CTRL+C to quit[0m
+2025-04-25 21:09:54,529 - INFO -  * Restarting with stat
+2025-04-25 21:10:02,237 - INFO - Current working directory: S:\AgriBot
+2025-04-25 21:10:02,253 - INFO - Absolute path to crop model: S:\AgriBot\model\crop_model (2) (1).pkl
+2025-04-25 21:10:02,253 - INFO - Absolute path to irrigation model: S:\AgriBot\model\irrigation_model (1).pkl
+2025-04-25 21:10:02,253 - INFO - Scikit-learn version: 1.6.1
+2025-04-25 21:10:02,253 - INFO - API key loaded successfully from S:\AgriBot\API_KEY.py
+2025-04-25 21:10:02,253 - INFO - Gemini API initialized successfully
+2025-04-25 21:10:02,253 - WARNING -  * Debugger is active!
+2025-04-25 21:10:02,271 - INFO -  * Debugger PIN: 655-155-562
+2025-04-25 21:10:17,416 - INFO - 127.0.0.1 - - [25/Apr/2025 21:10:17] "GET / HTTP/1.1" 200 -
+2025-04-25 21:10:17,447 - INFO - 127.0.0.1 - - [25/Apr/2025 21:10:17] "[36mGET /styles/stylesLogin.css HTTP/1.1[0m" 304 -
+2025-04-25 21:10:17,911 - INFO - 127.0.0.1 - - [25/Apr/2025 21:10:17] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-04-25 21:10:21,802 - INFO - Login request received
+2025-04-25 21:10:21,803 - INFO - 127.0.0.1 - - [25/Apr/2025 21:10:21] "POST /login HTTP/1.1" 200 -
+2025-04-25 21:10:22,511 - INFO - 127.0.0.1 - - [25/Apr/2025 21:10:22] "GET /index HTTP/1.1" 200 -
+2025-04-25 21:10:22,531 - INFO - 127.0.0.1 - - [25/Apr/2025 21:10:22] "GET /chatindex.html HTTP/1.1" 200 -
+2025-04-25 21:10:22,555 - INFO - 127.0.0.1 - - [25/Apr/2025 21:10:22] "GET /styles/style.css HTTP/1.1" 200 -
+2025-04-25 21:10:22,569 - INFO - 127.0.0.1 - - [25/Apr/2025 21:10:22] "GET /js/script.js HTTP/1.1" 200 -
+2025-04-25 21:10:22,583 - INFO - 127.0.0.1 - - [25/Apr/2025 21:10:22] "GET /images/farmer.png HTTP/1.1" 200 -
+2025-04-25 21:10:22,618 - INFO - 127.0.0.1 - - [25/Apr/2025 21:10:22] "GET /translations.json HTTP/1.1" 200 -
+2025-04-25 21:10:22,628 - INFO - 127.0.0.1 - - [25/Apr/2025 21:10:22] "[33mGET /cdn-cgi/challenge-platform/scripts/jsd/main.js HTTP/1.1[0m" 404 -
+2025-04-25 21:10:30,810 - INFO - Received /predict_soil request
+2025-04-25 21:10:30,818 - INFO - Loading soil model from S:\AgriBot\model\efficientnet_soil (1).pth
+2025-04-25 21:10:31,208 - INFO - Soil model loaded successfully
+2025-04-25 21:10:31,208 - INFO - Processing image: Alluvial Soil.jpg
+2025-04-25 21:10:31,384 - INFO - Prediction: soil_type=Alluvial Soil, pest_detection=Armyworm
+2025-04-25 21:10:31,386 - INFO - 127.0.0.1 - - [25/Apr/2025 21:10:31] "POST /predict_soil HTTP/1.1" 200 -
+2025-04-25 21:11:05,097 - INFO - Received /recommend_crop request
+2025-04-25 21:11:05,113 - DEBUG - Raw request data: b'{"nitrogen":90,"phosphorus":42,"potassium":43,"temperature":22,"humidity":90,"ph":6,"rainfall":85,"soil_type":"Alluvial","lang":"en"}'
+2025-04-25 21:11:05,113 - DEBUG - Parsed JSON data: {'nitrogen': 90, 'phosphorus': 42, 'potassium': 43, 'temperature': 22, 'humidity': 90, 'ph': 6, 'rainfall': 85, 'soil_type': 'Alluvial', 'lang': 'en'}
+2025-04-25 21:11:05,113 - INFO - Loading crop model from S:\AgriBot\model\crop_model (2) (1).pkl
+2025-04-25 21:11:05,744 - INFO - Crop model expected features: ['N' 'P' 'K' 'temperature' 'humidity' 'ph' 'rainfall']
+2025-04-25 21:11:05,747 - INFO - Crop model classes: [ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21]
+2025-04-25 21:11:05,747 - INFO - Crop model loaded successfully
+2025-04-25 21:11:05,747 - INFO - Validating input fields
+2025-04-25 21:11:05,747 - DEBUG - Parsed features: [90.0, 42.0, 43.0, 22.0, 90.0, 6.0, 85.0]
+2025-04-25 21:11:05,754 - DEBUG - Soil type: Alluvial
+2025-04-25 21:11:05,759 - INFO - Generating heuristic recommendation
+2025-04-25 21:11:05,768 - INFO - Running heuristic crop recommendation
+2025-04-25 21:11:05,780 - INFO - Heuristic top crops: [{'crop': 'wheat', 'probability': 0.7}, {'crop': 'rice', 'probability': 0.6000000000000001}, {'crop': 'sugarcane', 'probability': 0.6000000000000001}, {'crop': 'barley', 'probability': 0.6000000000000001}, {'crop': 'millet', 'probability': 0.5}]
+2025-04-25 21:11:05,789 - INFO - Loading irrigation model from S:\AgriBot\model\irrigation_model (1).pkl
+2025-04-25 21:11:05,931 - INFO - Irrigation model loaded successfully
+2025-04-25 21:11:05,939 - ERROR - Error using irrigation model: The feature names should match those that were passed during fit.
+Feature names unseen at fit time:
+- crop
+- humidity
+- soil_type
+- temperature
+Feature names seen at fit time, yet now missing:
+-  Soil Humidity
+- Air humidity (%)
+- Air temperature (C)
+- Pressure (KPa)
+- Soil Moisture
+- ...
+
+2025-04-25 21:11:05,939 - INFO - Running heuristic irrigation check
+2025-04-25 21:11:05,952 - INFO - Heuristic irrigation result: Moderate irrigation required
+2025-04-25 21:11:05,968 - INFO - Estimating yield
+2025-04-25 21:11:05,973 - INFO - Estimated yield: 2.8 tons/ha
+2025-04-25 21:11:05,974 - INFO - Response: {'crop': 'wheat', 'crops': [{'crop': 'wheat', 'probability': 0.7}, {'crop': 'rice', 'probability': 0.6000000000000001}, {'crop': 'sugarcane', 'probability': 0.6000000000000001}, {'crop': 'barley', 'probability': 0.6000000000000001}, {'crop': 'millet', 'probability': 0.5}], 'irrigation': 'Moderate irrigation required', 'estimated_yield': '2.8 tons/ha', 'note': 'Using heuristic recommendation'}
+2025-04-25 21:11:05,976 - INFO - 127.0.0.1 - - [25/Apr/2025 21:11:05] "POST /recommend_crop HTTP/1.1" 200 -
+2025-04-25 21:11:24,377 - INFO - Received /predict_soil request
+2025-04-25 21:11:24,377 - INFO - Loading soil model from S:\AgriBot\model\efficientnet_soil (1).pth
+2025-04-25 21:11:24,713 - INFO - Soil model loaded successfully
+2025-04-25 21:11:24,713 - INFO - Processing image: Alluvial Soil.jpg
+2025-04-25 21:11:24,852 - INFO - Prediction: soil_type=Alluvial Soil, pest_detection=None
+2025-04-25 21:11:24,859 - INFO - 127.0.0.1 - - [25/Apr/2025 21:11:24] "POST /predict_soil HTTP/1.1" 200 -
+2025-04-25 21:11:29,805 - INFO - Received /api/grok request
+2025-04-25 21:11:33,091 - INFO - Response sent: Clay soils, while challenging, offer several advantages:
+
+1. High Water Retention: Clay's small particle size creates a dense structure, holding significant amounts of water. This is beneficial in drier climates, reducing the frequency of irrigation.
+
+2. Nutrient Retention:  Clay's negatively charged particles attract and hold positively charged nutrient ions (like potassium and ammonium), preventing leaching and making nutrients readily available to plants.
+
+3. Good for specific crops: Certain crops thrive in clay's rich nutrient environment and moisture-holding capacity.  Examples include rice (in paddy fields) and certain types of vegetables.
+
+4. Potential for improved structure:  Through the addition of organic matter (compost, manure) and proper tillage practices, clay soil structure can be improved, enhancing drainage and aeration.  This is crucial to counteracting clay's tendency to become compacted.
+2025-04-25 21:11:33,091 - INFO - 127.0.0.1 - - [25/Apr/2025 21:11:33] "POST /api/grok HTTP/1.1" 200 -
+2025-04-25 21:14:24,751 - INFO -  * Detected change in 'S:\\AgriBot\\app.py', reloading
+2025-04-25 21:14:27,921 - INFO -  * Restarting with stat
+2025-04-25 21:15:06,221 - INFO - Current working directory: S:\AgriBot
+2025-04-25 21:15:06,221 - INFO - Absolute path to crop model: S:\AgriBot\model\crop_model (2) (1).pkl
+2025-04-25 21:15:06,221 - INFO - Absolute path to irrigation model: S:\AgriBot\model\irrigation_model (1).pkl
+2025-04-25 21:15:06,221 - INFO - Scikit-learn version: 1.6.1
+2025-04-25 21:15:06,221 - INFO - API key loaded successfully from S:\AgriBot\API_KEY.py
+2025-04-25 21:15:06,221 - INFO - Gemini API initialized successfully
+2025-04-25 21:15:07,094 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.29.228:5000
+2025-04-25 21:15:07,094 - INFO - [33mPress CTRL+C to quit[0m
+2025-04-25 21:15:07,094 - INFO -  * Restarting with stat
+2025-04-25 21:15:18,024 - INFO - Current working directory: S:\AgriBot
+2025-04-25 21:15:18,024 - INFO - Absolute path to crop model: S:\AgriBot\model\crop_model (2) (1).pkl
+2025-04-25 21:15:18,024 - INFO - Absolute path to irrigation model: S:\AgriBot\model\irrigation_model (1).pkl
+2025-04-25 21:15:18,024 - INFO - Scikit-learn version: 1.6.1
+2025-04-25 21:15:18,024 - INFO - API key loaded successfully from S:\AgriBot\API_KEY.py
+2025-04-25 21:15:18,024 - INFO - Gemini API initialized successfully
+2025-04-25 21:15:18,050 - WARNING -  * Debugger is active!
+2025-04-25 21:15:18,068 - INFO -  * Debugger PIN: 655-155-562
+2025-04-25 21:15:47,337 - INFO - 127.0.0.1 - - [25/Apr/2025 21:15:47] "GET /index HTTP/1.1" 200 -
+2025-04-25 21:15:47,359 - INFO - 127.0.0.1 - - [25/Apr/2025 21:15:47] "[36mGET /styles/style.css HTTP/1.1[0m" 304 -
+2025-04-25 21:15:47,368 - INFO - 127.0.0.1 - - [25/Apr/2025 21:15:47] "[36mGET /images/farmer.png HTTP/1.1[0m" 304 -
+2025-04-25 21:15:47,369 - INFO - 127.0.0.1 - - [25/Apr/2025 21:15:47] "[36mGET /js/script.js HTTP/1.1[0m" 304 -
+2025-04-25 21:15:47,371 - INFO - 127.0.0.1 - - [25/Apr/2025 21:15:47] "[36mGET /chatindex.html HTTP/1.1[0m" 304 -
+2025-04-25 21:15:47,392 - INFO - 127.0.0.1 - - [25/Apr/2025 21:15:47] "[33mGET /cdn-cgi/challenge-platform/scripts/jsd/main.js HTTP/1.1[0m" 404 -
+2025-04-25 21:15:47,393 - INFO - 127.0.0.1 - - [25/Apr/2025 21:15:47] "[36mGET /translations.json HTTP/1.1[0m" 304 -
+2025-04-25 21:15:59,353 - INFO - Received /predict_soil request
+2025-04-25 21:15:59,354 - INFO - Loading soil model from S:\AgriBot\model\efficientnet_soil (1).pth
+2025-04-25 21:15:59,654 - INFO - Soil model loaded successfully
+2025-04-25 21:15:59,654 - INFO - Processing image: Alluvial Soil.jpg
+2025-04-25 21:15:59,773 - INFO - Prediction: soil_type=Alluvial Soil, pest_detection=['Aphids']
+2025-04-25 21:15:59,774 - INFO - 127.0.0.1 - - [25/Apr/2025 21:15:59] "POST /predict_soil HTTP/1.1" 200 -

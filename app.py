@@ -34,12 +34,8 @@ app = Flask(__name__, static_url_path='', static_folder='static', template_folde
 app.config['SECRET_KEY'] = os.urandom(24).hex()
 CORS(app, resources={r"/api/*": {"origins": ["http://localhost:5000", "http://localhost:3000"]}})
 
-# --- Directories ---
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-VIDEO_DIR = os.path.join(BASE_DIR, 'videos')
-os.makedirs(VIDEO_DIR, exist_ok=True)  # Ensure video directory exists
-
 # --- Model Paths ---
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 SOIL_MODEL_PATH = os.path.join(BASE_DIR, "model", "efficientnet_soil (1).pth")
 CROP_MODEL_PATH = os.path.join(BASE_DIR, "model", "crop_model (2) (1).pkl")
 IRRIGATION_MODEL_PATH = os.path.join(BASE_DIR, "model", "irrigation_model (1).pkl")
@@ -100,59 +96,8 @@ transform = transforms.Compose([
 soil_classes = ["Alluvial Soil", "Black Soil", "Clay Soil", "Red Soil"]
 irrigation_classes = ["Very low", "Low", "Moderate", "High", "Very high"]
 
-# --- Load Models ---
-soil_model = None
-crop_model = None
-irrigation_model = None
-
 # Expected feature names for crop model
 EXPECTED_FEATURES = ["N", "P", "K", "temperature", "humidity", "ph", "rainfall"]
-
-# Load soil model
-try:
-    if os.path.exists(SOIL_MODEL_PATH):
-        logging.info(f"Loading soil model from {SOIL_MODEL_PATH}")
-        soil_model = CustomEfficientNet()
-        soil_model.load_state_dict(torch.load(SOIL_MODEL_PATH, map_location=torch.device('cpu')))
-        soil_model.eval()
-        logging.info("Soil model loaded successfully")
-    else:
-        logging.warning("Soil model file missing")
-except Exception as e:
-    logging.error(f"Error loading soil model: {str(e)}")
-
-# Load crop model
-try:
-    if os.path.exists(CROP_MODEL_PATH):
-        logging.info(f"Loading crop model from {CROP_MODEL_PATH}")
-        crop_model = joblib.load(CROP_MODEL_PATH)
-        if not hasattr(crop_model, 'predict_proba'):
-            logging.error("Crop model does not support predict_proba")
-            crop_model = None
-        elif hasattr(crop_model, 'feature_names_in_'):
-            logging.info(f"Crop model expected features: {crop_model.feature_names_in_}")
-            if not all(f in crop_model.feature_names_in_ for f in EXPECTED_FEATURES):
-                logging.error(f"Crop model features mismatch. Expected: {EXPECTED_FEATURES}")
-                crop_model = None
-        if crop_model and hasattr(crop_model, 'classes_'):
-            logging.info(f"Crop model classes: {crop_model.classes_}")
-        logging.info("Crop model loaded successfully")
-    else:
-        logging.warning("Crop model file missing")
-except Exception as e:
-    logging.error(f"Error loading crop model: {str(e)}")
-    crop_model = None
-
-# Load irrigation model
-try:
-    if os.path.exists(IRRIGATION_MODEL_PATH):
-        logging.info(f"Loading irrigation model from {IRRIGATION_MODEL_PATH}")
-        irrigation_model = joblib.load(IRRIGATION_MODEL_PATH)
-        logging.info("Irrigation model loaded successfully")
-    else:
-        logging.warning("Irrigation model file missing")
-except Exception as e:
-    logging.error(f"Error loading irrigation model: {str(e)}")
 
 # --- Crop Labels ---
 crop_labels = {
@@ -217,7 +162,7 @@ def heuristic_crop_recommendation(features, soil_type):
 # --- Irrigation Check (Heuristic) ---
 def check_irrigation_heuristic(crop, soil_type, features):
     logging.info("Running heuristic irrigation check")
-    cropContext = str(crop).lower()
+    crop = str(crop).lower()
     soil_type = soil_type.lower()
     nitrogen, phosphorus, potassium, temperature, humidity, ph, rainfall = features
 
@@ -231,7 +176,7 @@ def check_irrigation_heuristic(crop, soil_type, features):
     soil_retention = {
         "clay": "high", "alluvial": "moderate", "black": "high", "red": "low"
     }
-    crop_need = crop_irrigation.get(cropContext, "moderate")
+    crop_need = crop_irrigation.get(crop, "moderate")
     soil_hold = soil_retention.get(soil_type, "moderate")
 
     irrigation_score = 0
@@ -265,21 +210,29 @@ def check_irrigation_heuristic(crop, soil_type, features):
 
 # --- Irrigation Check (ML Model) ---
 def check_irrigation(crop, soil_type, features):
-    if irrigation_model:
-        try:
-            soil_type_map = {"alluvial": 0, "black": 1, "clay": 2, "red": 3}
-            crop_map = {v: k for k, v in crop_labels.items()}
-            soil_type_encoded = soil_type_map.get(soil_type.lower(), 0)
-            crop_encoded = crop_map.get(crop.lower(), "unknown")
-            input_data = features + [soil_type_encoded, crop_encoded]
-            input_df = pd.DataFrame([input_data], columns=["N", "P", "K", "temperature", "humidity", "ph", "rainfall", "soil_type", "crop"])
-            prediction = irrigation_model.predict(input_df)[0]
-            irrigation_level = irrigation_classes[prediction]
-            logging.info(f"ML irrigation prediction: {irrigation_level}")
-            return irrigation_level
-        except Exception as e:
-            logging.error(f"Error using irrigation model: {str(e)}")
-    return check_irrigation_heuristic(crop, soil_type, features)
+    try:
+        # Load irrigation model on-demand
+        logging.info(f"Loading irrigation model from {IRRIGATION_MODEL_PATH}")
+        irrigation_model = joblib.load(IRRIGATION_MODEL_PATH)
+        logging.info("Irrigation model loaded successfully")
+    except Exception as e:
+        logging.error(f"Error loading irrigation model: {str(e)}")
+        return check_irrigation_heuristic(crop, soil_type, features)
+
+    try:
+        soil_type_map = {"alluvial": 0, "black": 1, "clay": 2, "red": 3}
+        crop_map = {v: k for k, v in crop_labels.items()}
+        soil_type_encoded = soil_type_map.get(soil_type.lower(), 0)
+        crop_encoded = crop_map.get(crop.lower(), "unknown")
+        input_data = features + [soil_type_encoded, crop_encoded]
+        input_df = pd.DataFrame([input_data], columns=["N", "P", "K", "temperature", "humidity", "ph", "rainfall", "soil_type", "crop"])
+        prediction = irrigation_model.predict(input_df)[0]
+        irrigation_level = irrigation_classes[prediction]
+        logging.info(f"ML irrigation prediction: {irrigation_level}")
+        return irrigation_level
+    except Exception as e:
+        logging.error(f"Error using irrigation model: {str(e)}")
+        return check_irrigation_heuristic(crop, soil_type, features)
 
 # --- Yield Estimation ---
 def estimate_yield(crop, features):
@@ -300,26 +253,6 @@ def estimate_yield(crop, features):
     result = float(round(yield_value, 2))
     logging.info(f"Estimated yield: {result} tons/ha")
     return result
-
-# --- Heuristic Pest Detection ---
-def heuristic_pest_detection(soil_type):
-    logging.info("Running heuristic pest detection")
-    soil_type = soil_type.lower()
-    
-    pest_prefs = {
-        "alluvial": ["Locusts", "Aphids", "Whiteflies"],
-        "black": ["Armyworm", "Cutworm", "Bollworm"],
-        "clay": ["Stem Borer", "Brown Plant Hopper"],
-        "red": ["Grasshoppers", "Mites"]
-    }
-    
-    possible_pests = pest_prefs.get(soil_type, ["Locusts", "Aphids"])
-    pest_detection = random.sample(possible_pests, min(2, len(possible_pests)))
-    pest_note = "These pests might appear in this soil"
-    pest_probability = random.choice(["Low likelihood", "Moderate likelihood", "High likelihood"])
-    
-    logging.info(f"Pest detection: pests={pest_detection}, note={pest_note}, probability={pest_probability}")
-    return pest_detection, pest_note, pest_probability
 
 # --- API Key Handling ---
 API_KEY_FILE = os.path.join(BASE_DIR, "api", "API_KEY.py")
@@ -509,8 +442,15 @@ def predict_soil():
     if lang not in SUPPORTED_LANGUAGES:
         lang = "en"
 
-    if soil_model is None:
-        logging.error("Soil model not loaded")
+    try:
+        # Load soil model on-demand
+        logging.info(f"Loading soil model from {SOIL_MODEL_PATH}")
+        soil_model = CustomEfficientNet()
+        soil_model.load_state_dict(torch.load(SOIL_MODEL_PATH, map_location=torch.device('cpu')))
+        soil_model.eval()
+        logging.info("Soil model loaded successfully")
+    except Exception as e:
+        logging.error(f"Error loading soil model: {str(e)}")
         return jsonify(translate_response({"error": "Soil model not loaded"}, lang)), 500
 
     try:
@@ -524,22 +464,18 @@ def predict_soil():
             predicted = torch.argmax(output, 1).item()
 
         soil_type = soil_classes[predicted]
-        pest_detection, pest_note, pest_probability = heuristic_pest_detection(soil_type.lower())
-
-        pest_note = translate_text(pest_note, lang)
-
-        logging.info(f"Prediction: soil_type={soil_type}, pest_detection={pest_detection}, pest_note={pest_note}, pest_probability={pest_probability}")
+        pest = random.choice(["None", "Locusts", "Aphids", "Armyworm"])
+        pest_detection = [] if pest == "None" else [pest]
+        logging.info(f"Prediction: soil_type={soil_type}, pest_detection={pest_detection}")
 
         response = {
             "success": True,
             "data": {
                 "soil_type": soil_type,
-                "pest_detection": pest_detection,
-                "pest_note": pest_note,
-                "pest_probability": pest_probability
+                "pest_detection": pest_detection
             }
         }
-        return jsonify(response)
+        return jsonify(translate_response(response, lang))
 
     except Exception as e:
         logging.error(f"Error processing image: {str(e)}")
@@ -558,6 +494,26 @@ def recommend_crop():
     if not data:
         logging.error("No data provided in request")
         return jsonify(translate_response({"error": "No data provided"}, lang)), 400
+
+    try:
+        # Load crop model on-demand
+        logging.info(f"Loading crop model from {CROP_MODEL_PATH}")
+        crop_model = joblib.load(CROP_MODEL_PATH)
+        if not hasattr(crop_model, 'predict_proba'):
+            logging.error("Crop model does not support predict_proba")
+            return jsonify(translate_response({"error": "Crop model does not support probability prediction"}, lang)), 500
+        if hasattr(crop_model, 'feature_names_in_'):
+            logging.info(f"Crop model expected features: {crop_model.feature_names_in_}")
+            if not all(f in crop_model.feature_names_in_ for f in EXPECTED_FEATURES):
+                logging.error(f"Crop model features mismatch. Expected: {EXPECTED_FEATURES}")
+                return jsonify(translate_response({"error": f"Crop model features mismatch. Expected: {EXPECTED_FEATURES}"}, lang)), 500
+        if hasattr(crop_model, 'classes_'):
+            logging.info(f"Crop model classes: {crop_model.classes_}")
+        logging.info("Crop model loaded successfully")
+    except Exception as e:
+        logging.error(f"Error loading crop model: {str(e)}")
+        # Fallback to heuristic if model loading fails
+        pass
 
     try:
         logging.info("Validating input fields")
@@ -641,9 +597,9 @@ def government_aids():
         land_size = float(data.get("land_size", 0))
         logging.debug(f"State: {state}, Land Size: {land_size}")
 
-        if not state:
-            logging.error("State name is required")
-            return jsonify(translate_response({"error": "State name is required"}, lang)), 400
+        if state not in all_states:
+            logging.error("Invalid state provided")
+            return jsonify(translate_response({"error": "Invalid state provided"}, lang)), 400
         if land_size < 0:
             logging.error("Land size cannot be negative")
             return jsonify(translate_response({"error": "Land size cannot be negative"}, lang)), 400
@@ -661,7 +617,7 @@ def government_aids():
                         "contact": s["contact"]
                     }
                 }
-                logging.info(f"Response: {response}")
+                logging.info(f"Government aids response: {response}")
                 return jsonify(translate_response(response, lang))
 
         response = {
@@ -674,13 +630,12 @@ def government_aids():
                 "contact": "Visit your local agriculture office for accurate details"
             }
         }
-        logging.info(f"Response: {response}")
+        logging.info(f"Government aids response: {response}")
         return jsonify(translate_response(response, lang))
 
     except Exception as e:
         logging.error(f"Error processing government aids: {str(e)}")
         return jsonify(translate_response({"error": str(e)}, lang)), 500
-
 
 @app.route('/api/grok', methods=['POST'])
 def chat():
@@ -690,7 +645,7 @@ def chat():
         logging.error("No data provided in request")
         return jsonify(translate_response({'error': 'No data provided'}, "en")), 400
 
-    message = data.get('message', '').strip().lower()
+    message = data.get('message', '').strip()
     lang = data.get('language', 'en')
     
     if not message:
@@ -700,44 +655,16 @@ def chat():
     if lang not in SUPPORTED_LANGUAGES:
         logging.warning(f"Unsupported language: {lang}, defaulting to 'en'")
         lang = 'en'
-
-    # Check for video request
-    if message in ['video', 'show_video']:  # Handle both text input and video icon
-        video_filename = 'demo_video.mp4'
-        video_path = os.path.join(VIDEO_DIR, video_filename)
-        if os.path.exists(video_path):
-            video_url = f'/videos/{video_filename}'
-            logging.info(f"Video requested, serving: {video_url}")
-            return jsonify({
-                'response': translate_text('Here is the requested video.', lang),
-                'language': lang,
-                'video_url': video_url
-            })
-        else:
-            logging.error(f"Video file not found: {video_path}")
-            return jsonify(translate_response({
-                'error': 'Video file not found'
-            }, lang)), 404
-
-    # Existing chat logic
+    
     query_en = translate_to_english(message, lang)
     response_en = get_gemini_response(query_en)
     response = translate_text(response_en, lang)
     
-    logging.info(f"Response sent: {response}")
+    logging.info(f"Chat response: {response}")
     return jsonify({
         'response': response,
         'language': lang
     })
-
-
-@app.route('/videos/<filename>')
-def serve_video(filename):
-    try:
-        return send_from_directory(VIDEO_DIR, filename)
-    except FileNotFoundError:
-        logging.error(f"Video file not found: {filename}")
-        return jsonify(translate_response({'error': 'Video file not found'}, "en")), 404
 
 @app.route('/api/tts', methods=['POST'])
 def text_to_speech():
@@ -751,7 +678,7 @@ def text_to_speech():
         return jsonify(translate_response({'error': 'Empty text'}, "en")), 400
     
     if lang not in SUPPORTED_LANGUAGES:
-        logging.warning(f"Unsupported language code: {lang}, defaulting to 'en'")
+        logging.warning(f"Unsupported language: {lang}, defaulting to 'en'")
         lang = 'en'
     
     gtts_lang = SUPPORTED_LANGUAGES[lang]['gtts']
@@ -773,7 +700,7 @@ def text_to_speech():
             'filename': filename
         })
     except Exception as e:
-        logging.error(f"TTS error for language {gtts_lang}: {str(e)}")
+        logging.error(f"TTS error: {str(e)}")
         return jsonify(translate_response({'error': f'Failed to generate speech: {str(e)}'}, "en")), 500
 
 @app.route('/audio/<filename>')
@@ -788,36 +715,48 @@ def serve_audio(filename):
 @app.route('/translations.json')
 def serve_translations():
     try:
-        return send_from_directory('static', 'translations.json')
+        return send_from_directory(app.static_folder, 'translations.json')
     except Exception as e:
         logging.error(f"Error serving translations: {str(e)}")
-        return jsonify(translate_response({"error": "Translations not found"}, "en")), 404
+        return jsonify(translate_response({'error': 'Translations not found'}, "en")), 404
 
 @app.route('/health', methods=['GET'])
 def health():
     status = {
-        "api": "running",
-        "soil_model": bool(soil_model),
-        "crop_model": bool(crop_model),
-        "irrigation_model": bool(irrigation_model),
-        "gemini": bool(gemini_chat),
-        "api_key": bool(key)
+        'api': 'running',
+        'soil_model': os.path.exists(SOIL_MODEL_PATH),
+        'crop_model': os.path.exists(CROP_MODEL_PATH),
+        'irrigation_model': os.path.exists(IRRIGATION_MODEL_PATH),
+        'gemini': gemini_chat is not None,
+        'api_key': key is not None
     }
     return jsonify(status)
 
 @app.route('/model_info', methods=['GET'])
 def model_info():
     crop_model_info = {
-        "loaded": bool(crop_model),
-        "path": CROP_MODEL_PATH,
-        "exists": os.path.exists(CROP_MODEL_PATH),
-        "predict_proba": hasattr(crop_model, 'predict_proba') if crop_model else False,
-        "features": getattr(crop_model, 'feature_names_in_', "Not loaded") if crop_model else "Not loaded",
-        "classes": getattr(crop_model, 'classes_', "Not loaded").tolist() if crop_model and hasattr(crop_model, 'classes_') else "Not loaded"
+        'loaded': False,
+        'path': CROP_MODEL_PATH,
+        'exists': os.path.exists(CROP_MODEL_PATH),
+        'predict_proba': False,
+        'features': [],
+        'classes': []
     }
+    
+    try:
+        crop_model = joblib.load(CROP_MODEL_PATH)
+        crop_model_info.update({
+            'loaded': True,
+            'predict_proba': hasattr(crop_model, 'predict_proba'),
+            'features': getattr(crop_model, 'feature_names_in_', []),  # Use empty list if attribute not present
+            'classes': getattr(crop_model, 'classes_', []).tolist()  # Convert to list
+        })
+    except Exception as e:
+        logging.error(f"Error loading crop model for info: {str(e)}")
+    
     return jsonify({
-        "crop_model": crop_model_info,
-        "sklearn_version": sklearn.__version__
+        'crop_model': crop_model_info,
+        'sklearn_version': sklearn.__version__
     })
 
 if __name__ == '__main__':
