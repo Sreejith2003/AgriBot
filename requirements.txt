@@ -10,3 +10,4 @@ bcrypt
 google-generativeai
 gTTS
 scikit-learn
+gunicorn
