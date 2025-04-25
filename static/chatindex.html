@@ -333,12 +333,25 @@
             color: #b71c1c;
         }
 
+        .video-message {
+            max-width: 80%;
+            margin-right: auto;
+        }
+
+        .video-message video {
+            width: 100%;
+            max-width: 300px;
+            border-radius: var(--radius-medium);
+            box-shadow: var(--shadow-sm);
+            margin-top: 5px;
+        }
+
         @media (max-width: 500px) {
             .chatbot-header h3 {
                 font-size: 1rem;
             }
             
-            .message {
+            .message, .video-message {
                 max-width: 85%;
                 padding: 10px 12px;
                 font-size: 13px;
@@ -356,6 +369,10 @@
             .welcome-message p {
                 font-size: 12px;
             }
+
+            .video-message video {
+                max-width: 250px;
+            }
         }
     </style>
 </head>
@@ -370,7 +387,7 @@
         <div class="chatbot-body" id="chatbotBody">
             <div class="welcome-message">
                 <h4>Welcome to AgriAssistant! 🌱</h4>
-                <p>Your personal agricultural expert. Ask me anything about farming, crops, or weather.</p>
+                <p>Your personal agricultural expert. Ask me anything about farming, crops, or weather. Type 'video' to see a demo video.</p>
             </div>
         </div>
         <div class="chatbot-footer">
@@ -470,7 +487,7 @@
                     type: 'languageChange', 
                     language: currentLanguage 
                 }, trustedOrigin);
-                console.log('Language changed to:', currentLanguage); // Debug log
+                console.log('Language changed to:', currentLanguage);
             });
 
             window.addEventListener('message', function(event) {
@@ -599,7 +616,7 @@
                 }
             }
 
-            function sendMessage() {
+            async function sendMessage() {
                 if (currentMode === 'voice' && !isRecording) {
                     toggleRecording();
                     return;
@@ -637,7 +654,13 @@
                     });
                     const data = await response.json();
                     chatbotBody.removeChild(typingIndicator);
-                    addBotMessage(data.response || "I'm here to help with your farming questions! Please ask about crops, weather, or anything else.");
+                    if (data.error) {
+                        addBotMessage(data.error);
+                    } else if (data.video_url) {
+                        addBotVideoMessage(data.response, data.video_url);
+                    } else {
+                        addBotMessage(data.response || "I'm here to help with your farming questions! Please ask about crops, weather, or anything else.");
+                    }
                 } catch (error) {
                     chatbotBody.removeChild(typingIndicator);
                     addBotMessage("Sorry, there was an error connecting to the server. Please try again.");
@@ -686,11 +709,43 @@
                 scrollToBottom();
             }
 
+            function addBotVideoMessage(message, videoUrl) {
+                const div = document.createElement('div');
+                div.className = 'message bot-message video-message';
+                div.textContent = message;
+                const video = document.createElement('video');
+                video.controls = true;
+                video.innerHTML = `<source src="${videoUrl}" type="video/mp4">Your browser does not support the video tag.`;
+                div.appendChild(video);
+                const timestamp = document.createElement('span');
+                timestamp.className = 'message-timestamp';
+                timestamp.textContent = getCurrentTime();
+                div.appendChild(timestamp);
+
+                const audioControls = document.createElement('div');
+                audioControls.className = 'audio-controls';
+                const playBtn = document.createElement('button');
+                playBtn.className = 'audio-btn';
+                playBtn.innerHTML = '<i class="fas fa-play"></i> Play';
+                playBtn.setAttribute('aria-label', 'Play audio response');
+                playBtn.addEventListener('click', () => playTextAsAudio(message, currentLanguage));
+                const stopBtn = document.createElement('button');
+                stopBtn.className = 'audio-btn stop-btn';
+                stopBtn.innerHTML = '<i class="fas fa-stop"></i> Stop';
+                stopBtn.setAttribute('aria-label', 'Stop audio response');
+                stopBtn.addEventListener('click', stopAudio);
+                audioControls.appendChild(playBtn);
+                audioControls.appendChild(stopBtn);
+                div.appendChild(audioControls);
+
+                chatbotBody.appendChild(div);
+                scrollToBottom();
+            }
+
             async function playTextAsAudio(text, lang) {
-                stopAudio(); // Stop any ongoing speech
-                console.log('Playing audio for text:', text, 'in language:', lang); // Debug log
+                stopAudio();
+                console.log('Playing audio for text:', text, 'in language:', lang);
                 try {
-                    // Use server-side TTS API
                     const response = await fetch('/api/tts', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -711,7 +766,6 @@
                     }
                 } catch (error) {
                     console.error('TTS request failed:', error);
-                    // Fallback to browser SpeechSynthesis if server fails
                     if ('speechSynthesis' in window) {
                         currentSpeech = new SpeechSynthesisUtterance(text);
                         currentSpeech.lang = languageMap[lang]?.synthesis || 'en-US';

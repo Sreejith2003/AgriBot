@@ -130,6 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
     loadTranslations();
 
     // Soil Form
+    // Soil Form
     const soilForm = document.getElementById('soilForm');
     if (soilForm) {
         soilForm.addEventListener('submit', async (e) => {
@@ -156,21 +157,26 @@ document.addEventListener('DOMContentLoaded', () => {
                     body: formData
                 });
                 const data = await response.json();
+                console.log('Soil Prediction Response:', data); // Debug log
                 loading.style.display = 'none';
 
                 if (response.ok && data.success) {
                     resultDiv.innerHTML = `
                         <div class="result">
-                            <div class="result-item"><span class="result-title">${translations[currentLanguage]?.resultFields?.['Soil Type'] || 'Soil Type'}:</span> ${data.data.soil_type}</div>
-                            <div class="result-item"><span class="result-title">${translations[currentLanguage]?.resultFields?.['Pest Detection'] || 'Pest Detection'}:</span> ${data.data.pest_detection}</div>
+                            <div class="result-item">soil_type = ${data.data.soil_type}</div>
+                            <div class="result-item">pest_detection = ${data.data.pest_detection.join(', ')} (${data.data.pest_note})</div>
                         </div>
                     `;
+                    showToast('Soil analysis completed!');
                 } else {
                     resultDiv.innerHTML = `<div class="error">Error: ${data.error || 'Failed to analyze soil'}</div>`;
+                    showToast('Failed to analyze soil');
                 }
             } catch (error) {
+                console.error('Soil Prediction Error:', error);
                 loading.style.display = 'none';
                 resultDiv.innerHTML = `<div class="error">Network error: ${error.message}</div>`;
+                showToast('Network error during soil analysis');
             }
         });
     }
