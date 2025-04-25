@@ -1,0 +1,12 @@
+Flask
+flask-cors
+torch
+torchvision
+Pillow
+joblib
+pandas
+numpy
+bcrypt
+google-generativeai
+gTTS
+scikit-learn
