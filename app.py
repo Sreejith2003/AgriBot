@@ -1,3 +1,5 @@
+# New code
+
 from flask import Flask, request, jsonify, render_template, send_from_directory
 from flask_cors import CORS
 import os
@@ -20,8 +22,6 @@ from bson.objectid import ObjectId
 from dotenv import load_dotenv
 from datetime import datetime
 import importlib.util
-import gc
-import torch.quantization
 
 # Load environment variables
 load_dotenv()
@@ -204,7 +204,7 @@ def heuristic_crop_recommendation(features, soil_type):
 
     crop_scores = {
         "rice": 0, "wheat": 0, "maize": 0, "sugarcane": 0, "cotton": 0,
-        "groundnut": 0, "barley": 0, "millet": 0, "sorghum": 0, "soybean": 0
+        "groundnut": 0, "barley": 0, "millet": 0, "Bats": 0, "sorghum": 0, "soybean": 0
     }
 
     soil_prefs = {
@@ -307,17 +307,10 @@ def check_irrigation(crop, soil_type, features):
         input_data = features + [soil_type_map.get(soil_type.lower(), 0)]
         input_df = pd.DataFrame([input_data], columns=["N", "P", "K", "temperature", "humidity", "ph", "rainfall", "soil_type"])
         prediction = irrigation_model.predict(input_df)[0]
-        result = irrigation_classes[prediction]
+        return irrigation_classes[prediction]
     except Exception as e:
         logging.error(f"Error using irrigation model: {str(e)}")
-        result = check_irrigation_heuristic(crop, soil_type, features)
-    finally:
-        # Unload irrigation model to free memory
-        if 'irrigation_model' in locals():
-            del irrigation_model
-            gc.collect()
-            logging.info("Irrigation model unloaded and memory freed")
-    return result
+        return check_irrigation_heuristic(crop, soil_type, features)
 
 def estimate_yield(crop, features):
     rainfall = features[6]
@@ -526,14 +519,9 @@ def predict_soil():
         soil_model = CustomEfficientNet()
         soil_model.load_state_dict(torch.load(SOIL_MODEL_PATH, map_location=torch.device('cpu')))
         soil_model.eval()
-        # Apply dynamic quantization to optimize model
-        logging.info("Applying dynamic quantization to soil model")
-        soil_model = torch.quantization.quantize_dynamic(
-            soil_model, {torch.nn.Linear}, dtype=torch.qint8
-        )
-        logging.info("Soil model loaded and quantized successfully")
+        logging.info("Soil model loaded successfully")
     except Exception as e:
-        logging.error(f"Error loading or quantizing soil model: {str(e)}")
+        logging.error(f"Error loading soil model: {str(e)}")
         return jsonify(translate_response({"error": "Soil model not loaded", "code": "MODEL_NOT_LOADED"}, lang)), 503
 
     try:
@@ -565,12 +553,6 @@ def predict_soil():
             "error": f"Image processing failed: {str(e)}",
             "code": "IMAGE_PROCESSING_ERROR"
         }, lang)), 500
-    finally:
-        # Unload soil model to free memory
-        if 'soil_model' in locals():
-            del soil_model
-            gc.collect()
-            logging.info("Soil model unloaded and memory freed")
 
 @app.route('/recommend_crop', methods=['POST'])
 def recommend_crop():
@@ -648,7 +630,7 @@ def recommend_crop():
             "crops": top_crops,
             "irrigation": irrigation_status,
             "estimated_yield": f"{estimated_yield} tons/ha",
-            #"note": "Using heuristic recommendation" if not crop_model else "Using ML model"
+            "note": "Using heuristic recommendation" if not crop_model else "Using ML model"
         }
         return jsonify(translate_response(response, lang))
     except Exception as e:
@@ -657,12 +639,6 @@ def recommend_crop():
             "error": f"Error processing crop recommendation: {str(e)}",
             "code": "CROP_RECOMMENDATION_ERROR"
         }, lang)), 500
-    finally:
-        # Unload crop model to free memory
-        if 'crop_model' in locals() and crop_model is not None:
-            del crop_model
-            gc.collect()
-            logging.info("Crop model unloaded and memory freed")
 
 @app.route('/government_aids', methods=['POST'])
 def government_aids():
@@ -874,12 +850,6 @@ def model_info():
         logging.info("Crop model info retrieved successfully")
     except Exception as e:
         logging.error(f"Error loading crop model for model_info: {str(e)}")
-    finally:
-        # Unload crop model to free memory
-        if 'crop_model' in locals():
-            del crop_model
-            gc.collect()
-            logging.info("Crop model unloaded and memory freed for model_info")
 
     return jsonify({
         "crop_model": crop_model_info,
@@ -887,5 +857,6 @@ def model_info():
     })
 
 if __name__ == '__main__':
+
     port = int(os.environ.get("PORT", 10000))
     app.run(debug=True, host='0.0.0.0', port=port)
