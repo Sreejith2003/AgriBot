@@ -20,6 +20,8 @@ from bson.objectid import ObjectId
 from dotenv import load_dotenv
 from datetime import datetime
 import importlib.util
+import gc
+import torch.quantization
 
 # Load environment variables
 load_dotenv()
@@ -119,41 +121,6 @@ transform = transforms.Compose([
     transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
 ])
 
-# --- Load Models ---
-soil_model = None
-crop_model = None
-irrigation_model = None
-
-try:
-    # Load soil model
-    if os.path.exists(SOIL_MODEL_PATH):
-        logging.info(f"Loading soil model from {SOIL_MODEL_PATH}")
-        soil_model = CustomEfficientNet()
-        soil_model.load_state_dict(torch.load(SOIL_MODEL_PATH, map_location=torch.device('cpu')))
-        soil_model.eval()
-        logging.info("Soil model loaded successfully")
-    else:
-        logging.warning("Soil model file missing")
-
-    # Load crop model
-    if os.path.exists(CROP_MODEL_PATH):
-        logging.info(f"Loading crop model from {CROP_MODEL_PATH}")
-        crop_model = joblib.load(CROP_MODEL_PATH)
-        logging.info("Crop model loaded successfully")
-    else:
-        logging.warning("Crop model file missing")
-
-    # Load irrigation model
-    if os.path.exists(IRRIGATION_MODEL_PATH):
-        logging.info(f"Loading irrigation model from {IRRIGATION_MODEL_PATH}")
-        irrigation_model = joblib.load(IRRIGATION_MODEL_PATH)
-        logging.info("Irrigation model loaded successfully")
-    else:
-        logging.warning("Irrigation model file missing")
-
-except Exception as e:
-    logging.error(f"Error loading models: {str(e)}")
-
 # --- Supported Languages ---
 SUPPORTED_LANGUAGES = {
     'en': {'gtts': 'en', 'name': 'English'},
@@ -208,6 +175,8 @@ if key:
         logging.info("Gemini API initialized successfully")
     except Exception as e:
         logging.error(f"Error initializing Gemini: {str(e)}")
+        gemini_model = None
+        gemini_chat = None
 else:
     logging.warning("No valid Gemini API key found. Chat functionality will be limited.")
 
@@ -324,16 +293,31 @@ def check_irrigation_heuristic(crop, soil_type, features):
     return irrigation_levels.get(min(irrigation_score, 4), "Moderate irrigation required")
 
 def check_irrigation(crop, soil_type, features):
-    if irrigation_model:
-        try:
-            soil_type_map = {"alluvial": 0, "black": 1, "clay": 2, "red": 3}
-            input_data = features + [soil_type_map.get(soil_type.lower(), 0)]
-            input_df = pd.DataFrame([input_data], columns=["N", "P", "K", "temperature", "humidity", "ph", "rainfall", "soil_type"])
-            prediction = irrigation_model.predict(input_df)[0]
-            return irrigation_classes[prediction]
-        except Exception as e:
-            logging.error(f"Error using irrigation model: {str(e)}")
-    return check_irrigation_heuristic(crop, soil_type, features)
+    try:
+        # Load irrigation model on-demand
+        logging.info(f"Loading irrigation model from {IRRIGATION_MODEL_PATH}")
+        irrigation_model = joblib.load(IRRIGATION_MODEL_PATH)
+        logging.info("Irrigation model loaded successfully")
+    except Exception as e:
+        logging.error(f"Error loading irrigation model: {str(e)}")
+        return check_irrigation_heuristic(crop, soil_type, features)
+
+    try:
+        soil_type_map = {"alluvial": 0, "black": 1, "clay": 2, "red": 3}
+        input_data = features + [soil_type_map.get(soil_type.lower(), 0)]
+        input_df = pd.DataFrame([input_data], columns=["N", "P", "K", "temperature", "humidity", "ph", "rainfall", "soil_type"])
+        prediction = irrigation_model.predict(input_df)[0]
+        result = irrigation_classes[prediction]
+    except Exception as e:
+        logging.error(f"Error using irrigation model: {str(e)}")
+        result = check_irrigation_heuristic(crop, soil_type, features)
+    finally:
+        # Unload irrigation model to free memory
+        if 'irrigation_model' in locals():
+            del irrigation_model
+            gc.collect()
+            logging.info("Irrigation model unloaded and memory freed")
+    return result
 
 def estimate_yield(crop, features):
     rainfall = features[6]
@@ -536,7 +520,20 @@ def predict_soil():
     if lang not in SUPPORTED_LANGUAGES:
         lang = "en"
 
-    if soil_model is None:
+    try:
+        # Load soil model on-demand
+        logging.info(f"Loading soil model from {SOIL_MODEL_PATH}")
+        soil_model = CustomEfficientNet()
+        soil_model.load_state_dict(torch.load(SOIL_MODEL_PATH, map_location=torch.device('cpu')))
+        soil_model.eval()
+        # Apply dynamic quantization to optimize model
+        logging.info("Applying dynamic quantization to soil model")
+        soil_model = torch.quantization.quantize_dynamic(
+            soil_model, {torch.nn.Linear}, dtype=torch.qint8
+        )
+        logging.info("Soil model loaded and quantized successfully")
+    except Exception as e:
+        logging.error(f"Error loading or quantizing soil model: {str(e)}")
         return jsonify(translate_response({"error": "Soil model not loaded", "code": "MODEL_NOT_LOADED"}, lang)), 503
 
     try:
@@ -568,6 +565,12 @@ def predict_soil():
             "error": f"Image processing failed: {str(e)}",
             "code": "IMAGE_PROCESSING_ERROR"
         }, lang)), 500
+    finally:
+        # Unload soil model to free memory
+        if 'soil_model' in locals():
+            del soil_model
+            gc.collect()
+            logging.info("Soil model unloaded and memory freed")
 
 @app.route('/recommend_crop', methods=['POST'])
 def recommend_crop():
@@ -578,6 +581,15 @@ def recommend_crop():
 
     if not data:
         return jsonify(translate_response({"error": "No data provided", "code": "NO_DATA"}, lang)), 400
+
+    try:
+        # Load crop model on-demand
+        logging.info(f"Loading crop model from {CROP_MODEL_PATH}")
+        crop_model = joblib.load(CROP_MODEL_PATH)
+        logging.info("Crop model loaded successfully")
+    except Exception as e:
+        logging.error(f"Error loading crop model: {str(e)}")
+        crop_model = None  # Ensure heuristic fallback
 
     try:
         required_fields = ["nitrogen", "phosphorus", "potassium", "temperature", "humidity", "ph", "rainfall", "soil_type"]
@@ -636,7 +648,7 @@ def recommend_crop():
             "crops": top_crops,
             "irrigation": irrigation_status,
             "estimated_yield": f"{estimated_yield} tons/ha",
-            "note": "Using heuristic recommendation"
+            #"note": "Using heuristic recommendation" if not crop_model else "Using ML model"
         }
         return jsonify(translate_response(response, lang))
     except Exception as e:
@@ -645,6 +657,12 @@ def recommend_crop():
             "error": f"Error processing crop recommendation: {str(e)}",
             "code": "CROP_RECOMMENDATION_ERROR"
         }, lang)), 500
+    finally:
+        # Unload crop model to free memory
+        if 'crop_model' in locals() and crop_model is not None:
+            del crop_model
+            gc.collect()
+            logging.info("Crop model unloaded and memory freed")
 
 @app.route('/government_aids', methods=['POST'])
 def government_aids():
@@ -824,9 +842,9 @@ def serve_translations():
 def health():
     status = {
         "api": "running",
-        "soil_model": bool(soil_model),
-        "crop_model": bool(crop_model),
-        "irrigation_model": bool(irrigation_model),
+        "soil_model": os.path.exists(SOIL_MODEL_PATH),
+        "crop_model": os.path.exists(CROP_MODEL_PATH),
+        "irrigation_model": os.path.exists(IRRIGATION_MODEL_PATH),
         "gemini": bool(gemini_chat),
         "api_key": bool(key),
         "mongodb": bool(users_collection)
@@ -836,17 +854,38 @@ def health():
 @app.route('/model_info', methods=['GET'])
 def model_info():
     crop_model_info = {
-        "loaded": bool(crop_model),
+        "loaded": False,
         "path": CROP_MODEL_PATH,
         "exists": os.path.exists(CROP_MODEL_PATH),
-        "predict_proba": hasattr(crop_model, 'predict_proba') if crop_model else False,
-        "features": getattr(crop_model, 'feature_names_in_', "Not loaded") if crop_model else "Not loaded",
-        "classes": getattr(crop_model, 'classes_', "Not loaded").tolist() if crop_model and hasattr(crop_model, 'classes_') else "Not loaded"
+        "predict_proba": False,
+        "features": "Not loaded",
+        "classes": "Not loaded"
     }
+    
+    try:
+        logging.info(f"Loading crop model for model_info from {CROP_MODEL_PATH}")
+        crop_model = joblib.load(CROP_MODEL_PATH)
+        crop_model_info.update({
+            "loaded": True,
+            "predict_proba": hasattr(crop_model, 'predict_proba'),
+            "features": getattr(crop_model, 'feature_names_in_', "Not available").tolist() if hasattr(crop_model, 'feature_names_in_') else "Not available",
+            "classes": getattr(crop_model, 'classes_', "Not available").tolist() if hasattr(crop_model, 'classes_') else "Not available"
+        })
+        logging.info("Crop model info retrieved successfully")
+    except Exception as e:
+        logging.error(f"Error loading crop model for model_info: {str(e)}")
+    finally:
+        # Unload crop model to free memory
+        if 'crop_model' in locals():
+            del crop_model
+            gc.collect()
+            logging.info("Crop model unloaded and memory freed for model_info")
+
     return jsonify({
         "crop_model": crop_model_info,
         "sklearn_version": sklearn.__version__
     })
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    port = int(os.environ.get("PORT", 10000))
+    app.run(debug=True, host='0.0.0.0', port=port)
