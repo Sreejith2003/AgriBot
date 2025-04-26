@@ -51,6 +51,7 @@
             background-color: var(--content-bg);
             box-sizing: border-box;
             overflow: hidden;
+            position: relative;
         }
 
         .chatbot-header {
@@ -197,6 +198,22 @@
             transform: scale(1.05);
         }
 
+        .video-btn {
+            width: 40px;
+            height: 40px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: transform 0.2s;
+        }
+
+        .video-btn:hover {
+            transform: scale(1.05);
+        }
+
         .mode-selector {
             display: flex;
             justify-content: space-between;
@@ -333,25 +350,12 @@
             color: #b71c1c;
         }
 
-        .video-message {
-            max-width: 80%;
-            margin-right: auto;
-        }
-
-        .video-message video {
-            width: 100%;
-            max-width: 300px;
-            border-radius: var(--radius-medium);
-            box-shadow: var(--shadow-sm);
-            margin-top: 5px;
-        }
-
         @media (max-width: 500px) {
             .chatbot-header h3 {
                 font-size: 1rem;
             }
             
-            .message, .video-message {
+            .message {
                 max-width: 85%;
                 padding: 10px 12px;
                 font-size: 13px;
@@ -369,25 +373,21 @@
             .welcome-message p {
                 font-size: 12px;
             }
-
-            .video-message video {
-                max-width: 250px;
-            }
         }
     </style>
 </head>
 <body>
     <div class="chatbot-container" id="chatbotContainer">
         <div class="chatbot-header">
-            <h3><i class="fas fa-leaf"></i> AgriAssistant</h3>
+            <h3><i class="fas fa-leaf"></i> Uzhavan - Smart Farming Assistant</h3>
             <button class="chatbot-close" id="chatbotClose" aria-label="Close chatbot">
                 <i class="fas fa-times"></i>
             </button>
         </div>
         <div class="chatbot-body" id="chatbotBody">
             <div class="welcome-message">
-                <h4>Welcome to AgriAssistant! 🌱</h4>
-                <p>Your personal agricultural expert. Ask me anything about farming, crops, or weather. Type 'video' to see a demo video.</p>
+                <h4>Welcome to Uzhavan! 🌱</h4>
+                <p>Your smart farming assistant. Please type a message to get started.</p>
             </div>
         </div>
         <div class="chatbot-footer">
@@ -412,6 +412,9 @@
                 <button class="record-btn" id="recordBtn" aria-label="Toggle voice recording">
                     <i class="fas fa-microphone"></i>
                 </button>
+                <button class="video-btn" id="videoBtn" aria-label="Play video">
+                    <i class="fas fa-video"></i>
+                </button>
                 <button class="chatbot-send" id="chatbotSend" aria-label="Send message">
                     <i class="fas fa-paper-plane"></i>
                 </button>
@@ -431,6 +434,7 @@
             const voiceModeBtn = document.getElementById('voiceModeBtn');
             const languageSelector = document.getElementById('languageSelector');
             const recordBtn = document.getElementById('recordBtn');
+            const videoBtn = document.getElementById('videoBtn');
 
             // State variables
             let currentMode = 'text';
@@ -477,6 +481,9 @@
 
             chatbotSend.addEventListener('click', sendMessage);
             recordBtn.addEventListener('click', toggleRecording);
+            videoBtn.addEventListener('click', () => {
+                window.parent.postMessage({ type: 'playVideo' }, trustedOrigin);
+            });
 
             languageSelector.addEventListener('change', () => {
                 currentLanguage = languageSelector.value;
@@ -616,7 +623,7 @@
                 }
             }
 
-            async function sendMessage() {
+            function sendMessage() {
                 if (currentMode === 'voice' && !isRecording) {
                     toggleRecording();
                     return;
@@ -654,13 +661,7 @@
                     });
                     const data = await response.json();
                     chatbotBody.removeChild(typingIndicator);
-                    if (data.error) {
-                        addBotMessage(data.error);
-                    } else if (data.video_url) {
-                        addBotVideoMessage(data.response, data.video_url);
-                    } else {
-                        addBotMessage(data.response || "I'm here to help with your farming questions! Please ask about crops, weather, or anything else.");
-                    }
+                    addBotMessage(data.response || "I'm here to help with your farming questions! Please ask about crops, weather, or anything else.");
                 } catch (error) {
                     chatbotBody.removeChild(typingIndicator);
                     addBotMessage("Sorry, there was an error connecting to the server. Please try again.");
@@ -684,39 +685,6 @@
                 const div = document.createElement('div');
                 div.className = 'message bot-message';
                 div.textContent = message;
-                const timestamp = document.createElement('span');
-                timestamp.className = 'message-timestamp';
-                timestamp.textContent = getCurrentTime();
-                div.appendChild(timestamp);
-
-                const audioControls = document.createElement('div');
-                audioControls.className = 'audio-controls';
-                const playBtn = document.createElement('button');
-                playBtn.className = 'audio-btn';
-                playBtn.innerHTML = '<i class="fas fa-play"></i> Play';
-                playBtn.setAttribute('aria-label', 'Play audio response');
-                playBtn.addEventListener('click', () => playTextAsAudio(message, currentLanguage));
-                const stopBtn = document.createElement('button');
-                stopBtn.className = 'audio-btn stop-btn';
-                stopBtn.innerHTML = '<i class="fas fa-stop"></i> Stop';
-                stopBtn.setAttribute('aria-label', 'Stop audio response');
-                stopBtn.addEventListener('click', stopAudio);
-                audioControls.appendChild(playBtn);
-                audioControls.appendChild(stopBtn);
-                div.appendChild(audioControls);
-
-                chatbotBody.appendChild(div);
-                scrollToBottom();
-            }
-
-            function addBotVideoMessage(message, videoUrl) {
-                const div = document.createElement('div');
-                div.className = 'message bot-message video-message';
-                div.textContent = message;
-                const video = document.createElement('video');
-                video.controls = true;
-                video.innerHTML = `<source src="${videoUrl}" type="video/mp4">Your browser does not support the video tag.`;
-                div.appendChild(video);
                 const timestamp = document.createElement('span');
                 timestamp.className = 'message-timestamp';
                 timestamp.textContent = getCurrentTime();

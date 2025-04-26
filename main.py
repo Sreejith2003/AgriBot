@@ -1,3 +1,5 @@
+# Sample code
+
 from flask import Flask, request, jsonify, render_template, send_from_directory
 from flask_cors import CORS
 import os
@@ -15,6 +17,9 @@ import logging
 import random
 from gtts import gTTS
 import sklearn
+import requests
+import time
+from requests.exceptions import RequestException, Timeout, ConnectionError
 
 # Import all_states from data.schemes
 from data.schemes import all_states
@@ -300,24 +305,32 @@ def estimate_yield(crop, features):
 # --- API Key Handling ---
 API_KEY_FILE = os.path.join(BASE_DIR, "api", "API_KEY.py")
 API_KEY_ROOT = os.path.join(BASE_DIR, "API_KEY.py")
-key = os.getenv("GOOGLE_API_KEY")
+key = None
 
-if not key:
-    try:
-        api_key_file = API_KEY_FILE if os.path.exists(API_KEY_FILE) else API_KEY_ROOT
-        if not os.path.exists(api_key_file):
-            raise FileNotFoundError(f"API key file not found at '{api_key_file}' or '{API_KEY_ROOT}'")
-        import importlib.util
-        spec = importlib.util.spec_from_file_location("API_KEY", api_key_file)
-        api_key_module = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(api_key_module)
-        key = api_key_module.key
-        if not key or not isinstance(key, str) or "YOUR_API_KEY" in key:
-            raise ValueError("Invalid API key format")
-        logging.info(f"API key loaded successfully from {api_key_file}")
-    except Exception as e:
-        logging.error(f"Error loading API key: {str(e)}")
-        key = None
+try:
+    # Check both possible locations for API_KEY.py
+    api_key_file = API_KEY_FILE if os.path.exists(API_KEY_FILE) else API_KEY_ROOT
+    if not os.path.exists(api_key_file):
+        raise FileNotFoundError(f"API key file not found at '{api_key_file}' or '{API_KEY_ROOT}'")
+    
+    # Dynamically import the API_KEY module
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("API_KEY", api_key_file)
+    if spec is None:
+        raise ImportError(f"Failed to create spec for module at {api_key_file}")
+    
+    api_key_module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(api_key_module)
+    
+    # Access the key variable
+    key = getattr(api_key_module, 'key', None)
+    if not key or not isinstance(key, str) or "YOUR_API_KEY" in key:
+        raise ValueError("Invalid API key format")
+    
+    logging.info(f"API key loaded successfully from {api_key_file}")
+except Exception as e:
+    logging.error(f"Error loading API key from API_KEY.py: {str(e)}")
+    key = None
 
 if not key:
     logging.warning("No valid API key found")
@@ -326,9 +339,24 @@ if not key:
 gemini_model = None
 gemini_chat = None
 model_name_to_use = 'gemini-1.5-flash'
+MAX_RETRIES = 3
+RETRY_DELAY = 2  # seconds
+REQUEST_TIMEOUT = 30  # seconds
+
+# Test API connectivity
+def test_api_connectivity():
+    try:
+        response = requests.get("https://generativelanguage.googleapis.com/", timeout=5)
+        return response.status_code < 400
+    except (RequestException, Timeout, ConnectionError):
+        return False
 
 if key:
     try:
+        # Check network connectivity first
+        if not test_api_connectivity():
+            logging.warning("Network connectivity issue detected with Google API")
+        
         genai.configure(api_key=key)
         gemini_model = genai.GenerativeModel(model_name_to_use)
         gemini_chat = gemini_model.start_chat(history=[])
@@ -406,12 +434,32 @@ def translate_to_english(text, source_lang_code):
         logging.error(f"Translation error from {source_lang_code}: {e}")
         return text
 
+# Fallback responses for common agricultural topics
+FALLBACK_RESPONSES = {
+    "soil": "Soil health is crucial for farming. Consider testing your soil for nutrient levels, pH, and organic matter content. Good soil management practices include crop rotation, cover cropping, and appropriate fertilization.",
+    "crop": "Crop selection should be based on your local climate, soil type, water availability, and market demand. Consider factors like growing season, disease resistance, and yield potential.",
+    "irrigation": "Efficient irrigation is key to successful farming. Methods include drip irrigation, sprinkler systems, and flood irrigation. The best method depends on your crop, soil type, and water availability.",
+    "fertilizer": "Balanced fertilization is important for crop health. Consider using a mix of organic and inorganic fertilizers based on soil test results. Apply at the right time and in appropriate amounts.",
+    "pest": "Integrated Pest Management (IPM) combines biological, cultural, physical, and chemical methods to minimize economic damage from pests while reducing environmental impact.",
+    "weather": "Weather patterns significantly impact farming. Stay updated with local forecasts and consider implementing climate-smart agricultural practices to mitigate risks.",
+    "farming": "Sustainable farming practices help maintain long-term productivity. These include crop rotation, conservation tillage, water management, and integrated pest management."
+}
+
+def get_fallback_response(query):
+    """Generate a fallback response based on keywords in the query"""
+    query_lower = query.lower()
+    for keyword, response in FALLBACK_RESPONSES.items():
+        if keyword in query_lower:
+            return response
+    return "I'm currently unable to process your request due to connectivity issues. Please try again later or check your network connection."
+
 def get_gemini_response(query_en):
     if not query_en or len(query_en.strip()) < 2:
         return "Please provide a more detailed question."
     
     if gemini_chat is None:
-        return "Chat service is currently unavailable due to missing API key."
+        logging.warning("Chat service unavailable - API key missing or invalid")
+        return "Chat service is currently unavailable due to missing or invalid API key."
 
     full_prompt = (
         "You are an AI assistant. If the user asks about agriculture, farming, crops, soil, weather for farming, "
@@ -422,14 +470,52 @@ def get_gemini_response(query_en):
         f"User query: {query_en}"
     )
 
-    try:
-        response = gemini_chat.send_message(full_prompt, stream=False)
-        if not hasattr(response, 'parts') or not response.parts:
-            return "Sorry, I couldn't process that request."
-        return clean_text("".join(part.text for part in response.parts if hasattr(part, 'text')).strip())
-    except Exception as e:
-        logging.error(f"Gemini API error: {str(e)}")
-        return "Sorry, I encountered an error processing your request."
+    # Implement retry mechanism
+    for attempt in range(MAX_RETRIES):
+        try:
+            # Check network connectivity before making the request
+            if not test_api_connectivity():
+                logging.error("Network connectivity issue detected before API call")
+                return get_fallback_response(query_en)
+                
+            # Make the API call with timeout
+            response = gemini_chat.send_message(full_prompt, stream=False)
+            
+            if not hasattr(response, 'parts') or not response.parts:
+                logging.warning(f"Empty response received from Gemini API (attempt {attempt+1}/{MAX_RETRIES})")
+                if attempt == MAX_RETRIES - 1:  # Last attempt
+                    return get_fallback_response(query_en)
+                continue  # Try again
+                
+            return clean_text("".join(part.text for part in response.parts if hasattr(part, 'text')).strip())
+            
+        except ConnectionError as e:
+            logging.error(f"Connection error on attempt {attempt+1}/{MAX_RETRIES}: {str(e)}")
+            
+            if attempt == MAX_RETRIES - 1:  # Last attempt
+                return get_fallback_response(query_en)
+            time.sleep(RETRY_DELAY)  # Wait before retrying
+            
+        except Timeout as e:
+            logging.error(f"Timeout error on attempt {attempt+1}/{MAX_RETRIES}: {str(e)}")
+            if attempt == MAX_RETRIES - 1:  # Last attempt
+                return get_fallback_response(query_en)
+            time.sleep(RETRY_DELAY)  # Wait before retrying
+            
+        except RequestException as e:
+            logging.error(f"Request exception on attempt {attempt+1}/{MAX_RETRIES}: {str(e)}")
+            if attempt == MAX_RETRIES - 1:  # Last attempt
+                return get_fallback_response(query_en)
+            time.sleep(RETRY_DELAY)  # Wait before retrying
+            
+        except Exception as e:
+            logging.error(f"Gemini API error on attempt {attempt+1}/{MAX_RETRIES}: {str(e)}")
+            if attempt == MAX_RETRIES - 1:  # Last attempt
+                return get_fallback_response(query_en)
+            time.sleep(RETRY_DELAY)  # Wait before retrying
+    
+    # If we get here, all retries failed
+    return get_fallback_response(query_en)
 
 # --- Routes ---
 @app.route('/')

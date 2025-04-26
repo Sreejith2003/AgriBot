@@ -3,14 +3,194 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>AgriBot - Smart Farming Assistant</title>
+  <title>Uzhavan</title>
+  <link rel="icon" href="{{ url_for('static', filename='images/uzhavan.ico') }}" type="image/x-icon">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
   <link rel="stylesheet" href="{{ url_for('static', filename='styles/style.css') }}"/>
+  <style>
+    body {
+      position: relative;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+    }
+    
+    /* 3-Column Image System */
+    .image-mosaic {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      z-index: -1;
+    }
+    
+    .mosaic-column {
+      flex: 1;
+      height: 100%;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .mosaic-column img {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      transition: opacity 1.5s ease-in-out;
+      filter: brightness(0.9);
+    }
+    
+    .mosaic-column img.active {
+      opacity: 1;
+    }
+    
+    /* Enhanced Green Overlay */
+    .green-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(16, 120, 19, 0.3);
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* Container Styles */
+    .container {
+      background-color: rgba(255, 255, 255, 0.85);
+      border-radius: 15px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+      backdrop-filter: blur(5px);
+      margin: 2rem auto;
+      max-width: 900px;
+      padding: 2rem;
+      position: relative;
+    }
+
+    /* Video Overlay Styles */
+    .video-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(8px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 10000;
+    }
+
+    .video-player {
+      position: relative;
+      width: 80%;
+      max-width: 800px;
+      background: #1c2526;
+      border-radius: 10px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+    }
+
+    .video-player video {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .video-controls {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(0, 0, 0, 0.7);
+      padding: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .video-control-btn {
+      background: none;
+      border: none;
+      color: white;
+      cursor: pointer;
+      font-size: 1.2rem;
+      padding: 5px 10px;
+    }
+
+    .video-control-btn:hover {
+      color: #66BB6A;
+    }
+
+    .video-close {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      color: white;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      transition: background 0.2s;
+    }
+
+    .video-close:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    @media (max-width: 500px) {
+      .video-player {
+        width: 90%;
+      }
+    }
+  </style>
 </head>
 <body>
+  <!-- 3-Column Image Background System -->
+  <div class="image-mosaic">
+    <!-- Column 1 -->
+    <div class="mosaic-column" id="col1">
+      <img class="active" src="{{ url_for('static', filename='images/image1.jpg') }}" alt="Farm image 1">
+      <img src="{{ url_for('static', filename='images/image2.jpg') }}" alt="Farm image 2">
+      <img src="{{ url_for('static', filename='images/image3.jpg') }}" alt="Farm image 3">
+    </div>
+    
+    <!-- Column 2 -->
+    <div class="mosaic-column" id="col2">
+      <img class="active" src="{{ url_for('static', filename='images/image4.jpg') }}" alt="Farm image 4">
+      <img src="{{ url_for('static', filename='images/image5.jpg') }}" alt="Farm image 5">
+      <img src="{{ url_for('static', filename='images/image6.jpg') }}" alt="Farm image 6">
+    </div>
+    
+    <!-- Column 3 -->
+    <div class="mosaic-column" id="col3">
+      <img class="active" src="{{ url_for('static', filename='images/image7.jpg') }}" alt="Farm image 7">
+      <img src="{{ url_for('static', filename='images/image8.jpg') }}" alt="Farm image 8">
+      <img src="{{ url_for('static', filename='images/image9.jpg') }}" alt="Farm image 9">
+    </div>
+  </div>
+  
+  <!-- Green Overlay System -->
+  <div class="green-overlay"></div>
+  <div class="farmer-overlay"></div>
+
   <div class="container" id="mainContainer">
-    <h2 id="appTitle">AgriBot - Smart Farming Assistant</h2>
+    <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+      <img src="{{ url_for('static', filename='images/uzhavanre.png') }}" alt="Uzhavan Logo" style="width: 140px; height: 140px; transition: transform 0.3s ease; margin-right: 20px;">
+      <h1 id="appTitle" style="margin: 0;">Uzhavan</h1>
+    </div>
 
     <div class="language-select">
       <label for="language">Select Language</label>
@@ -157,73 +337,157 @@
   <!-- Scripts -->
   <script src="{{ url_for('static', filename='js/script.js') }}"></script>
   <script>
+    // Enhanced Column Rotation System for 9 images (3 columns × 3 images)
+    function initColumn(columnId) {
+      const column = document.getElementById(columnId);
+      const images = column.querySelectorAll('img');
+      let current = 0;
+      
+      const rotate = () => {
+        images[current].classList.remove('active');
+        current = (current + 1) % images.length;
+        images[current].classList.add('active');
+        
+        // Random interval between 4-7 seconds for organic feel
+        setTimeout(rotate, 4000 + Math.random() * 3000);
+      };
+      
+      // Initial rotation with random delay (0-3s)
+      setTimeout(rotate, Math.random() * 3000);
+    }
+
+    // Initialize all three columns
+    initColumn('col1');
+    initColumn('col2');
+    initColumn('col3');
+
+    // Chatbot and Video Functionality
     const chatbotFrame = document.getElementById('chatbotFrame');
     const chatbotLauncher = document.getElementById('chatbotLauncher');
     const languageSelect = document.getElementById('language');
-  
-    // Show/hide chatbot when farmer icon clicked
+    let videoOverlay = null;
+    let videoPlayer = null;
+
     chatbotLauncher.addEventListener('click', () => {
       const isVisible = chatbotFrame.style.display === 'block';
       chatbotFrame.style.display = isVisible ? 'none' : 'block';
     });
-  
-    // Send initial language on load
+
     chatbotFrame.addEventListener('load', () => {
       chatbotFrame.contentWindow.postMessage({
         type: 'init',
         language: languageSelect.value
       }, '*');
     });
-  
-    // Update language dynamically
+
     languageSelect.addEventListener('change', () => {
       chatbotFrame.contentWindow.postMessage({
         type: 'languageUpdate',
         language: languageSelect.value
       }, '*');
     });
-  
-    // If chatbot inside sends a "close", just hide it (don't remove launcher)
+
     window.addEventListener('message', (event) => {
-      if (event.data.type === 'close') {
-        chatbotFrame.style.display = 'none';
+      switch (event.data.type) {
+        case 'closeChatbot':
+          chatbotFrame.style.display = 'none';
+          break;
+        case 'playVideo':
+          openVideoPlayer();
+          break;
+        case 'sendMessage':
+          if (event.data.message.includes('Show soil prediction')) {
+            showForm('soil_prediction');
+          } else if (event.data.message.includes('Show crop mgmt')) {
+            showForm('crop_mgmt');
+          } else if (event.data.message.includes('Show govt aid')) {
+            showForm('govt_aid');
+          }
+          break;
       }
     });
-  </script>
 
-  <!-- Cloudflare Script -->
-  <script>
-    (function () {
-      function c() {
-        var b = a.contentDocument || a.contentWindow.document;
-        if (b) {
-          var d = b.createElement('script');
-          d.innerHTML = "window.__CF$cv$params={r:'92c25ec8eeffbd58',t:'MTc0Mzk1Mzg4NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";
-          b.getElementsByTagName('head')[0].appendChild(d);
+    function openVideoPlayer() {
+      videoOverlay = document.createElement('div');
+      videoOverlay.className = 'video-overlay';
+      
+      videoPlayer = document.createElement('div');
+      videoPlayer.className = 'video-player';
+
+      const video = document.createElement('video');
+      video.src = 'videos/Agriculture.mp4';
+      video.controls = false;
+      video.autoplay = false;
+      video.onloadeddata = () => {
+        console.log('Video loaded successfully');
+      };
+      video.onerror = () => {
+        console.error('Failed to load video');
+        alert('Failed to load video. Please try again or use a different video URL.');
+      };
+      videoPlayer.appendChild(video);
+
+      const closeBtn = document.createElement('button');
+      closeBtn.className = 'video-close';
+      closeBtn.innerHTML = '<i class="fas fa-times"></i>';
+      closeBtn.setAttribute('aria-label', 'Close video player');
+      closeBtn.addEventListener('click', closeVideoPlayer);
+      videoPlayer.appendChild(closeBtn);
+
+      const controls = document.createElement('div');
+      controls.className = 'video-controls';
+
+      const playPauseBtn = document.createElement('button');
+      playPauseBtn.className = 'video-control-btn';
+      playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+      playPauseBtn.setAttribute('aria-label', 'Play/Pause video');
+      playPauseBtn.addEventListener('click', () => {
+        if (video.paused) {
+          video.play().catch(error => {
+            console.error('Video play failed:', error);
+            alert('Failed to play video. Please check browser permissions.');
+          });
+          playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+        } else {
+          video.pause();
+          playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
         }
-      }
-      if (document.body) {
-        var a = document.createElement('iframe');
-        a.height = 1;
-        a.width = 1;
-        a.style.position = 'absolute';
-        a.style.top = 0;
-        a.style.left = 0;
-        a.style.border = 'none';
-        a.style.visibility = 'hidden';
-        document.body.appendChild(a);
-        if ('loading' !== document.readyState) c();
-        else if (window.addEventListener)
-          document.addEventListener('DOMContentLoaded', c);
-        else {
-          var e = document.onreadystatechange || function () {};
-          document.onreadystatechange = function (b) {
-            e(b);
-            'loading' !== document.readyState && (document.onreadystatechange = e, c());
-          };
+      });
+
+      controls.appendChild(playPauseBtn);
+      videoPlayer.appendChild(controls);
+
+      videoOverlay.appendChild(videoPlayer);
+      document.body.appendChild(videoOverlay);
+    }
+
+    function closeVideoPlayer() {
+      if (videoOverlay) {
+        const video = videoOverlay.querySelector('video');
+        if (video) {
+          video.pause();
         }
+        videoOverlay.remove();
+        videoOverlay = null;
+        videoPlayer = null;
       }
-    })();
+    }
+
+    function showForm(formId) {
+      document.getElementById('options').style.display = 'none';
+      document.getElementById('soil_prediction').classList.add('hidden');
+      document.getElementById('crop_mgmt').classList.add('hidden');
+      document.getElementById('govt_aid').classList.add('hidden');
+      document.getElementById(formId).classList.remove('hidden');
+    }
+
+    function goBack() {
+      document.getElementById('options').style.display = 'block';
+      document.getElementById('soil_prediction').classList.add('hidden');
+      document.getElementById('crop_mgmt').classList.add('hidden');
+      document.getElementById('govt_aid').classList.add('hidden');
+    }
   </script>
+  <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9366e1f639774566',t:'MTc0NTY3ODkyMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
 </body>
 </html>
