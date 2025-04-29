@@ -27,7 +27,7 @@ async function loadTranslations() {
                 soilButton: 'Analyze Soil',
                 cropTitle: 'Crop & Irrigation Management',
                 nitrogenLabel: 'Nitrogen (N) Level',
-                phosphorusLabel: 'Phosphorus (P) Level', // Updated spelling
+                phosphorusLabel: 'Phosphorus (P) Level',
                 potassiumLabel: 'Potassium (K) Level',
                 tempLabel: 'Temperature (°C)',
                 humidityLabel: 'Humidity (%)',
@@ -73,7 +73,7 @@ function updateUIText() {
     
     document.getElementById('cropTitle').textContent = lang.cropTitle || 'Crop & Irrigation Management';
     document.getElementById('nitrogenLabel').textContent = lang.nitrogenLabel || 'Nitrogen (N) Level';
-    document.getElementById('phosphorusLabel').textContent = lang.phosphorusLabel || 'Phosphorus (P) Level'; // Updated spelling
+    document.getElementById('phosphorusLabel').textContent = lang.phosphorusLabel || 'Phosphorus (P) Level';
     document.getElementById('potassiumLabel').textContent = lang.potassiumLabel || 'Potassium (K) Level';
     document.getElementById('tempLabel').textContent = lang.tempLabel || 'Temperature (°C)';
     document.getElementById('humidityLabel').textContent = lang.humidityLabel || 'Humidity (%)';
@@ -109,6 +109,14 @@ function goBack() {
     document.getElementById('soilResult').innerHTML = '';
     document.getElementById('cropResult').innerHTML = '';
     document.getElementById('aidResult').innerHTML = '';
+    
+    // Reset all forms
+    const soilForm = document.getElementById('soilForm');
+    const cropForm = document.getElementById('cropForm');
+    const aidForm = document.getElementById('aidForm');
+    if (soilForm) soilForm.reset();
+    if (cropForm) cropForm.reset();
+    if (aidForm) aidForm.reset();
 }
 
 function showToast(message) {
@@ -116,7 +124,9 @@ function showToast(message) {
     const toast = document.getElementById('toast');
     toast.textContent = message;
     toast.classList.add('show');
-    setTimeout(() => toast.classList.remove('show'), 3000);
+    setTimeout(() => {
+        toast.classList.remove('show');
+    }, 3000);
 }
 
 function changeLanguage() {
@@ -125,12 +135,12 @@ function changeLanguage() {
     updateUIText();
 }
 
+// Initialize the application when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     console.log('DOM fully loaded');
     loadTranslations();
 
-    // Soil Form
-    // Soil Form
+    // Soil Form Submission Handler
     const soilForm = document.getElementById('soilForm');
     if (soilForm) {
         soilForm.addEventListener('submit', async (e) => {
@@ -157,14 +167,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     body: formData
                 });
                 const data = await response.json();
-                console.log('Soil Prediction Response:', data); // Debug log
+                console.log('Soil Prediction Response:', data);
                 loading.style.display = 'none';
 
                 if (response.ok && data.success) {
                     resultDiv.innerHTML = `
                         <div class="result">
-                            <div class="result-item">soil_type = ${data.data.soil_type}</div>
-                            <div class="result-item">pest_detection = ${data.data.pest_detection.join(', ')} (${data.data.pest_note})</div>
+                            <div class="result-item">${translations[currentLanguage]?.resultFields?.['Soil Type'] || 'Soil Type'}: ${data.data.soil_type}</div>
+                            <div class="result-item">${translations[currentLanguage]?.resultFields?.['Pest Detection'] || 'Pest Detection'}: ${data.data.pest_detection.join(', ')} (${data.data.pest_note})</div>
                         </div>
                     `;
                     showToast('Soil analysis completed!');
@@ -181,7 +191,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Crop Form
+    // Crop Form Submission Handler
     const cropForm = document.getElementById('cropForm');
     if (cropForm) {
         cropForm.addEventListener('submit', async (e) => {
@@ -190,10 +200,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const loading = document.getElementById('cropLoading');
             const resultDiv = document.getElementById('cropResult');
 
-            // Log form elements to verify existence
             const inputs = {
                 nitrogen: document.getElementById('nitrogen'),
-                phosphorus: document.getElementById('phosphorus'), // Updated spelling
+                phosphorus: document.getElementById('phosphorus'),
                 potassium: document.getElementById('potassium'),
                 temperature: document.getElementById('temperature'),
                 humidity: document.getElementById('humidity'),
@@ -201,20 +210,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 rainfall: document.getElementById('rainfall'),
                 soil_type: document.getElementById('soil_type')
             };
-            console.log('Form inputs:', Object.keys(inputs).map(k => `${k}: ${inputs[k] ? 'found' : 'missing'}`));
-
-            // Check for missing inputs
-            const missingInputs = Object.entries(inputs).filter(([_, el]) => !el);
-            if (missingInputs.length > 0) {
-                const errorMsg = `Missing form elements: ${missingInputs.map(([k]) => k).join(', ')}`;
-                console.error(errorMsg);
-                showToast(errorMsg);
-                return;
-            }
 
             const data = {
                 nitrogen: parseFloat(inputs.nitrogen.value) || 0,
-                phosphorus: parseFloat(inputs.phosphorus.value) || 0, // Updated spelling
+                phosphorus: parseFloat(inputs.phosphorus.value) || 0,
                 potassium: parseFloat(inputs.potassium.value) || 0,
                 temperature: parseFloat(inputs.temperature.value) || 0,
                 humidity: parseFloat(inputs.humidity.value) || 0,
@@ -224,10 +223,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 lang: currentLanguage
             };
 
-            // Validate numeric fields
+            // Validation logic
             const validationRules = {
                 nitrogen: { min: 0, max: 300, label: 'Nitrogen' },
-                phosphorus: { min: 0, max: 300, label: 'Phosphorus' }, // Updated spelling
+                phosphorus: { min: 0, max: 300, label: 'Phosphorus' },
                 potassium: { min: 0, max: 300, label: 'Potassium' },
                 temperature: { min: -50, max: 60, label: 'Temperature' },
                 humidity: { min: 0, max: 100, label: 'Humidity' },
@@ -247,12 +246,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
-            // Validate soil type
-            const validSoilTypes = ['Alluvial', 'Black', 'Clay', 'Red'];
-            if (!validSoilTypes.includes(data.soil_type)) {
-                validationErrors.push(`Soil type must be one of: ${validSoilTypes.join(', ')}`);
-            }
-
             if (validationErrors.length > 0) {
                 showToast(validationErrors.join('; '));
                 console.error('Validation errors:', validationErrors);
@@ -264,29 +257,16 @@ document.addEventListener('DOMContentLoaded', () => {
             resultDiv.innerHTML = '';
 
             try {
-                console.log('Sending crop recommendation request to /recommend_crop');
                 const response = await fetch('/recommend_crop', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(data)
                 });
-                const text = await response.text();
-                console.log('Crop response raw:', text, 'Status:', response.status, 'Headers:', Object.fromEntries(response.headers.entries()));
-                
-                let result;
-                try {
-                    result = JSON.parse(text);
-                } catch (parseError) {
-                    console.error('JSON parse error:', parseError);
-                    throw new Error(`Invalid server response format: ${text}`);
-                }
-                console.log('Crop response parsed:', result);
+                const result = await response.json();
+                console.log('Crop response:', result);
                 loading.style.display = 'none';
 
                 if (response.ok) {
-                    if (result.error) {
-                        throw new Error(result.error);
-                    }
                     const cropsText = (result.crops || [])
                         .slice(0, 4)
                         .map(crop => `${crop.crop} (${(crop.probability * 100).toFixed(1)}%)`)
@@ -299,20 +279,20 @@ document.addEventListener('DOMContentLoaded', () => {
                             ${result.note ? `<div class="result-item"><span class="result-title">Note:</span> ${result.note}</div>` : ''}
                         </div>
                     `;
+                    showToast('Crop recommendation generated!');
                 } else {
                     throw new Error(result.error || `Server error (Status: ${response.status})`);
                 }
             } catch (error) {
                 console.error('Crop form error:', error);
                 loading.style.display = 'none';
-                resultDiv.innerHTML = `<div class="error">Error: ${error.message} (Check console for details)</div>`;
+                resultDiv.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+                showToast('Failed to generate crop recommendation');
             }
         });
-    } else {
-        console.error('Crop form not found');
     }
 
-    // Government Aid Form
+    // Government Aid Form Submission Handler
     const aidForm = document.getElementById('aidForm');
     if (aidForm) {
         aidForm.addEventListener('submit', async (e) => {
@@ -357,13 +337,23 @@ document.addEventListener('DOMContentLoaded', () => {
                             <div class="result-item"><span class="result-title">${translations[currentLanguage]?.resultFields?.['Contact'] || 'Contact'}:</span> ${result.data.contact || 'Not available'}</div>
                         </div>
                     `;
+                    showToast('Government schemes loaded!');
                 } else {
                     resultDiv.innerHTML = `<div class="error">Error: ${result.error || 'No schemes found'}</div>`;
+                    showToast('Failed to load government schemes');
                 }
             } catch (error) {
+                console.error('Aid form error:', error);
                 loading.style.display = 'none';
                 resultDiv.innerHTML = `<div class="error">Network error: ${error.message}</div>`;
+                showToast('Network error during scheme loading');
             }
         });
+    }
+
+    // Language selector change handler
+    const languageSelect = document.getElementById('language');
+    if (languageSelect) {
+        languageSelect.addEventListener('change', changeLanguage);
     }
 });
