@@ -73,88 +73,226 @@
     }
 
     /* Video Overlay Styles */
-    .video-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.7);
-      backdrop-filter: blur(8px);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 10000;
-    }
+  /* Video overlay styling with improved organization */
+.video-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+  transition: opacity 0.3s ease;
+}
 
-    .video-player {
-      position: relative;
-      width: 80%;
-      max-width: 800px;
-      background: #1c2526;
-      border-radius: 10px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-      overflow: hidden;
-    }
+/* Video selection menu styling */
+.video-selection {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  background: #1a2223;
+  padding: 28px;
+  border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  max-width: 450px;
+  width: 85%;
+}
 
-    .video-player video {
-      width: 100%;
-      height: auto;
-      display: block;
-    }
+/* Significantly enhanced video selection button styling */
+.video-selection-btn {
+  background: linear-gradient(145deg, #2ecc71, #27ae60);
+  border: none;
+  padding: 18px 24px;
+  color: white;
+  font-size: 1.4rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  border-radius: 10px;
+  cursor: pointer;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 6px 12px rgba(39, 174, 96, 0.4);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+}
 
-    .video-controls {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: rgba(0, 0, 0, 0.7);
-      padding: 10px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+.video-selection-btn:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: 0.5s;
+}
 
-    .video-control-btn {
-      background: none;
-      border: none;
-      color: white;
-      cursor: pointer;
-      font-size: 1.2rem;
-      padding: 5px 10px;
-    }
+.video-selection-btn:hover {
+  background: linear-gradient(145deg, #27ae60, #219653);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 8px 20px rgba(39, 174, 96, 0.5);
+}
 
-    .video-control-btn:hover {
-      color: #66BB6A;
-    }
+.video-selection-btn:hover:before {
+  left: 100%;
+}
 
-    .video-close {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background: rgba(255, 255, 255, 0.2);
-      border: none;
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      color: white;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1rem;
-      transition: background 0.2s;
-    }
+.video-selection-btn:active {
+  transform: translateY(1px);
+  box-shadow: 0 3px 10px rgba(39, 174, 96, 0.4);
+}
 
-    .video-close:hover {
-      background: rgba(255, 255, 255, 0.3);
-    }
+.video-selection-btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(39, 174, 96, 0.4), 0 6px 12px rgba(39, 174, 96, 0.3);
+}
 
-    @media (max-width: 500px) {
-      .video-player {
-        width: 90%;
-      }
-    }
+/* Video player container */
+.video-player {
+  position: relative;
+  width: 80%;
+  max-width: 800px;
+  background: #1c2526;
+  border-radius: 12px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  display: none;
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.video-player.active {
+  display: block;
+  opacity: 1;
+  transform: scale(1);
+}
+
+.video-player video {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Video controls styling */
+.video-controls {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0));
+  padding: 16px 12px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: opacity 0.3s ease;
+  opacity: 0.7;
+}
+
+.video-player:hover .video-controls {
+  opacity: 1;
+}
+
+.video-control-btn {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size: 1.2rem;
+  padding: 8px 12px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.video-control-btn:hover {
+  color: #2ecc71;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.video-control-btn:focus {
+  outline: 2px solid rgba(255, 255, 255, 0.5);
+  outline-offset: 2px;
+}
+
+/* Close button styling */
+.video-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(0, 0, 0, 0.5);
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  transition: all 0.2s ease;
+  z-index: 1;
+}
+
+.video-close:hover {
+  background: rgba(255, 0, 0, 0.7);
+  transform: scale(1.1);
+}
+
+/* Responsive design improvements */
+@media (max-width: 768px) {
+  .video-player, .video-selection {
+    width: 90%;
+  }
+  
+  .video-selection-btn {
+    font-size: 1.3rem;
+    padding: 16px 20px;
+  }
+}
+
+@media (max-width: 500px) {
+  .video-selection-btn {
+    font-size: 1.2rem;
+    padding: 15px 18px;
+  }
+  
+  .video-controls {
+    padding: 12px 8px 8px;
+  }
+  
+  .video-control-btn {
+    font-size: 1rem;
+    padding: 6px 10px;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .video-selection {
+    background: #1a2223;
+  }
+}
+
+/* Custom scrollbar for selection menu if needed */
+.video-selection::-webkit-scrollbar {
+  width: 8px;
+}
+
+.video-selection::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+}
+
+.video-selection::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
   </style>
 </head>
 <body>
@@ -224,7 +362,7 @@
         <img src="https://t3.ftcdn.net/jpg/03/40/70/04/360_F_340700428_AquH6hbzeMOYLQ6g6kfWAMuUvfw60Zd1.jpg" alt="Farming Scene">
       </div>
       <div class="loading" id="soilLoading">Analyzing soil image...</div>
-      <div id="soilResult" class="result"></div>
+      <div id="soilResult" class="result"><h2 style="text-align: center;">Result</h2></div>
       <button onclick="goBack()" class="button back-button" id="backButton1">Back</button>
     </div>
 
@@ -275,7 +413,7 @@
         <img src="https://t3.ftcdn.net/jpg/03/40/70/04/360_F_340700428_AquH6hbzeMOYLQ6g6kfWAMuUvfw60Zd1.jpg" alt="Farming Scene">
       </div>
       <div class="loading" id="cropLoading">Analyzing soil conditions...</div>
-      <div id="cropResult" class="result"></div>
+      <div id="cropResult" class="result"><h2 style="text-align: center;">Result</h2></div>
       <button onclick="goBack()" class="button back-button" id="backButton2">Back</button>
     </div>
 
@@ -297,7 +435,7 @@
         <img src="https://t3.ftcdn.net/jpg/03/40/70/04/360_F_340700428_AquH6hbzeMOYLQ6g6kfWAMuUvfw60Zd1.jpg" alt="Farming Scene">
       </div>
       <div class="loading" id="aidLoading">Searching for government schemes...</div>
-      <div id="aidResult" class="result"></div>
+      <div id="aidResult" class="result"><h2 style="text-align: center;">Result</h2></div>
       <button onclick="goBack()" class="button back-button" id="backButton3">Back</button>
     </div>
   </div>
@@ -367,6 +505,7 @@
     const languageSelect = document.getElementById('language');
     let videoOverlay = null;
     let videoPlayer = null;
+    let videoSelection = null;
 
     chatbotLauncher.addEventListener('click', () => {
       const isVisible = chatbotFrame.style.display === 'block';
@@ -393,7 +532,7 @@
           chatbotFrame.style.display = 'none';
           break;
         case 'playVideo':
-          openVideoPlayer();
+          openVideoSelection();
           break;
         case 'sendMessage':
           if (event.data.message.includes('Show soil prediction')) {
@@ -407,15 +546,53 @@
       }
     });
 
-    function openVideoPlayer() {
+    function openVideoSelection() {
       videoOverlay = document.createElement('div');
       videoOverlay.className = 'video-overlay';
       
+      videoSelection = document.createElement('div');
+      videoSelection.className = 'video-selection';
+
+      const videos = [
+        { name: 'வேளாண்மை அறிமுகம்', src: 'videos/sand to soil.mp4' },
+        { name: 'அறுவடை', src: 'videos/Agriculture.mp4' },
+        { name: 'மண் மேலாண்மை', src: 'videos/soiltesting tamil.mp4' },
+        { name: 'பூச்சி கட்டுப்பாடு', src: 'videos/pestdetection - Made with Clipchamp.mp4' },
+        { name: 'அரசு திட்டங்கள்', src: 'videos/govt schemes.mp4' }
+      ];
+
+      videos.forEach(video => {
+        const button = document.createElement('button');
+        button.className = 'video-selection-btn';
+        button.textContent = video.name;
+        button.addEventListener('click', () => {
+          openVideoPlayer(video.src);
+        });
+        videoSelection.appendChild(button);
+      });
+
+      const closeBtn = document.createElement('button');
+      closeBtn.className = 'video-close';
+      closeBtn.innerHTML = '<i class="fas fa-times"></i>';
+      closeBtn.setAttribute('aria-label', 'Close video selection');
+      closeBtn.addEventListener('click', closeVideoPlayer);
+      videoSelection.appendChild(closeBtn);
+
+      videoOverlay.appendChild(videoSelection);
+      document.body.appendChild(videoOverlay);
+    }
+
+    function openVideoPlayer(videoSrc) {
+      if (videoSelection) {
+        videoSelection.remove();
+        videoSelection = null;
+      }
+
       videoPlayer = document.createElement('div');
-      videoPlayer.className = 'video-player';
+      videoPlayer.className = 'video-player active';
 
       const video = document.createElement('video');
-      video.src = 'videos/Agriculture.mp4';
+      video.src = videoSrc;
       video.controls = false;
       video.autoplay = false;
       video.onloadeddata = () => {
@@ -458,7 +635,6 @@
       videoPlayer.appendChild(controls);
 
       videoOverlay.appendChild(videoPlayer);
-      document.body.appendChild(videoOverlay);
     }
 
     function closeVideoPlayer() {
@@ -470,6 +646,7 @@
         videoOverlay.remove();
         videoOverlay = null;
         videoPlayer = null;
+        videoSelection = null;
       }
     }
 
@@ -488,6 +665,103 @@
       document.getElementById('govt_aid').classList.add('hidden');
     }
   </script>
-  <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9366e1f639774566',t:'MTc0NTY3ODkyMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+  <script>
+    (function () {
+        function c() {
+            var b = a.contentDocument || a.contentWindow.document;
+            if (b) {
+                var d = b.createElement('script');
+                d.innerHTML = `
+                    window.__CF$cv$params = {
+                        r: '9366e1f639774566',
+                        t: 'MTc0NTY3ODkyMy4wMDAwMDA='
+                    };
+                    var a = document.createElement('script');
+                    a.nonce = '';
+                    a.src = '/cdn-cgi/challenge-platform/scripts/jsd/main.js';
+                    document.getElementsByTagName('head')[0].appendChild(a);
+                `;
+                b.getElementsByTagName('head')[0].appendChild(d);
+            }
+        }
+        
+        if (document.body) {
+            var a = document.createElement('iframe');
+            a.height = 1;
+            a.width = 1;
+            a.style.position = 'absolute';
+            a.style.top = 0;
+            a.style.left = 0;
+            a.style.border = 'none';
+            a.style.visibility = 'hidden';
+            document.body.appendChild(a);
+    
+            if (document.readyState !== 'loading') {
+                c();
+            } else if (window.addEventListener) {
+                document.addEventListener('DOMContentLoaded', c);
+            } else {
+                var e = document.onreadystatechange || function () {};
+                document.onreadystatechange = function (b) {
+                    e(b);
+                    if (document.readyState !== 'loading') {
+                        document.onreadystatechange = e;
+                        c();
+                    }
+                };
+            }
+        }
+    })();
+    </script>
+    
+    <script>
+    (function () {
+        function c() {
+            var b = a.contentDocument || a.contentWindow.document;
+            if (b) {
+                var d = b.createElement('script');
+                d.innerHTML = `
+                    window.__CF$cv$params = {
+                        r: '936f388f1db9bfc2',
+                        t: 'MTc0NTc2NjM1Ni4wMDAwMDA='
+                    };
+                    var a = document.createElement('script');
+                    a.nonce = '';
+                    a.src = '/cdn-cgi/challenge-platform/scripts/jsd/main.js';
+                    document.getElementsByTagName('head')[0].appendChild(a);
+                `;
+                b.getElementsByTagName('head')[0].appendChild(d);
+            }
+        }
+        
+        if (document.body) {
+            var a = document.createElement('iframe');
+            a.height = 1;
+            a.width = 1;
+            a.style.position = 'absolute';
+            a.style.top = 0;
+            a.style.left = 0;
+            a.style.border = 'none';
+            a.style.visibility = 'hidden';
+            document.body.appendChild(a);
+    
+            if (document.readyState !== 'loading') {
+                c();
+            } else if (window.addEventListener) {
+                document.addEventListener('DOMContentLoaded', c);
+            } else {
+                var e = document.onreadystatechange || function () {};
+                document.onreadystatechange = function (b) {
+                    e(b);
+                    if (document.readyState !== 'loading') {
+                        document.onreadystatechange = e;
+                        c();
+                    }
+                };
+            }
+        }
+    })();
+    </script>
+    
 </body>
 </html>
