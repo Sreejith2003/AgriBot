@@ -1,359 +1,224 @@
-console.log('script.js: Initializing...');
-
-let currentLanguage = 'en';
-let translations = {};
-
-async function loadTranslations() {
-    console.log('Loading translations...');
-    try {
-        const response = await fetch('/translations.json');
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        translations = await response.json();
-        console.log('Translations loaded:', Object.keys(translations));
-        updateUIText();
-    } catch (error) {
-        console.error('Error loading translations:', error);
-        showToast('Failed to load translations - using default English');
-        translations = { 
-            en: {
-                appTitle: 'AgriBot - Smart Farming Assistant',
-                soilOption: 'Soil & Pest Detection',
-                cropOption: 'Crop & Irrigation Management',
-                aidOption: 'Government Aids',
-                soilTitle: 'Soil & Pest Detection',
-                soilImageLabel: 'Upload Soil Image',
-                soilButton: 'Analyze Soil',
-                cropTitle: 'Crop & Irrigation Management',
-                nitrogenLabel: 'Nitrogen (N) Level',
-                phosphorusLabel: 'Phosphorus (P) Level',
-                potassiumLabel: 'Potassium (K) Level',
-                tempLabel: 'Temperature (°C)',
-                humidityLabel: 'Humidity (%)',
-                phLabel: 'Soil pH',
-                rainfallLabel: 'Rainfall (mm)',
-                soilTypeLabel: 'Soil Type',
-                cropButton: 'Recommend Crop & Irrigation',
-                aidTitle: 'Government Aids',
-                stateLabel: 'State',
-                landLabel: 'Land Size (acres)',
-                aidButton: 'Get Government Schemes',
-                backButton: 'Back',
-                resultFields: {
-                    'Soil Type': 'Soil Type',
-                    'Pest Detection': 'Pest Detection',
-                    'Recommended Crops': 'Recommended Crops',
-                    'Irrigation Status': 'Irrigation Status',
-                    'Estimated Yield': 'Estimated Yield',
-                    'State': 'State',
-                    'Land Size': 'Land Size',
-                    'Available Schemes': 'Available Schemes',
-                    'Eligibility': 'Eligibility',
-                    'Contact': 'Contact'
-                }
-            } 
-        };
-        updateUIText();
-    }
-}
-
-function updateUIText() {
-    console.log('Updating UI for language:', currentLanguage);
-    const lang = translations[currentLanguage] || translations['en'] || {};
-    
-    document.getElementById('appTitle').textContent = lang.appTitle || 'AgriBot - Smart Farming Assistant';
-    document.getElementById('soilOption').textContent = lang.soilOption || 'Soil & Pest Detection';
-    document.getElementById('cropOption').textContent = lang.cropOption || 'Crop & Irrigation Management';
-    document.getElementById('aidOption').textContent = lang.aidOption || 'Government Aids';
-    
-    document.getElementById('soilTitle').textContent = lang.soilTitle || 'Soil & Pest Detection';
-    document.getElementById('soilImageLabel').textContent = lang.soilImageLabel || 'Upload Soil Image';
-    document.getElementById('soilButton').textContent = lang.soilButton || 'Analyze Soil';
-    
-    document.getElementById('cropTitle').textContent = lang.cropTitle || 'Crop & Irrigation Management';
-    document.getElementById('nitrogenLabel').textContent = lang.nitrogenLabel || 'Nitrogen (N) Level';
-    document.getElementById('phosphorusLabel').textContent = lang.phosphorusLabel || 'Phosphorus (P) Level';
-    document.getElementById('potassiumLabel').textContent = lang.potassiumLabel || 'Potassium (K) Level';
-    document.getElementById('tempLabel').textContent = lang.tempLabel || 'Temperature (°C)';
-    document.getElementById('humidityLabel').textContent = lang.humidityLabel || 'Humidity (%)';
-    document.getElementById('phLabel').textContent = lang.phLabel || 'Soil pH';
-    document.getElementById('rainfallLabel').textContent = lang.rainfallLabel || 'Rainfall (mm)';
-    document.getElementById('soilTypeLabel').textContent = lang.soilTypeLabel || 'Soil Type';
-    document.getElementById('cropButton').textContent = lang.cropButton || 'Recommend Crop & Irrigation';
-    
-    document.getElementById('aidTitle').textContent = lang.aidTitle || 'Government Aids';
-    document.getElementById('stateLabel').textContent = lang.stateLabel || 'State';
-    document.getElementById('landLabel').textContent = lang.landLabel || 'Land Size (acres)';
-    document.getElementById('aidButton').textContent = lang.aidButton || 'Get Government Schemes';
-    
-    document.getElementById('backButton1').textContent = lang.backButton || 'Back';
-    document.getElementById('backButton2').textContent = lang.backButton || 'Back';
-    document.getElementById('backButton3').textContent = lang.backButton || 'Back';
-}
-
-function showForm(formId) {
-    console.log('Showing form:', formId);
-    document.getElementById('options').classList.add('hidden');
-    document.getElementById(formId).classList.remove('hidden');
-    document.getElementById('farmerBot').classList.add('hidden');
-}
-
-function goBack() {
-    console.log('Going back to options');
-    document.getElementById('soil_prediction').classList.add('hidden');
-    document.getElementById('crop_mgmt').classList.add('hidden');
-    document.getElementById('govt_aid').classList.add('hidden');
-    document.getElementById('options').classList.remove('hidden');
-    document.getElementById('farmerBot').classList.remove('hidden');
-    document.getElementById('soilResult').innerHTML = '';
-    document.getElementById('cropResult').innerHTML = '';
-    document.getElementById('aidResult').innerHTML = '';
-    
-    // Reset all forms
-    const soilForm = document.getElementById('soilForm');
-    const cropForm = document.getElementById('cropForm');
-    const aidForm = document.getElementById('aidForm');
-    if (soilForm) soilForm.reset();
-    if (cropForm) cropForm.reset();
-    if (aidForm) aidForm.reset();
-}
-
-function showToast(message) {
-    console.log('Showing toast:', message);
-    const toast = document.getElementById('toast');
-    toast.textContent = message;
-    toast.classList.add('show');
-    setTimeout(() => {
-        toast.classList.remove('show');
-    }, 3000);
-}
-
-function changeLanguage() {
-    currentLanguage = document.getElementById('language').value;
-    console.log('Language changed to:', currentLanguage);
-    updateUIText();
-}
-
-// Initialize the application when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('DOM fully loaded');
-    loadTranslations();
+    // Tab switching functionality
+    const tabButtons = document.querySelectorAll(".tab-btn");
+    const authForms = document.querySelectorAll(".auth-form");
 
-    // Soil Form Submission Handler
-    const soilForm = document.getElementById('soilForm');
-    if (soilForm) {
-        soilForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const loading = document.getElementById('soilLoading');
-            const resultDiv = document.getElementById('soilResult');
-            const soilImage = document.getElementById('soilImage').files[0];
+    tabButtons.forEach(btn => {
+        btn.addEventListener("click", () => {
+            tabButtons.forEach(b => b.classList.remove("active"));
+            authForms.forEach(form => form.classList.remove("active"));
+            btn.classList.add("active");
+            document.getElementById(`${btn.dataset.tab}Form`).classList.add("active");
+        });
+    });
 
-            if (!soilImage) {
-                showToast('Please select an image');
-                return;
+    // LOGIN form submission
+    document.getElementById("loginForm").addEventListener("submit", async function(e) {
+        e.preventDefault();
+        const email = document.getElementById("loginEmail").value.trim();
+        const password = document.getElementById("loginPassword").value.trim();
+
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+        if (!emailRegex.test(email)) {
+            alert("Please enter a valid Gmail address (must end with @gmail.com)");
+            return;
+        }
+
+        try {
+            const response = await fetch('/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
 
-            const formData = new FormData();
-            formData.append('image', soilImage);
-            formData.append('language', currentLanguage);
+            const result = await response.json();
+            if (result.success) {
+                alert("Login successful! Welcome, " + result.user.full_name);
+                window.location.href = "/index";
+            } else {
+                alert(result.error || "Login failed. Please try again.");
+            }
+        } catch (err) {
+            alert("Network error during login: " + err.message);
+        }
+    });
 
-            loading.style.display = 'block';
-            resultDiv.innerHTML = '';
+    // REGISTER form submission
+    document.getElementById("registerForm").addEventListener("submit", async function(e) {
+        e.preventDefault();
+        const full_name = document.getElementById("registerName").value.trim();
+        const email = document.getElementById("registerEmail").value.trim();
+        const password = document.getElementById("registerPassword").value.trim();
+        const confirmPassword = document.getElementById("confirmPassword").value.trim();
 
-            try {
-                const response = await fetch('/predict_soil', {
-                    method: 'POST',
-                    body: formData
-                });
-                const data = await response.json();
-                console.log('Soil Prediction Response:', data);
-                loading.style.display = 'none';
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+        if (!emailRegex.test(email)) {
+            alert("Please enter a valid Gmail address (must end with @gmail.com)");
+            return;
+        }
 
-                if (response.ok && data.success) {
-                    resultDiv.innerHTML = `
-                        <div class="result">
-                            <div class="result-item">${translations[currentLanguage]?.resultFields?.['Soil Type'] || 'Soil Type'}: ${data.data.soil_type}</div>
-                            <div class="result-item">${translations[currentLanguage]?.resultFields?.['Pest Detection'] || 'Pest Detection'}: ${data.data.pest_detection.join(', ')} (${data.data.pest_note})</div>
-                        </div>
-                    `;
-                    showToast('Soil analysis completed!');
-                } else {
-                    resultDiv.innerHTML = `<div class="error">Error: ${data.error || 'Failed to analyze soil'}</div>`;
-                    showToast('Failed to analyze soil');
-                }
-            } catch (error) {
-                console.error('Soil Prediction Error:', error);
-                loading.style.display = 'none';
-                resultDiv.innerHTML = `<div class="error">Network error: ${error.message}</div>`;
-                showToast('Network error during soil analysis');
+        if (password !== confirmPassword) {
+            alert("Passwords do not match");
+            return;
+        }
+
+        try {
+            const response = await fetch('/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ full_name, email, password })
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const result = await response.json();
+            if (result.success) {
+                alert("Registration successful! Please log in.");
+                document.querySelector('.tab-btn[data-tab="login"]').click();
+            } else {
+                alert(result.error || "Registration failed. Please try again.");
+            }
+        } catch (err) {
+            alert("Network error during registration: " + err.message);
+        }
+    });
+
+    // Slogan rotation logic
+    const slogans = [
+        { text: "உழுதுண்டு வாழ்வாரே வாழ்வார் மற்றெல்லாம் தொழுதுண்டு பின்செல் பவர்", lang: "Tamil" },
+        { text: "ഉഴുതുണ്ട് ജീവിക്കുന്നവരാണ് ജീവിക്കുന്നവർ മറ്റെല്ലാവരും അനുഗമിച്ച് ജീവിക്കുന്നവരാണ്", lang: "Malayalam" },
+        { text: "ఉధృతి తిని జీవించేవారే నిజంగా జీవించేవారు మిగతావారంతా ఇతరులను ఆధారపడి జీవించేవారు", lang: "Telugu" },
+        { text: "ಉಳುಮೆ ಮಾಡಿ ತಿನ್ನುವವರೇ ನಿಜವಾಗಿ ಬದುಕುವವರು ಉಳಿದವರೆಲ್ಲಾ ಇತರರನ್ನು ಅವಲಂಬಿಸಿ ಬದುಕುವವರು", lang: "Kannada" },
+        { text: "जो हल चलाकर खाते हैं, वे ही सच्चे जीवन जीते हैं बाकी सब दूसरों के आगे हाथ फैलाकर जीते हैं", lang: "Hindi" },
+        { text: "Only those who plough and eat shall truly live All others are but followers, eating from their hands", lang: "English" }
+    ];
+
+    const sloganText = document.getElementById('dynamic-slogan');
+    const sloganLanguage = document.getElementById('slogan-language');
+
+    // Add CSS for line breaks and text alignment
+    const style = document.createElement('style');
+    style.textContent = `
+        #dynamic-slogan {
+            white-space: pre-wrap;
+            text-align: center;
+            line-height: 1.2; /* Reduced to tighten lines */
+            min-height: 3em;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .slogan-line {
+            display: block;
+            width: 100%;
+            text-align: center;
+            word-break: break-word;
+            margin: 0; /* Removed margin to reduce space */
+        }
+        
+        #slogan-language {
+            font-style: italic;
+            margin-top: 0.5em;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        
+        #slogan-language.visible {
+            opacity: 1;
+        }
+        
+        .fade-out {
+            opacity: 0;
+            transition: opacity 0.7s ease;
+        }
+    `;
+    document.head.appendChild(style);
+
+    let currentSloganIndex = 0;
+
+    function typeSlogan(slogan, callback) {
+        sloganText.innerHTML = ''; // Clear previous content
+        sloganLanguage.textContent = '';
+        sloganText.classList.remove('fade-out');
+        sloganLanguage.classList.remove('visible');
+
+        // Split into two lines based on language
+        let lines;
+        if (slogan.lang === "Tamil") {
+            // Explicit split for Tamil to ensure correct alignment
+            lines = [
+                "உழுதுண்டு வாழ்வாரே வாழ்வார்",
+                "மற்றெல்லாம் தொழுதுண்டு பின்செல் பவர்"
+            ];
+        } else {
+            // For other languages, split at a logical point
+            const splitPoint = slogan.text.indexOf("मറ്റെല്ലാവരും") || 
+                              slogan.text.indexOf("మిగతావారంతా") || 
+                              slogan.text.indexOf("ಉಳಿದವರೆಲ್ಲಾ") || 
+                              slogan.text.indexOf("बाकी सब") || 
+                              slogan.text.indexOf("All others") || 
+                              (slogan.text.length / 2);
+            lines = [
+                slogan.text.substring(0, splitPoint).trim(),
+                slogan.text.substring(splitPoint).trim()
+            ];
+        }
+
+        const lineElements = [];
+
+        // Create line spans
+        lines.forEach((line, index) => {
+            const lineSpan = document.createElement('span');
+            lineSpan.className = 'slogan-line';
+            sloganText.appendChild(lineSpan);
+            lineElements.push(lineSpan);
+
+            // Add line break after the first line
+            if (index === 0) {
+                sloganText.appendChild(document.createElement('br'));
             }
         });
-    }
 
-    // Crop Form Submission Handler
-    const cropForm = document.getElementById('cropForm');
-    if (cropForm) {
-        cropForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            console.log('Crop form submitted');
-            const loading = document.getElementById('cropLoading');
-            const resultDiv = document.getElementById('cropResult');
+        let currentLine = 0;
 
-            const inputs = {
-                nitrogen: document.getElementById('nitrogen'),
-                phosphorus: document.getElementById('phosphorus'),
-                potassium: document.getElementById('potassium'),
-                temperature: document.getElementById('temperature'),
-                humidity: document.getElementById('humidity'),
-                ph: document.getElementById('ph'),
-                rainfall: document.getElementById('rainfall'),
-                soil_type: document.getElementById('soil_type')
-            };
-
-            const data = {
-                nitrogen: parseFloat(inputs.nitrogen.value) || 0,
-                phosphorus: parseFloat(inputs.phosphorus.value) || 0,
-                potassium: parseFloat(inputs.potassium.value) || 0,
-                temperature: parseFloat(inputs.temperature.value) || 0,
-                humidity: parseFloat(inputs.humidity.value) || 0,
-                ph: parseFloat(inputs.ph.value) || 0,
-                rainfall: parseFloat(inputs.rainfall.value) || 0,
-                soil_type: inputs.soil_type.value.trim() || 'Alluvial',
-                lang: currentLanguage
-            };
-
-            // Validation logic
-            const validationRules = {
-                nitrogen: { min: 0, max: 300, label: 'Nitrogen' },
-                phosphorus: { min: 0, max: 300, label: 'Phosphorus' },
-                potassium: { min: 0, max: 300, label: 'Potassium' },
-                temperature: { min: -50, max: 60, label: 'Temperature' },
-                humidity: { min: 0, max: 100, label: 'Humidity' },
-                ph: { min: 0, max: 14, label: 'pH' },
-                rainfall: { min: 0, max: 5000, label: 'Rainfall' }
-            };
-
-            const validationErrors = [];
-            for (const [field, value] of Object.entries(data)) {
-                const rule = validationRules[field];
-                if (rule) {
-                    if (isNaN(value)) {
-                        validationErrors.push(`${rule.label} must be a valid number`);
-                    } else if (value < rule.min || value > rule.max) {
-                        validationErrors.push(`${rule.label} must be between ${rule.min} and ${rule.max}`);
-                    }
-                }
-            }
-
-            if (validationErrors.length > 0) {
-                showToast(validationErrors.join('; '));
-                console.error('Validation errors:', validationErrors);
-                return;
-            }
-
-            console.log('Sending crop data:', JSON.stringify(data));
-            loading.style.display = 'block';
-            resultDiv.innerHTML = '';
-
-            try {
-                const response = await fetch('/recommend_crop', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data)
-                });
-                const result = await response.json();
-                console.log('Crop response:', result);
-                loading.style.display = 'none';
-
-                if (response.ok) {
-                    const cropsText = (result.crops || [])
-                        .slice(0, 4)
-                        .map(crop => `${crop.crop} (${(crop.probability * 100).toFixed(1)}%)`)
-                        .join(', ');
-                    resultDiv.innerHTML = `
-                        <div class="result">
-                            <div class="result-item"><span class="result-title">${translations[currentLanguage]?.resultFields?.['Recommended Crops'] || 'Recommended Crops'}:</span> ${cropsText || 'No crops recommended'}</div>
-                            <div class="result-item"><span class="result-title">${translations[currentLanguage]?.resultFields?.['Irrigation Status'] || 'Irrigation Status'}:</span> ${result.irrigation || 'Not specified'}</div>
-                            <div class="result-item"><span class="result-title">${translations[currentLanguage]?.resultFields?.['Estimated Yield'] || 'Estimated Yield'}:</span> ${result.estimated_yield || 'Not available'}</div>
-                            ${result.note ? `<div class="result-item"><span class="result-title">Note:</span> ${result.note}</div>` : ''}
-                        </div>
-                    `;
-                    showToast('Crop recommendation generated!');
+        function typeNextLine() {
+            if (currentLine < lines.length) {
+                lineElements[currentLine].textContent = lines[currentLine];
+                currentLine++;
+                if (currentLine < lines.length) {
+                    setTimeout(typeNextLine, 1000); // Pause between lines
                 } else {
-                    throw new Error(result.error || `Server error (Status: ${response.status})`);
+                    sloganLanguage.textContent = `— ${slogan.lang}`;
+                    sloganLanguage.classList.add('visible');
+                    callback();
                 }
-            } catch (error) {
-                console.error('Crop form error:', error);
-                loading.style.display = 'none';
-                resultDiv.innerHTML = `<div class="error">Error: ${error.message}</div>`;
-                showToast('Failed to generate crop recommendation');
             }
-        });
+        }
+
+        typeNextLine();
     }
 
-    // Government Aid Form Submission Handler
-    const aidForm = document.getElementById('aidForm');
-    if (aidForm) {
-        aidForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const loading = document.getElementById('aidLoading');
-            const resultDiv = document.getElementById('aidResult');
-            const data = {
-                state: document.getElementById('state').value.trim().toLowerCase(),
-                land_size: parseFloat(document.getElementById('land_size').value) || 0,
-                lang: currentLanguage
-            };
+    function updateSlogan() {
+        const currentSlogan = slogans[currentSloganIndex];
+        sloganText.classList.add('fade-out');
+        sloganLanguage.classList.remove('visible');
 
-            if (!data.state || isNaN(data.land_size) || data.land_size < 0) {
-                showToast('Please fill all fields with a valid state and non-negative land size');
-                return;
-            }
-
-            console.log('Sending aid data:', data);
-            loading.style.display = 'block';
-            resultDiv.innerHTML = '';
-
-            try {
-                const response = await fetch('/government_aids', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data)
-                });
-                const result = await response.json();
-                console.log('Received aid response:', result);
-                loading.style.display = 'none';
-
-                if (response.ok && result.success) {
-                    const schemesHTML = (result.data.available_schemes || [])
-                        .map(s => `<li>${s}</li>`)
-                        .join('');
-                    resultDiv.innerHTML = `
-                        <div class="result">
-                            <div class="result-item"><span class="result-title">${translations[currentLanguage]?.resultFields?.['State'] || 'State'}:</span> ${result.data.state}</div>
-                            <div class="result-item"><span class="result-title">${translations[currentLanguage]?.resultFields?.['Land Size'] || 'Land Size'}:</span> ${result.data.land_size} acres</div>
-                            <div class="result-item"><span class="result-title">${translations[currentLanguage]?.resultFields?.['Available Schemes'] || 'Available Schemes'}:</span> <ul class="result-list">${schemesHTML}</ul></div>
-                            <div class="result-item"><span class="result-title">${translations[currentLanguage]?.resultFields?.['Eligibility'] || 'Eligibility'}:</span> ${result.data.eligibility || 'Unknown'}</div>
-                            <div class="result-item"><span class="result-title">${translations[currentLanguage]?.resultFields?.['Contact'] || 'Contact'}:</span> ${result.data.contact || 'Not available'}</div>
-                        </div>
-                    `;
-                    showToast('Government schemes loaded!');
-                } else {
-                    resultDiv.innerHTML = `<div class="error">Error: ${result.error || 'No schemes found'}</div>`;
-                    showToast('Failed to load government schemes');
-                }
-            } catch (error) {
-                console.error('Aid form error:', error);
-                loading.style.display = 'none';
-                resultDiv.innerHTML = `<div class="error">Network error: ${error.message}</div>`;
-                showToast('Network error during scheme loading');
-            }
-        });
+        setTimeout(() => {
+            typeSlogan(currentSlogan, () => {
+                currentSloganIndex = (currentSloganIndex + 1) % slogans.length;
+                setTimeout(updateSlogan, 5000); // Show each slogan for 5 seconds
+            });
+        }, 700); // Match fade-out transition
     }
 
-    // Language selector change handler
-    const languageSelect = document.getElementById('language');
-    if (languageSelect) {
-        languageSelect.addEventListener('change', changeLanguage);
-    }
+    // Initial call
+    updateSlogan();
 });
