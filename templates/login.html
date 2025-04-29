@@ -3,14 +3,36 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Authentication Page with Dynamic Slogan</title>
+    <title>Uzhavan - Authentication Page</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="{{ url_for('static', filename='images/uzhavan.ico') }}" type="image/x-icon">
 
     <!-- External Fonts & Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
-
+    
     <!-- Linked CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/stylesLogin.css') }}">
+    <style>
+        /* Larger Logo Effect */
+        .logo-icon {
+            display: inline-block;
+            background-image: url("{{ url_for('static', filename='images/uzhavan.ico') }}");
+            background-size: contain;
+            background-repeat: no-repeat;
+            width: 70px;  /* Increased size */
+            height: 70px; /* Increased size */
+            border-radius: 50%;
+            vertical-align: middle;
+            margin-right: 15px;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover .logo-icon {
+            transform: scale(1.05); /* Subtle hover effect */
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -19,10 +41,12 @@
                 <div class="auth-card">
                     <div class="auth-header">
                         <div class="logo">
-                            <i class="fas fa-seedling logo-icon"></i>
+                            <span class="logo-icon"></span>
                             <h1>உழவன்</h1>
                         </div>
-                        <p>Your smart farming assistant</p>
+                        <div class="main-slogan">
+                            <h2>உழுவது கைவிடேல்</h2>
+                        </div>
                     </div>
 
                     <div class="tabs">
@@ -34,35 +58,40 @@
                     <form id="loginForm" class="auth-form active">
                         <div class="form-group">
                             <label for="loginEmail">Email</label>
-                            <input type="email" id="loginEmail" required />
+                            <input type="email" id="loginEmail" placeholder="youremail@gmail.com" required />
                         </div>
                         <div class="form-group">
                             <label for="loginPassword">Password</label>
-                            <input type="password" id="loginPassword" required />
-                            <a href="#" class="forgot-password">Forgot password?</a>
+                            <input type="password" id="loginPassword" placeholder="Your password" required />
                         </div>
-                        <button type="submit" class="submit-btn">Sign In</button>
+                        <button type="submit" class="submit-btn">
+                            <span>Sign In</span>
+                            <i class="fas fa-arrow-right btn-icon"></i>
+                        </button>
                     </form>
 
                     <!-- Register Form -->
                     <form id="registerForm" class="auth-form">
                         <div class="form-group">
                             <label for="registerName">Full Name</label>
-                            <input type="text" id="registerName" required />
+                            <input type="text" id="registerName" placeholder="Your full name" required />
                         </div>
                         <div class="form-group">
                             <label for="registerEmail">Email</label>
-                            <input type="email" id="registerEmail" required />
+                            <input type="email" id="registerEmail" placeholder="youremail@gmail.com" required />
                         </div>
                         <div class="form-group">
                             <label for="registerPassword">Password</label>
-                            <input type="password" id="registerPassword" required />
+                            <input type="password" id="registerPassword" placeholder="Create a password" required />
                         </div>
                         <div class="form-group">
                             <label for="confirmPassword">Confirm Password</label>
-                            <input type="password" id="confirmPassword" required />
+                            <input type="password" id="confirmPassword" placeholder="Confirm your password" required />
                         </div>
-                        <button type="submit" class="submit-btn">Create Account</button>
+                        <button type="submit" class="submit-btn">
+                            <span>Create Account</span>
+                            <i class="fas fa-user-plus btn-icon"></i>
+                        </button>
                     </form>
                 </div>
             </div>
@@ -77,111 +106,8 @@
         </div>
     </div>
 
-    <!-- Linked JavaScript -->
-    <script>
-        // Tab switching
-        const tabButtons = document.querySelectorAll(".tab-btn");
-        const authForms = document.querySelectorAll(".auth-form");
-
-        tabButtons.forEach(btn => {
-            btn.addEventListener("click", () => {
-                tabButtons.forEach(b => b.classList.remove("active"));
-                authForms.forEach(form => form.classList.remove("active"));
-                btn.classList.add("active");
-                document.getElementById(`${btn.dataset.tab}Form`).classList.add("active");
-            });
-        });
-
-        // LOGIN form submission
-        document.getElementById("loginForm").addEventListener("submit", async function(e) {
-            e.preventDefault();
-            const email = document.getElementById("loginEmail").value.trim();
-            const password = document.getElementById("loginPassword").value.trim();
-
-            const emailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
-            if (!emailRegex.test(email)) {
-                alert("Please enter a valid Gmail address (must end with @gmail.com)");
-                return;
-            }
-
-            try {
-                const response = await fetch('/login', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, password })
-                });
-
-                const result = await response.json();
-                if (result.success) {
-                    alert("Login successful! Welcome, " + result.user.full_name);
-                    window.location.href = "/index";
-                } else {
-                    alert(result.error || "Login failed");
-                }
-            } catch (err) {
-                alert("Login error: " + err.message);
-            }
-        });
-
-        // REGISTER form submission
-        document.getElementById("registerForm").addEventListener("submit", async function(e) {
-            e.preventDefault();
-            const full_name = document.getElementById("registerName").value.trim();
-            const email = document.getElementById("registerEmail").value.trim();
-            const password = document.getElementById("registerPassword").value.trim();
-            const confirmPassword = document.getElementById("confirmPassword").value.trim();
-
-            const emailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
-            if (!emailRegex.test(email)) {
-                alert("Please enter a valid Gmail address (must end with @gmail.com)");
-                return;
-            }
-
-            if (password !== confirmPassword) {
-                alert("Passwords do not match");
-                return;
-            }
-
-            try {
-                const response = await fetch('/register', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ full_name, email, password })
-                });
-
-                const result = await response.json();
-                if (result.success) {
-                    alert("Registration successful! Please log in.");
-                    document.querySelector('.tab-btn[data-tab="login"]').click();
-                } else {
-                    alert(result.error || "Registration failed");
-                }
-            } catch (err) {
-                alert("Registration error: " + err.message);
-            }
-        });
-
-        // Slogan rotation
-        const slogans = [
-            { text: "Empowering Farmers with AI", lang: "English" },
-            { text: "किसानों के लिए स्मार्ट समाधान", lang: "Hindi" },
-            { text: "உழவர்களுக்கு அறிவாற்றல் வழிகாட்டி", lang: "Tamil" },
-            { text: "കർഷകർക്ക് സ്മാർട്ട് സഹായം", lang: "Malayalam" },
-            { text: "రైతులకు మేధో సహాయం", lang: "Telugu" },
-            { text: "ರೈತರಿಗೆ ಸ್ಮಾರ್ಟ್ ಸಲಹೆಗಾರ", lang: "Kannada" }
-        ];
-        let i = 0;
-        const sloganText = document.getElementById("dynamic-slogan");
-        const sloganLang = document.getElementById("slogan-language");
-
-        function rotateSlogan() {
-            sloganText.textContent = slogans[i].text;
-            sloganLang.textContent = `(${slogans[i].lang})`;
-            i = (i + 1) % slogans.length;
-        }
-
-        rotateSlogan();
-        setInterval(rotateSlogan, 4000);
-    </script>
+    <!-- Scripts -->
+    <script src="{{ url_for('static', filename='js/scriptLogin.js') }}"></script>
+    <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'935f2a862d1378c6',t:'MTc0NTU5ODAwOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
 </body>
 </html>
