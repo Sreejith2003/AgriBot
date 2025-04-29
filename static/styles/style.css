@@ -15,6 +15,81 @@ body {
     color: #333;
     padding: 20px;
 }
+  
+  /* Ensure main container floats above the background layers */
+  #mainContainer {
+    position: relative;
+    z-index: 1;
+    background-color: rgba(255, 255, 255, 0.85); /* Semi-transparent white */
+    border-radius: 15px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(5px);
+    margin: 2rem auto;
+    max-width: 900px;
+    padding: 2rem;
+  }
+  /* Add this to your existing CSS */
+.image-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -2;
+    transition: opacity 1s ease-in-out;
+  }
+  
+  .image-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(46, 125, 50, 0.3); /* Green overlay */
+    z-index: -1;
+  }
+  
+  /* Adjustments for chatbot and other fixed elements */
+  #chatbotLauncher, #chatbotFrame {
+    z-index: 1000; /* Ensure these stay on top */
+  }
+  
+  /* Custom scrollbar for better look */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.5);
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: rgba(39, 125, 39, 0.6);
+    border-radius: 10px;
+  }
+  
+  /* Make form elements stand out better against semi-transparent backgrounds */
+  input, select, button {
+    border: 1px solid rgba(39, 125, 39, 0.5);
+    background-color: rgba(255, 255, 255, 0.9);
+  }
+  
+  /* Enhanced focus states for better accessibility */
+  input:focus, select:focus, button:focus {
+    outline: 2px solid rgba(39, 125, 39, 0.8);
+    box-shadow: 0 0 8px rgba(39, 125, 39, 0.4);
+  }
+  
+  /* Enhanced animations for transitions */
+  .option, .button {
+    transition: all 0.3s ease;
+  }
+  
+  .option:hover, .button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  }
 
 :root {
     --primary: #2E7D32; /* Rich green */
@@ -140,6 +215,10 @@ body::before {
     opacity: 0;
     animation: slideUp 0.5s 0.2s forwards ease-out;
 }
+/* Remove the leaf icon from title */
+#appTitle::before {
+    content: none !important;
+  }
 
 .language-select select {
     width: 100%;
@@ -307,7 +386,8 @@ h3::after {
 
 .form-group input[type="file"],
 .form-group input[type="number"],
-.form-group input[type="text"] {
+.form-group input[type="text"],
+.form-group select {
     width: 100%;
     padding: 14px 18px;
     border: 1px solid var(--border);
@@ -319,25 +399,38 @@ h3::after {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
 }
 
-.form-group input::placeholder { 
-    color: #BDC5CD; 
-    opacity: 1; 
+.form-group select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%232E7D32' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1.5rem center;
+    background-size: 16px 12px;
+    cursor: pointer;
+}
+
+.form-group input::placeholder,
+.form-group select:invalid {
+    color: #BDC5CD;
+    opacity: 1;
     transition: var(--transition);
 }
 
-.form-group input:focus::placeholder {
+.form-group input:focus::placeholder,
+.form-group select:focus:invalid {
     opacity: 0.6;
     transform: translateX(5px);
 }
 
-.form-group input:focus {
+.form-group input:focus,
+.form-group select:focus {
     outline: none;
     border-color: var(--primary);
     box-shadow: 0 0 0 4px rgba(46, 125, 50, 0.1);
     transform: translateY(-2px);
 }
 
-.form-group input:focus + label {
+.form-group input:focus + label,
+.form-group select:focus + label {
     color: var(--primary);
 }
 
@@ -350,8 +443,8 @@ h3::after {
     cursor: pointer;
 }
 
-.form-group input[type="file"]:hover { 
-    border-color: var(--primary-light); 
+.form-group input[type="file"]:hover {
+    border-color: var(--primary-light);
     background-color: rgba(102, 187, 106, 0.05);
 }
 
@@ -458,13 +551,49 @@ h3::after {
     line-height: 1.7;
     animation: fadeIn 0.4s ease forwards;
 }
+.result-container {
+    margin-top: var(--base-padding);
+    display: none; /* Initially hidden */
+}
+
+.result-box {
+    background: linear-gradient(to right, #E8F5E9, #F1F8E9);
+    border: 1px solid var(--primary-light);
+    color: #1B5E20;
+    text-align: left;
+    padding: calc(var(--base-padding) * 1.2);
+    border-radius: var(--border-radius);
+    box-shadow: 0 6px 16px rgba(46, 125, 50, 0.1);
+    margin-bottom: var(--base-padding);
+}
+
+.result-item {
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px dashed rgba(46, 125, 50, 0.2);
+}
+
+.result-item:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.result-title {
+    font-weight: 600;
+    color: var(--primary-dark);
+    display: inline-block;
+    min-width: 160px;
+}
 
 .loading {
-    color: var(--text-muted);
     background: linear-gradient(to right, #F5F7FA, #EFF6F0);
     border: 1px dashed var(--border);
+    padding: calc(var(--base-padding) * 1);
+    border-radius: var(--border-radius);
+    text-align: center;
+    margin: var(--base-padding) 0;
     display: none;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
 }
 
 .loading::before {
@@ -485,6 +614,26 @@ h3::after {
     white-space: pre-wrap;
     padding: calc(var(--base-padding) * 1.2);
     box-shadow: 0 6px 16px rgba(46, 125, 50, 0.1);
+    border-radius: var(--border-radius);
+    margin-top: var(--base-padding);
+    width: 100%;
+}
+
+.result-item {
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px dashed rgba(46, 125, 50, 0.2);
+}
+
+.result-item:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.result-title {
+    font-weight: 600;
+    color: var(--primary-dark);
 }
 
 .error {
@@ -519,28 +668,24 @@ h3::after {
     opacity: 0;
     animation: slideUp 0.5s 0.5s forwards ease-out;
     border: 1px solid rgba(46, 125, 50, 0.1);
+    margin-bottom: 0; /* Add this line to remove extra space */
 }
 
-.chatbot-launch {
+.farmer-bot {
     position: fixed;
     bottom: 20px;
-    right: 20px;
-    z-index: 1000;
+    left: 20px;
+    z-index: 999;
+    display: flex;
+    align-items: flex-end;
 }
 
-.chatbot-button {
-    background-color: #4CAF50;
-    color: white;
-    padding: 12px 20px;
-    border-radius: 30px;
-    text-decoration: none;
-    font-weight: bold;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-    transition: background-color 0.3s;
-}
-
-.chatbot-button:hover {
-    background-color: #388E3C;
+.farmer-bot img {
+    width: 90px;
+    height: auto;
+    border-radius: 50%;
+    margin-right: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .speech-bubble {
@@ -566,7 +711,6 @@ h3::after {
     border-right-color: #f1f1f1;
 }
 
-
 .image-container::before {
     content: '';
     position: absolute;
@@ -591,23 +735,54 @@ h3::after {
     transform: scale(1.05);
 }
 
-.hidden { 
-    display: none !important; 
+.hidden {
+    display: none !important;
+}
+#toast {
+    visibility: hidden;
+    min-width: 250px;
+    margin-left: -125px;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 2px;
+    padding: 16px;
+    position: fixed;
+    z-index: 1;
+    left: 50%;
+    bottom: 30px;
+    font-size: 17px;
+    border-radius: 8px;
 }
 
-@keyframes fadeIn { 
-    from { opacity: 0; } 
-    to { opacity: 1; } 
+#toast.show {
+    visibility: visible;
+    animation: fadein 0.5s, fadeout 0.5s 2.5s;
 }
 
-@keyframes slideUp { 
-    from { opacity: 0; transform: translateY(20px); } 
-    to { opacity: 1; transform: translateY(0); } 
+@keyframes fadein {
+    from {bottom: 0; opacity: 0;}
+    to {bottom: 30px; opacity: 1;}
 }
 
-@keyframes spin { 
-    0% { transform: rotate(0deg); } 
-    100% { transform: rotate(360deg); } 
+@keyframes fadeout {
+    from {bottom: 30px; opacity: 1;}
+    to {bottom: 0; opacity: 0;}
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
 @keyframes pulseBg {
@@ -633,7 +808,8 @@ h3::after {
     .option { padding: 16px; font-size: 1rem; }
     .button { font-size: 1rem; padding: 12px; }
     h3 { font-size: 1.6rem; }
-    .form-group input { font-size: 1rem; padding: 12px 14px; }
+    .form-group input,
+    .form-group select { font-size: 1rem; padding: 12px 14px; }
     .loading, .result, .error { font-size: 1rem; padding: var(--base-padding); }
     .error::before { left: calc(var(--base-padding) * 0.9); top: calc(var(--base-padding) * 0.9); }
 }
